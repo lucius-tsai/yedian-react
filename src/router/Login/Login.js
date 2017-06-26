@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { observer, inject } from 'mobx-react';
 import './login.scss';
 
-@inject('authData') @observer class Login extends Component {
+class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {

@@ -99,8 +99,8 @@ class Topic extends Component {
   componentWillUnmount() {
     const {showBar, router} = this.props;
     const pathname = router.location.pathname;
-    const reg = new RegExp(`^${BASENAME}[publish|topic|message]`);
-    if(!reg.test(pathname)) {
+    const reg = new RegExp(`^${BASENAME}publish|${BASENAME}topic|${BASENAME}message`);
+    if (!reg.test(pathname)) {
       showBar();
     }
   }

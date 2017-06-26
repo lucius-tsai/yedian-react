@@ -18,7 +18,7 @@ var getIPAdress = function () {
 var webpackConfig = {
   entry: {
     app: './src/app.js',
-    vendor: ['react', 'react-dom', 'react-router', 'mobx', 'mobx-react'],
+    vendor: ['react', 'react-dom', 'react-router'],
   },
   output: {
     path: path.resolve(__dirname, './dist'),
