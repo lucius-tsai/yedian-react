@@ -1,0 +1,80 @@
+{
+  "build_hash": "07f64aac2ad87a9641508e61ec73d773",
+  "prefix": "ion-",
+  "version": "2.0.1",
+  "name": "Ionicons",
+  "icons": [
+    {
+      "code": "0xf155",
+      "name": "angle-right"
+    },
+    {
+      "code": "0xf13b",
+      "name": "community"
+    },
+    {
+      "code": "0xf138",
+      "name": "community-active"
+    },
+    {
+      "code": "0xf14f",
+      "name": "cta-collection"
+    },
+    {
+      "code": "0xf150",
+      "name": "cta-comment"
+    },
+    {
+      "code": "0xf151",
+      "name": "cta-like"
+    },
+    {
+      "code": "0xf145",
+      "name": "index"
+    },
+    {
+      "code": "0xf13c",
+      "name": "index-active"
+    },
+    {
+      "code": "0xf14c",
+      "name": "list"
+    },
+    {
+      "code": "0xf146",
+      "name": "list-active"
+    },
+    {
+      "code": "0xf152",
+      "name": "loading"
+    },
+    {
+      "code": "0xf156",
+      "name": "pencil"
+    },
+    {
+      "code": "0xf21f",
+      "name": "search"
+    },
+    {
+      "code": "0xf157",
+      "name": "search-square"
+    },
+    {
+      "code": "0xf153",
+      "name": "topic"
+    },
+    {
+      "code": "0xf14e",
+      "name": "user"
+    },
+    {
+      "code": "0xf14d",
+      "name": "user-active"
+    },
+    {
+      "code": "0xf154",
+      "name": "venues-address"
+    }
+  ]
+}

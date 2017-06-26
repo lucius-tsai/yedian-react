@@ -1,0 +1,34 @@
+.user-time-line {
+  ._top {
+    height: 35vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-color: #2a1e46;
+    background-image: url("user-bg.jpg");
+    .avator {
+      margin: 50px auto 15px;
+      padding: 2px;
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(180deg,#f051db,#00d8ff);
+      border-radius: 50%;
+    }
+    .avator-box {
+      .follow-box {
+        button {
+          background-color: #ffffff;
+          border-color: #ffffff;
+          color: #0D213F;
+        }
+      }
+    }
+  }
+  ._messages {
+    .message-cell {
+      padding: 15px 10px;
+      margin-bottom: 10px;
+      background-color: #ffffff;
+    }
+  }
+}

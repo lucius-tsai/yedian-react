@@ -1,0 +1,65 @@
+.cta-box {
+  .cell {
+    float: left;
+    line-height: 20px;
+    margin-right: 12px;
+    font-size: 14px;
+  }
+  ._collection {
+    .icon {
+      font-size: 1.1em;
+    }
+  }
+  .icon {
+    color: #CCCCCC;
+  }
+  .icon, .text {
+    float: left;
+  }
+  .text {
+    color: #999999;
+  }
+  &.fix {
+    max-width: 414px;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    height: 50px;
+    z-index: 9;
+    background: #14171b;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 -3px 5px 0 rgba(0, 0, 0, .2);
+    transform: translateX(-50%);
+    .cell {
+      -webkit-box-flex: 1;
+      -ms-flex: 1;
+      flex: 1;
+      text-align: center;
+      float: none;
+      margin: 0;
+      color: #ffffff;
+      font-size: 20px;
+      &._collection {
+        position: relative;
+        top: -1px;
+      }
+      .icon, .text {
+        float: none;
+        line-height: 20px;
+        display: inline-block;
+      }
+      .text {
+        position: relative;
+        top: -2px;
+        font-size: 16px;
+      }
+    }
+  }
+}

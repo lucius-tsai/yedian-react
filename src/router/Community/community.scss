@@ -1,0 +1,89 @@
+@import '../../assets/scss/setting';
+
+.community {
+  margin-bottom: 20px;
+}
+.banner {
+  position: relative;
+  height: 170px;
+}
+
+.title {
+  line-height: 42px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: space-around;
+  span {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    text-align: left;
+    padding-left: 10px;
+  }
+  .link {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    text-align: right;
+    padding-right: 10px;
+  }
+}
+
+.news-timeLine {
+  margin: 10px auto;
+  padding: 10px;
+  line-height: 26px;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  ._title {
+    width: 40px;
+    float: left;
+    color: #333333;
+    font-size: 13px;
+    line-height: 1em;
+    border-right: 1px solid #D8D8D8;
+  }
+  ._message {
+    float: left;
+    padding-left: 12px;
+  }
+  ._text {
+    font-size: 14px;
+    color: $textGray;
+    padding-left: 90px;
+    text-align: left;
+  }
+}
+
+.section {
+  margin-top: 10px;
+  h3 {
+    line-height: 1.5em;
+    padding: 0 18px;
+    font-size: 16px;
+  }
+  .message-cell {
+    padding: 15px 10px;
+    margin: 10px 0;
+    background-color: #ffffff;
+  }
+}
+.section-follow {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  .follow-list {
+    padding: 0 10px; 
+    li {
+      width: 128px;
+      padding: 16px 0;
+      float: left;
+      margin-right: 7px;
+      background-color: #ffffff;
+      border: 1px solid #DDDDDD;
+    }
+    li:last-child {
+      margin-right: 0;
+    }
+  }
+}

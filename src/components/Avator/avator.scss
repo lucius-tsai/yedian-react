@@ -1,0 +1,111 @@
+.avator-box {
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  &.normal {
+    .avator {
+      width: 40px;
+      height: 40px;
+    }
+    .profile {
+      line-height: 17px;
+    }
+  }
+  &.small {
+    .avator {
+      width: 35px;
+      height: 35px;
+    }
+    .profile {
+      margin-left: 8px;
+      line-height: 18px;
+    }
+  }
+  &.sx {
+    .avator {
+      width: 26px;
+      height: 26px;
+    }
+    .profile {
+      margin-left: 8px;
+      line-height: 12px;
+    }
+  }
+  .avator {
+    float: left;
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, .5);
+    border-radius: 50%;
+    overflow: hidden;
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
+  }
+  .profile {
+    float: left;
+    margin-left: 12px;
+    line-height: 24px;
+    strong {
+      display: block;
+      padding-bottom: 3px;
+      color: #333333;
+      font-weight: normal;
+    }
+    p {
+      padding-top: 3px;
+      color: #999999;
+    }
+    &.user-time-line {
+      strong {
+        color: #ffffff;
+      }
+    }
+  }
+  .follow-box {
+    //float: right;
+    position: absolute;
+    right: 0;
+    button {
+      padding: 0 15px;
+      line-height: 24px;
+      border-radius: 2px;
+      border: 1px solid #999999;
+      color: #999999;
+    }
+  }
+  &.vertical {
+    display: block;
+    .avator, .profile {
+      float: none;
+      padding: 0;
+      margin: 0 auto;
+      text-align: center;
+      display: block;
+    }
+    .profile {
+      margin: 5px auto 10px;
+      strong {
+        font-size: 15px;
+        color: #333333;
+        line-height: 1.4em;
+      }
+      p {
+        color: #999999;
+        font-size: 12px;
+        line-height: 1.35em;
+      }
+      &.user-time-line {
+        strong {
+          color: #ffffff;
+        }
+      }
+    }
+    .follow-box {
+      text-align: center;
+      position: static;
+    }
+  }
+}

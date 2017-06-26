@@ -1,0 +1,24 @@
+.tag {
+    display: inline-block;
+    line-height: 28px;
+    font-size: 14px;
+    padding: 0 8px;
+    border-radius: 2px;
+    position: relative;
+    background-color: #F5F5F5;
+    .icon {
+        width: 14px;
+        height: 14px;
+        line-height: 12px;
+        font-size: 10px;
+        font-style: normal;
+        text-align: center;
+        position: absolute;
+        right: -7px;
+        top: -7px;
+        border-radius: 50%;
+        background-color: #0D213F;
+        color: #ffffff;
+        transform: rotate(45deg);
+    }
+}

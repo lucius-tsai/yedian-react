@@ -1,0 +1,73 @@
+.carousel-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  // background: #181d22 url(http://prod-app.ye-dian.com/dist/assets/img/xktv-logo.png) no-repeat 50%;
+  background-size: 50px auto;
+  .slider-carousel {
+    position: relative;
+    overflow: hidden;
+    height: 100% !important;
+  }
+  & div {
+    height: 100% !important;
+    display: block;
+  }
+  .slide {
+    width: 100%;
+    height: 100% !important;
+    .pic {
+      height: 100%;
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+      background-size: cover;
+    }
+  }
+}
+
+.carousel-default-enter {
+  position: absolute;
+  transform: translate3d(100%, 0, 0);
+  transition: transform 0.5s;
+  z-index: 1;
+}
+
+.carousel-default-enter.carousel-default-enter-active {
+  transform: translate3d(0, 0, 0);
+}
+
+.carousel-default-leave {
+  position: absolute;
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.5s;
+}
+
+.carousel-default-leave.carousel-default-leave-active {
+  transform: translate3d(-100%, 0, 0);
+}
+
+/**
+ *  渐变
+ */
+.carousel-fade-enter {
+  position: absolute;
+  opacity: 0.01;
+  transition: .7s opacity ease-in-out;
+}
+
+.carousel-fade-enter.carousel-fade-enter-active {
+  opacity: 1;
+}
+
+.carousel-fade-leave {
+  position: absolute;
+  opacity: 1;
+  transition: .7s opacity ease-in-out;
+}
+
+.carousel-fade-leave.carousel-fade-leave-active {
+  opacity: 0.01;
+}

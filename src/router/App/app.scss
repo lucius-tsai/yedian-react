@@ -1,0 +1,71 @@
+.app {
+	padding-bottom: 50px;
+	&.no-tab-bar {
+		padding-bottom: 0;
+	}
+}
+
+.app-enter {
+	width: 100%;
+	position: absolute;
+	opacity: 0.01;
+	transition: .3s opacity ease-in-out;
+}
+
+.app-enter.app-enter-active {
+	opacity: 1;
+}
+
+.app-leave {
+	width: 100%;
+	position: absolute;
+	opacity: 1;
+	transition: .3s opacity ease-in-out;
+}
+
+.app-leave.app-leave-active {
+	opacity: 0.01;
+}
+
+.app-left-to-right-enter {
+	position: absolute;
+	transform: translate3d(100%, 0, 0);
+	transition: transform 0.3s;
+	z-index: 1;
+}
+
+.app-left-to-right-enter.app-left-to-right-enter-active {
+	transform: translate3d(0, 0, 0);
+}
+
+.app-left-to-right-leave {
+	position: absolute;
+	transform: translate3d(0, 0, 0);
+	transition: transform 0.3s;
+}
+
+.app-left-to-right-leave.app-left-to-right-leave-active {
+	transform: translate3d(-100%, 0, 0);
+}
+
+
+.app-right-to-left-enter {
+	position: absolute;
+	transform: translate3d(-100%, 0, 0);
+	transition: transform 0.3s;
+	z-index: 1;
+}
+
+.app-right-to-left-enter.app-right-to-left-enter-active {
+	transform: translate3d(0, 0, 0);
+}
+
+.app-right-to-left-leave {
+	position: absolute;
+	transform: translate3d(0, 0, 0);
+	transition: transform 0.3s;
+}
+
+.app-right-to-left-leave.app-right-to-left-leave-active {
+	transform: translate3d(100%, 0, 0);
+}

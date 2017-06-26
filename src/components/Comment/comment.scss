@@ -1,0 +1,51 @@
+.comment {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  background-color: #ffffff;
+  ._title {
+    font-size: 18px;
+    line-height: 1.39em;
+    margin-bottom: 10px;
+  }
+  ._top-enter {
+    margin-bottom: 35px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    .input-enter .user-self {
+      -webkit-box-flex: 1;
+      -ms-flex: 1;
+      flex: 1
+    }
+    .user-self {
+      width: 16%;
+    }
+    .input-enter {
+      width: 82%;
+      box-sizing: border-box;
+      line-height: 40px;
+      padding-left: 15px;
+      background-color: #EEEEEE;
+      border-radius: 20px 20px 20px 0;
+      color: #999999;
+      font-size: 14px;
+    }
+  }
+}
+
+.comment-content {
+  .cell {
+    padding-top: 10px;
+    border-bottom: 1px solid #E1E1E1;
+    &:last-child {
+      border-bottom: none
+    }
+    ._content {
+      font-size: 16px;
+      line-height: 1.4em;
+      color: #333333;
+      margin: 10px auto;
+    }
+  }
+}

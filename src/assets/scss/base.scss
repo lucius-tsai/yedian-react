@@ -1,0 +1,137 @@
+@import "./setting";
+
+html {
+  font: 300 #{$fzSmall}/1 sans-serif;
+  text-size-adjust: 100%;
+}
+
+body {
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  &.no-scroll {
+    overflow: hidden;
+  }
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+  font-weight: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+small {
+  font-size: $fzTiny;
+}
+
+figure {
+  margin: 0;
+}
+
+ol, ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+input, button, textarea {
+  box-sizing: border-box;
+  color: inherit;
+  font: inherit;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  appearance: none;
+  border-radius: 0;
+}
+
+input {
+  line-height: normal;
+}
+
+input:disabled,
+button:disabled {
+  cursor: default;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="search"] {
+  appearance: textfield;
+  &::-webkit-search-decoration,
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-results-button,
+  &::-webkit-search-results-decoration {
+    display: none;
+  }
+}
+
+::placeholder {
+  color: $textLight;
+  opacity: 1;
+}
+
+a,
+area,
+button,
+input,
+label,
+select,
+textarea,
+[tabindex] {
+  touch-action: manipulation;
+}
+
+textarea {
+  resize: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+}
+
+.clearfix:before,
+.clearfix:after {
+  content: "";
+  display: table;
+}
+
+.clearfix:after {
+  clear: both;
+}
+
+.fade-transition {
+  transition: opacity .3s ease;
+
+  &.fade-enter,
+  &.fade-leave {
+    opacity: 0;
+  }
+}
+
+#app {
+  max-width: 414px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background: #F5F5F5;
+  color: $textGray;
+  overflow-y: scroll;
+}

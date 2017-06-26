@@ -1,0 +1,38 @@
+.venues-cell{
+  font-size: 14px;
+  height: 4.5em;
+  line-height: 4.5em;
+  background-color: #F5F5F5;
+  .img-holder {
+    width: 4.5em;
+    height: 100%;
+    float: left;
+    background-color: transparent;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .name {
+    float: left;
+    height: 100%;
+    margin-left: 10px;
+    span {
+      vertical-align: middle;
+      display: inline-block;
+      color: #333333;
+    }
+  }
+  .combo {
+    float: right;
+    height: 100%;
+    margin-right: 10px;
+    span {
+      display: inline-block;
+      padding: 0 8px;
+      line-height: 30px;
+      border-radius: 2px;
+      color: #B33DE5;
+      border: 1px solid #B33DE5;
+    }
+  }
+}
