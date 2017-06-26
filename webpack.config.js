@@ -64,7 +64,7 @@ var webpackConfig = {
         loader: 'file-loader?hash=sha512&digest=hex&name=[hash].[ext]'
       }
 
-// {
+      // {
       // 	test: /\.(ico|png|jpg|svg)$/,
       // 	loader: 'file-loader',
       // 	options: {
@@ -81,7 +81,13 @@ var webpackConfig = {
     historyApiFallback: {
       index: "/dist/"
     },
-    noInfo: true
+    noInfo: true,
+    proxy: {
+      "/api": {
+        target: "http://localhost:4003",
+        pathRewrite: {"^/api" : ""}
+      }
+    }
   },
   devtool: '#eval-source-map',
   plugins: [

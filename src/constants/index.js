@@ -3,9 +3,6 @@ let userCoreApiDomain = null;
 let commontCoreApiDomain = null;
 
 if (process.env.NODE_ENV === "development") {
-    // userApiDomain = "http://user.dev.ye-dian.com";
-    // userCoreApiDomain = "http://userCore.dev.ye-dian.com";
-    // commontCoreApiDomain = "http://feedback.dev.ye-dian.com";
     userApiDomain = "http://user.staging.ye-dian.com";
     userCoreApiDomain = "http://userCore.dev.ye-dian.com";
     commontCoreApiDomain = "http://feedback.dev.ye-dian.com";
@@ -22,11 +19,11 @@ if (process.env.NODE_ENV === "development") {
 export const API_ROOT = {
     weChatAuth: userApiDomain + "/auth/wechat?",
     getUserInfo: userApiDomain + "/internal/userInfo?_type=UserTimeLine",
-    getTopicBanner: `http://${process.env.IP}:4003/`,
-    getIndexMessage: `http://${process.env.IP}:4003/community`,
-    getIndexUserList: `http://${process.env.IP}:4003/userlist`,
-    getMessageInfo: `http://${process.env.IP}:4003/message`,
-    getSearch: `http://${process.env.IP}:4003/search`
+    getTopicBanner: "/api/",
+    getIndexMessage: "/api/community",
+    getIndexUserList: "/api/userlist",
+    getMessageInfo: "/api/message",
+    getSearch: "/api/search"
 }
 
 export const enums = {

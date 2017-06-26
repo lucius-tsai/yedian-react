@@ -1,14 +1,14 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import Carousel from '../../components/Carousel';
 import Avator from '../../components/Avator';
 import Message from '../../components/Message';
 import ActionBar from '../../components/ActionBar';
 import './community.scss';
-import {getTopicBanner, getIndexMessage, getIndexUserList} from '../../libs/api';
+import { getTopicBanner, getIndexMessage, getIndexUserList } from '../../libs/api';
 
-import {loading, loadSuccess, loadFail} from '../../store/actions/appStatus';
+import { loading, loadSuccess, loadFail } from '../../store/actions/appStatus';
 
 class Community extends Component {
 
@@ -19,11 +19,12 @@ class Community extends Component {
       messages: [],
       userList: []
     }
+    this.handleLoad = this.handleLoad.bind(this);
   }
 
   componentWillMount() {
     const self = this;
-    const {loading, loadSuccess, loadFail, dispatch} = this.props;
+    const { loading, loadSuccess, loadFail, dispatch } = this.props;
     loading();
 
     Promise.all([getTopicBanner(), getIndexMessage(), getIndexUserList()]).then(data => {
@@ -37,7 +38,6 @@ class Community extends Component {
       loadFail();
       console.log(error);
     });
-
   }
 
   componentWillReceiveProps(nextProps) {
@@ -47,13 +47,29 @@ class Community extends Component {
     return true;
   }
 
+  fetchMessages() {
+
+  }
+
+  handleLoad(dom) {
+    const { appStatus, router } = state;
+    window.addEventListener("scroll", () => {
+      const documentHeight = document.body.clientHeight;
+      const scrollHeight = window.scrollY;
+      if (documentHeight - scrollHeight < 700) {
+        console.log("loading more");
+      }
+    })
+  }
+
+
   render() {
-    const {slides, messages, userList} = this.state;
+    const { slides, messages, userList } = this.state;
 
     const messagesList = messages.map((cell, index) => {
       return (
         <li className="message-cell" key={index}>
-          <Message profile={cell.profile} message={cell.message} canLink={true}/>
+          <Message profile={cell.profile} message={cell.message} canLink={true} />
         </li>
       )
     });
@@ -61,17 +77,17 @@ class Community extends Component {
     const userListStr = userList.map((cell, index) => {
       return (
         <li key={index}>
-          <Avator style={"vertical"} profile={cell} size={"small"} model={"followCard"} showFollow={true}/>
+          <Avator style={"vertical"} profile={cell} size={"small"} model={"followCard"} showFollow={true} />
         </li>
       )
     });
 
     return (
-      <div className="community">
+      <div className="community" ref={this.handleLoad}>
         <div className="banner">
           {
             slides.length ?
-              <Carousel slides={slides} element={"div"} enterDelay={1000} leaveDelay={1000} speed={3000}/>
+              <Carousel slides={slides} element={"div"} enterDelay={1000} leaveDelay={1000} speed={3000} />
               :
               ""
           }
@@ -81,7 +97,7 @@ class Community extends Component {
             最新<br />动态
           </div>
           <div className="_message">
-            <Avator size={"sx"}/>
+            <Avator size={"sx"} />
           </div>
           <p className="_text">芹菜啊刚刚发布了一条动态</p>
         </div>
@@ -92,7 +108,7 @@ class Community extends Component {
           </ul>
         </div>
         <div className="section section-follow">
-          <ul className="follow-list clearfix" style={{width: `${userList.length * 137 - 7}px`}}>
+          <ul className="follow-list clearfix" style={{ width: `${userList.length * 137 - 7}px` }}>
             {userListStr}
           </ul>
         </div>
@@ -113,7 +129,7 @@ class Community extends Component {
 
 
 const mapStateToProps = state => {
-  const {appStatus, router} = state;
+  const { appStatus, router } = state;
   return {
     router
   }
