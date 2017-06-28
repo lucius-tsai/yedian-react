@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import Carousel from '../../components/Carousel';
 import Avator from '../../components/Avator';
@@ -8,12 +8,16 @@ import ActionBar from '../../components/ActionBar';
 import LoadMore from '../../components/LoadMore';
 
 import './community.scss';
-import {getTopicBanner, getIndexMessage, getIndexUserList} from '../../libs/api';
+import { getTopicBanner, getIndexMessage, getIndexUserList } from '../../libs/api';
 
-import {loading, loadSuccess, loadFail} from '../../store/actions/appStatus';
+import { loading, loadSuccess, loadFail } from '../../store/actions/appStatus';
 
 
-let pointY = null;
+let pointY = null, unbind = false;
+
+const f = () => {
+  console.log(123123)
+}
 
 class Community extends Component {
 
@@ -32,9 +36,9 @@ class Community extends Component {
 
   componentWillMount() {
     const self = this;
-    const {loading, loadSuccess, loadFail, dispatch} = this.props;
+    const { loading, loadSuccess, loadFail, dispatch } = this.props;
     loading();
-
+    unbind = false
     Promise.all([getTopicBanner(), getIndexMessage(), getIndexUserList()]).then(data => {
       loadSuccess();
       self.setState({
@@ -50,6 +54,13 @@ class Community extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const { router } = nextProps
+    if (this.props.router.location.pathname !== router.location.pathname) {
+      unbind = true;
+      document.removeEventListener("touchstart", this.handleTouch);
+      window.removeEventListener("scroll", this.handleScroll);
+      window.removeEventListener("click", f);
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -58,19 +69,19 @@ class Community extends Component {
 
   handleScroll() {
     const self = this;
-    const {loading, messages} = self.state;
+    const { loading, messages } = self.state;
     const documentHeight = document.body.clientHeight;
     const scrollHeight = window.scrollY;
     const distance = documentHeight - scrollHeight;
-    if (distance < 700 && !self.state.loading && pointY < scrollHeight) {
+    if (distance < 700 && !self.state.loading && pointY < scrollHeight && !unbind) {
       self.setState({
         loading: true
       });
-      console.log("loading more");
+
       getIndexMessage().then(res => {
         const merge = messages.concat(res.data);
         // console.log(res)
-        self.setState({
+        !unbind && self.setState({
           loading: false,
           messages: merge
         });
@@ -79,29 +90,25 @@ class Community extends Component {
       });
     }
   }
-
+  handleTouch() {
+    pointY = window.scrollY;
+  }
   handleLoad(dom) {
     const self = this;
-    const {loading, messages} = this.state;
-    document.addEventListener("touchstart", (e) => {
-      pointY = window.scrollY;
-    });
-
+    const { loading, messages } = this.state;
+    document.addEventListener("touchstart", this.handleTouch);
     window.addEventListener("scroll", this.handleScroll);
-
-    document.addEventListener("touchend", (e) => {
-      // pointY = window.scrollY;
-    });
+    window.addEventListener("click", f);
   }
 
 
   render() {
-    const {slides, messages, userList, loading, specialMessages} = this.state;
+    const { slides, messages, userList, loading, specialMessages } = this.state;
 
     const messagesList = messages.map((cell, index) => {
       return (
         <li className="message-cell" key={index}>
-          <Message profile={cell.profile} message={cell.message} canLink={true}/>
+          <Message profile={cell.profile} message={cell.message} canLink={true} />
         </li>
       )
     });
@@ -109,7 +116,7 @@ class Community extends Component {
     const specialMessagesList = specialMessages.map((cell, index) => {
       return (
         <li className="message-cell" key={index}>
-          <Message profile={cell.profile} message={cell.message} canLink={true}/>
+          <Message profile={cell.profile} message={cell.message} canLink={true} />
         </li>
       )
     });
@@ -117,7 +124,7 @@ class Community extends Component {
     const userListStr = userList.map((cell, index) => {
       return (
         <li key={index}>
-          <Avator style={"vertical"} profile={cell} size={"small"} model={"followCard"} showFollow={true}/>
+          <Avator style={"vertical"} profile={cell} size={"small"} model={"followCard"} showFollow={true} />
         </li>
       )
     });
@@ -127,7 +134,7 @@ class Community extends Component {
         <div className="banner">
           {
             slides.length ?
-              <Carousel slides={slides} element={"div"} enterDelay={1000} leaveDelay={1000} speed={3000}/>
+              <Carousel slides={slides} element={"div"} enterDelay={1000} leaveDelay={1000} speed={3000} />
               :
               ""
           }
@@ -137,7 +144,7 @@ class Community extends Component {
             最新<br />动态
           </div>
           <div className="_message">
-            <Avator size={"sx"}/>
+            <Avator size={"sx"} />
           </div>
           <p className="_text">芹菜啊刚刚发布了一条动态</p>
         </div>
@@ -148,7 +155,7 @@ class Community extends Component {
           </ul>
         </div>
         <div className="section section-follow">
-          <ul className="follow-list clearfix" style={{width: `${userList.length * 137 - 7}px`}}>
+          <ul className="follow-list clearfix" style={{ width: `${userList.length * 137 - 7}px` }}>
             {userListStr}
           </ul>
         </div>
@@ -158,7 +165,7 @@ class Community extends Component {
           </ul>
         </div>
         {
-          loading ? <LoadMore/> : ""
+          loading ? <LoadMore /> : ""
         }
         <ActionBar />
       </div>
@@ -170,16 +177,13 @@ class Community extends Component {
   }
 
   componentWillUnmount() {
-    const self = this;
-    document.removeEventListener("touchstart", () => {
-    });
-    window.removeEventListener("scroll", this.handleScroll);
+    
   }
 }
 
 
 const mapStateToProps = state => {
-  const {appStatus, router} = state;
+  const { appStatus, router } = state;
   return {
     router
   }

@@ -1,5 +1,4 @@
 // const jwtDecode = require("jwt-decode");
-
 export const cookie = (name, value, options) => {
     if (typeof value != "undefined") {
         options = options || {};

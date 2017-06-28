@@ -27,6 +27,7 @@ class Message extends Component {
       showFollow: true
     };
     this.go = this.go.bind(this);
+    this.lazyLoadPictures = this.lazyLoadPictures.bind(this);
   }
 
   componentWillMount() {
@@ -37,7 +38,7 @@ class Message extends Component {
       message: message ? message : defaultMessage,
       canLink: canLink === true,
       showFollow: showFollow
-    })
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -57,18 +58,30 @@ class Message extends Component {
     }
   }
 
+  lazyLoadPictures () {
+    const currentScrollY = window.scrollY + window.innerHeight - 30;
+    for(const i in this.refs) {
+      const cell = this.refs[i];
+      if(cell.offsetTop < currentScrollY) {
+        const originSrc = cell.getAttribute("data-src");
+        cell.style.backgroundImage = `url(${originSrc})`;
+        delete this.refs[i];
+      }
+    }
+  }
+
   render() {
     const {profile, message, canLink, showFollow} = this.state;
     const cellWidth = window.innerWidth > 414 ? (414 - 20) * 0.32 : (window.innerWidth - 20) * 0.32;
     let picturesList = "";
     if (message.pictures.length === 1) {
       picturesList = (
-        <img src={message.pictures[0]} alt=""/>
+        <img src={message.pictures[0]} alt="" data-src={message.pictures[0]}/>
       );
     } else if (message.pictures.length > 1) {
       picturesList = message.pictures.map((cell, index) => {
         return (
-          <div className="img-single" key={index} style={{backgroundImage: `url(${cell})`, height: `${cellWidth}px`}}>
+          <div className="img-single" key={index} style={{backgroundColor: `#3023AE`, height: `${cellWidth}px`}} ref={`lazyImages-${new Date().getTime()}-${index}`} data-src={cell}>
           </div>
         )
       });
@@ -123,7 +136,13 @@ class Message extends Component {
     )
   }
 
+  componentDidMount() {
+    window.addEventListener("scroll", this.lazyLoadPictures);
+    this.lazyLoadPictures();
+
+  }
   componentWillUnmount() {
+    window.removeEventListener("scroll", this.lazyLoadPictures)
   }
 }
 
