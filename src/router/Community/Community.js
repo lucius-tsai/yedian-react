@@ -21,6 +21,7 @@ class Community extends Component {
     super(props);
     this.state = {
       slides: [],
+      specialMessages: [],
       messages: [],
       userList: [],
       loading: false
@@ -39,6 +40,7 @@ class Community extends Component {
       self.setState({
         slides: data[0].data,
         messages: data[1].data,
+        specialMessages: data[1].data,
         userList: data[2].data
       });
     }, error => {
@@ -70,7 +72,7 @@ class Community extends Component {
         // console.log(res)
         self.setState({
           loading: false,
-          message: merge
+          messages: merge
         });
       }, error => {
 
@@ -94,9 +96,17 @@ class Community extends Component {
 
 
   render() {
-    const {slides, messages, userList, loading} = this.state;
+    const {slides, messages, userList, loading, specialMessages} = this.state;
 
     const messagesList = messages.map((cell, index) => {
+      return (
+        <li className="message-cell" key={index}>
+          <Message profile={cell.profile} message={cell.message} canLink={true}/>
+        </li>
+      )
+    });
+
+    const specialMessagesList = specialMessages.map((cell, index) => {
       return (
         <li className="message-cell" key={index}>
           <Message profile={cell.profile} message={cell.message} canLink={true}/>
@@ -134,7 +144,7 @@ class Community extends Component {
 
         <div className="section">
           <ul>
-            {messagesList}
+            {specialMessagesList}
           </ul>
         </div>
         <div className="section section-follow">

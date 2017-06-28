@@ -130,7 +130,7 @@
   .venues-holder {
     position: relative;
     transition: all 0.2s cubic-bezier(1, 0.3, 1, 1);
-    .remove {
+    div.remove {
       width: 70px;
       height: 100%;
       background-color: #B33DE5;
@@ -144,7 +144,6 @@
     }
     &.show-remove {
       transform: translateX(-70px);
-
     }
   }
 }

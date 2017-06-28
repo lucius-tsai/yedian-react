@@ -76,6 +76,7 @@ var webpackConfig = {
   },
   devServer: {
     compress: true,
+    host: getIPAdress(),
     port: 9001,
     contentBase: path.join(__dirname, "dist"),
     historyApiFallback: {

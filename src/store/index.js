@@ -10,6 +10,7 @@ let middleware = [thunk, logger];
 const init = (history) => {
     return createStore(
         connectRouter(history)(reducers),
+        // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
         compose(
             applyMiddleware(
                 routerMiddleware(history),

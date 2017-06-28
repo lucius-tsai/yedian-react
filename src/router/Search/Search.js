@@ -1,14 +1,14 @@
 /**
  * Created by townmi on 17/6/4.
  */
-import React, {Component} from 'react';
-import {Link, withRouter} from 'react-router-dom';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { Link, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import './search.scss';
-import {getSearch} from '../../libs/api';
+import { getSearch } from '../../libs/api';
 
-import {loading, loadSuccess, loadFail} from '../../store/actions/appStatus';
-import {addTopic, addVenues} from '../../store/actions/publish';
+import { loading, loadSuccess, loadFail } from '../../store/actions/appStatus';
+import { addTopic, addVenues } from '../../store/actions/publish';
 
 class Search extends Component {
   constructor(props) {
@@ -28,7 +28,7 @@ class Search extends Component {
 
   componentWillMount() {
     const self = this;
-    const {loading, loadSuccess, loadFail, location} = this.props;
+    const { loading, loadSuccess, loadFail, location } = this.props;
     const type = location && location.state && location.state.type;
     let searchPlaceholder = null;
     switch (type) {
@@ -64,7 +64,7 @@ class Search extends Component {
   }
 
   blur() {
-    const {search} = this.state;
+    const { search } = this.state;
     if (!search) {
       this.setState({
         input: false
@@ -79,22 +79,21 @@ class Search extends Component {
   }
 
   handler(cell) {
-    const {history, addTopic, addVenues} = this.props;
-    const {type} = this.state;
+    const { history, addTopic, addVenues, publish } = this.props;
+    const { type } = this.state;
     if (type === "venues") {
       addVenues({
         cell
       });
     } else {
-      addTopic({
-        cell
-      });
+      let topics = publish.topics ? publish.topics: [];
+      addTopic(topics.concat(cell));
     }
     history.goBack();
   }
 
   render() {
-    const {type, input, search, searchPlaceholder, list} = this.state;
+    const { type, input, search, searchPlaceholder, list } = this.state;
     const listStr = list.map((cell, index) => {
       return (
         <li key={cell.id} onClick={this.handler.bind(this, cell)}>
@@ -111,7 +110,7 @@ class Search extends Component {
         <div className={input ? "input-box focus" : "input-box"}>
           <i className="icon ion-search-square"></i>
           <input type="text" value={search} placeholder={searchPlaceholder} className="search-input" onBlur={this.blur}
-                 onFocus={this.focus} onChange={this.change}/>
+            onFocus={this.focus} onChange={this.change} />
         </div>
         {
           type === 'topic' ?
@@ -127,9 +126,10 @@ class Search extends Component {
 }
 
 const mapStateToProps = state => {
-  const {appStatus, router} = state;
+  const { appStatus, router, publish } = state;
   return {
-    loading: appStatus.loading || false
+    loading: appStatus.loading || false,
+    publish
   }
 };
 

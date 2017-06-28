@@ -26,6 +26,17 @@
       background-size: cover;
     }
   }
+  .swiper {
+    width: 300%;
+    position: absolute;
+    left: -100%;
+    top: 0;
+    display: none;
+    .slide {
+      width: 33.3333333333%;
+      float: left;
+    }
+  }
 }
 
 .carousel-default-enter {

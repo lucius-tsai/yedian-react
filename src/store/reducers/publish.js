@@ -21,11 +21,11 @@ const publish = (state = {}, action) => {
 			}
 		case PUBLISH_TOPIC_ADD:
 			return {
-				...state, topic: action.newState.cell
+				...state, topics: action.newState
 			}
 		case PUBLISH_TOPIC_DELETE:
 			return {
-				...state, topic: null
+				...state, topics: action.newState
 			}
 		case PUBLISH_PICTURES_ADD:
 			return {
@@ -37,7 +37,7 @@ const publish = (state = {}, action) => {
 			}
 		case PUBLISH_DELETE:
 			return {
-				...state, venues: null, topic: null
+				...state, venues: null, topics: null
 			}
 		default:
 			return state

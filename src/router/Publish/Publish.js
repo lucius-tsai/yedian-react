@@ -1,50 +1,56 @@
 /**
  * Created by townmi on 17/6/4.
  */
-import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import './publish.scss';
 
 import VenuesCell from '../../components/VenuesCell';
 import Tag from '../../components/Tag';
 
-import {hideBar, showBar, deleteUnmount} from '../../store/actions/appStatus';
-import {addPictures} from '../../store/actions/publish';
+import { hideBar, showBar, deleteUnmount } from '../../store/actions/appStatus';
+import { addPictures, removeTopic, removeVenues } from '../../store/actions/publish';
 
 class Publish extends Component {
   constructor(props) {
     super(props);
     this.state = {
       show: true,
-      publish: null,
+      topics: [],
+      venues: null,
       tmpImages: []
     };
     this.submit = this.submit.bind(this);
     this.handleFileUpload = this.handleFileUpload.bind(this);
-    // this.handleRemoveVenues = this.handleRemoveVenues(this);
+    this.removeTopic = this.removeTopic.bind(this);
+    this.handleRemoveVenues = this.handleRemoveVenues.bind(this);
   }
 
   componentWillMount() {
-    const {hideBar, publish, appStatus, router} = this.props;
+    const { hideBar, publish, appStatus, router } = this.props;
 
     hideBar();
     this.setState({
-      publish,
+      topics: publish.topics,
+      venues: publish.venues,
       tmpImages: publish.pictures ? publish.pictures : []
     });
   }
 
   componentWillReceiveProps(nextProps) {
+    this.setState({
+      topics: nextProps.publish.topics,
+      venues: nextProps.publish.venues,
+    })
   }
 
   submit() {
-    // this.props.router.push("/message/123");
   }
 
   handleFileUpload(e) {
-    const {addPictures} = this.props;
-    const {tmpImages} = this.state;
+    const { addPictures } = this.props;
+    const { tmpImages } = this.state;
     let fd = new FormData();
     const files = e.target.files;
     for (let index = 0; index < files.length; index++) {
@@ -69,9 +75,13 @@ class Publish extends Component {
     })(e);
     reader.readAsDataURL(file);
   }
+  loadPage() {
 
+  }
   handleRemoveVenues(dom) {
+    const self = this;
     let startX, startY, X, Y;
+    console.log(dom);
     if (!dom) return false;
     if (dom.addEventListener) {
       dom.addEventListener("touchstart", (e) => {
@@ -90,10 +100,13 @@ class Publish extends Component {
         X = moveEndX - startX;
         Y = moveEndY - startY;
         // console.log(X, Y)
-        dom.style.transform = `translateX(${X}px)`;
+        if (X > -70 && X < 0) {
+          dom.style.transform = `translateX(${X}px)`;
+        }
       });
       dom.addEventListener("touchend", (e) => {
         e.preventDefault();
+        
         if (X < -35) {
           dom.removeAttribute("style");
           dom.className = "venues-holder show-remove"
@@ -101,13 +114,31 @@ class Publish extends Component {
           dom.removeAttribute("style");
           dom.className = "venues-holder"
         }
+
+        /**
+         * 处理 删除venues
+         */
+        if(e.target && e.target.className === "remove") {
+          const { removeVenues } = self.props;
+          return removeVenues();
+        }
       });
     }
   }
 
-  render() {
-    const {show, publish, tmpImages, showRomeVenues} = this.state;
+  removeTopic(index) {
+    const { topics } = this.state;
+    const { removeTopic } = this.props;
+    topics.splice(index, 1);
+    removeTopic(topics);
+  }
 
+  removeVenue() {
+    console.log(123);
+  }
+
+  render() {
+    const { show, topics, venues, tmpImages, showRomeVenues } = this.state;
     const tmpImageStr = tmpImages.map((cell, index) => {
       return (
         <div className="pic" key={index} ref={this.previewImage.bind(this, cell)}></div>
@@ -115,29 +146,28 @@ class Publish extends Component {
     });
 
     return (
-      <div className="publish" style={show ? {display: "block"} : {display: "none"}}>
-        <form action="" className="publish-form">
+      <div className="publish" style={show ? { display: "block" } : { display: "none" }}>
+        <form action="" className="publish-form" ref={this.loadPage}>
           <textarea name="" id="" cols="30" rows="10" placeholder="Show出你的夜生活～"></textarea>
           <div className="pics-box">
             {tmpImageStr}
             <div className="file">
-              <input type="file" multiple accept='image/*' onChange={this.handleFileUpload}/>
+              <input type="file" multiple accept='image/*' onChange={this.handleFileUpload} />
             </div>
           </div>
           <div className="select">
             <p className="_cell">
-              <Link to={{pathname: `${BASENAME}search`, state: {type: "venues"}}}>
+              <Link to={{ pathname: `${BASENAME}search`, state: { type: "venues" } }}>
                 <i className="icon ion-venues-address"></i> <span>所在地点</span> <i className="icon ion-angle-right"></i>
-
               </Link>
             </p>
             {
-              publish && publish.venues ?
+              venues ?
                 <div className="venues-box">
                   <div className="venues-holder" ref={this.handleRemoveVenues}>
-                    <VenuesCell simple={true}/>
-                    <div className="remove">
-                      <span>删除</span>
+                    <VenuesCell simple={true} />
+                    <div className="remove" onClick={this.removeVenue}>
+                      <span className="remove">删除</span>
                     </div>
                   </div>
                 </div>
@@ -146,15 +176,18 @@ class Publish extends Component {
           </div>
           <div className="select">
             <p className="_cell">
-              <Link to={{pathname: `${BASENAME}search`, state: {type: "topic"}}}>
+              <Link to={{ pathname: `${BASENAME}search`, state: { type: "topic" } }}>
                 <i className="icon ion-topic"></i> <span>添加话题</span> <i className="icon ion-angle-right"></i>
               </Link>
             </p>
-            {
-              publish && publish.topic ?
-                <Tag word={publish.topic.topic}/>
-                : ""
-            }
+            <div className="tags-box">
+              {
+                topics ? topics.map((cell, index) => {
+                  return <Tag word={cell.topic} cell={cell} remove={this.removeTopic.bind(this, index)} key={index} />
+                })
+                  : ""
+              }
+            </div>
           </div>
           <button className="publish-submit" onClick={this.submit}>发布</button>
         </form>
@@ -162,8 +195,16 @@ class Publish extends Component {
     )
   }
 
+  componentDidUpdate() {
+    if(this.refs && this.refs.removeVenue && this.refs.removeVenue.addEventListener) {
+      console.log(this.refs.removeVenue);
+      this.refs.removeVenue.removeEventListener("click", this.removeVenue);
+      this.refs.removeVenue.addEventListener("click", this.removeVenue);
+    } 
+  }
+
   componentWillUnmount() {
-    const {showBar, appStatus, deleteUnmount, router} = this.props;
+    const { showBar, appStatus, deleteUnmount, router } = this.props;
     if (router.location.pathname !== `${BASENAME}topic`) {
       showBar();
     }
@@ -171,7 +212,7 @@ class Publish extends Component {
 }
 
 const mapStateToProps = state => {
-  const {appStatus, router, publish} = state;
+  const { appStatus, router, publish } = state;
   return {
     router,
     publish,
@@ -189,6 +230,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     addPictures: (cell) => {
       dispatch(addPictures(cell))
+    },
+    removeTopic: (cell) => {
+      dispatch(removeTopic(cell))
+    },
+    removeVenues: () => {
+      dispatch(removeVenues())
     }
   }
 };

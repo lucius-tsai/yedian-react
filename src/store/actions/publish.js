@@ -15,8 +15,18 @@ export const addTopic = newState => ({
     newState
 });
 
+export const removeTopic = newState => ({
+    type: PUBLISH_TOPIC_DELETE,
+    newState
+});
+
 export const addVenues = newState => ({
     type: PUBLISH_VENUES_ADD,
+    newState
+});
+
+export const removeVenues = newState => ({
+    type: PUBLISH_VENUES_DELETE,
     newState
 });
 
