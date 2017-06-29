@@ -1,5 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
+var fs = require('fs-extra');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var getIPAdress = function () {
@@ -122,7 +123,9 @@ if (process.env.NODE_ENV === 'development') {
 				production: false
 			}
     })
-  ])
+  ]);
+  fs.ensureDirSync(path.resolve(__dirname, './app/mockData'));
+  fs.copySync(path.resolve(__dirname, './mockData'), path.resolve(__dirname, './app/mockData'))
 }
 
 if (process.env.NODE_ENV === 'production') {

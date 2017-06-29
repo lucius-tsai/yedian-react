@@ -1,0 +1,36 @@
+{
+	"code": 200,
+	"total": 2,
+	"data": [
+		{
+			"avator": "http://www.wangmingdaquan.cc/tx61/66.jpg",
+			"username": "老王",
+			"city": "上海市",
+			"area": "晋安区"
+		},
+		{
+			"avator": "http://www.wangmingdaquan.cc/tx61/66.jpg",
+			"username": "小胖",
+			"city": "广州市",
+			"area": "浦东新区"
+		},
+		{
+			"avator": "http://www.wangmingdaquan.cc/tx61/66.jpg",
+			"username": "老王",
+			"city": "上海市",
+			"area": "晋安区"
+		},
+		{
+			"avator": "http://www.wangmingdaquan.cc/tx61/66.jpg",
+			"username": "小胖",
+			"city": "广州市",
+			"area": "浦东新区"
+		},
+		{
+			"avator": "http://www.wangmingdaquan.cc/tx61/66.jpg",
+			"username": "老王",
+			"city": "上海市",
+			"area": "晋安区"
+		}
+	]
+}

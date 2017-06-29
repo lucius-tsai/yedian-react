@@ -16,14 +16,25 @@ if (process.env.NODE_ENV === "development") {
     commontCoreApiDomain = "http://feedback.dev.ye-dian.com";
 }
 
+// localhost
+// export const API_ROOT = {
+//     weChatAuth: userApiDomain + "/auth/wechat?",
+//     getUserInfo: userApiDomain + "/internal/userInfo?_type=UserTimeLine",
+//     getTopicBanner: "/api/",
+//     getIndexMessage: "/api/community",
+//     getIndexUserList: "/api/userlist",
+//     getMessageInfo: "/api/message",
+//     getSearch: "/api/search"
+// }
+
 export const API_ROOT = {
     weChatAuth: userApiDomain + "/auth/wechat?",
     getUserInfo: userApiDomain + "/internal/userInfo?_type=UserTimeLine",
-    getTopicBanner: "/api/",
-    getIndexMessage: "/api/community",
-    getIndexUserList: "/api/userlist",
-    getMessageInfo: "/api/message",
-    getSearch: "/api/search"
+    getTopicBanner: "/app/mockData/banner.json",
+    getIndexMessage: "/app/mockData/community.json",
+    getIndexUserList: "/app/mockData/userlist.json",
+    getMessageInfo: "/app/mockData/message.json",
+    getSearch: "/app/mockData/search.json"
 }
 
 export const enums = {
