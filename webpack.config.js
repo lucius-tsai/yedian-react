@@ -21,8 +21,8 @@ var webpackConfig = {
     vendor: ['react', 'react-dom', 'react-router'],
   },
   output: {
-    path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/',
+    path: path.resolve(__dirname, './app'),
+    publicPath: '/app/',
     filename: `[name].[hash:8].js`
   },
   resolve: {
@@ -78,9 +78,9 @@ var webpackConfig = {
     compress: true,
     host: getIPAdress(),
     port: 9001,
-    contentBase: path.join(__dirname, "dist"),
+    contentBase: path.join(__dirname, "app"),
     historyApiFallback: {
-      index: "/dist/"
+      index: "/app/"
     },
     noInfo: true,
     proxy: {
@@ -94,17 +94,6 @@ var webpackConfig = {
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor'
-    }),
-    new HtmlWebpackPlugin({
-      template: './src/index.html',
-      hash: false,
-      // favicon: base('static/favicon.ico'),
-      filename: 'index.html',
-      inject: 'body',
-      minify: {
-        collapseWhitespace: true
-      },
-      title: 'wechat-dev'
     })
   ]
 
@@ -116,8 +105,22 @@ if (process.env.NODE_ENV === 'development') {
       'process.env': {
         NODE_ENV: JSON.stringify('development')
       },
-      BASENAME: JSON.stringify("/dist/"),
+      BASENAME: JSON.stringify("/app/"),
       'process.env.IP': JSON.stringify(getIPAdress())
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      hash: false,
+      // favicon: base('static/favicon.ico'),
+      filename: 'index.html',
+      inject: 'body',
+      minify: {
+        collapseWhitespace: true
+      },
+      title: 'wechat-dev',
+      env: {
+				production: false
+			}
     })
   ])
 }
@@ -127,7 +130,7 @@ if (process.env.NODE_ENV === 'production') {
   webpackConfig.plugins = (webpackConfig.plugins || []).concat([
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
-      BASENAME: JSON.stringify("/dist/"),
+      BASENAME: JSON.stringify("/app/"),
       'process.env.IP': JSON.stringify(getIPAdress())
     }),
     new webpack.optimize.UglifyJsPlugin({
@@ -139,6 +142,20 @@ if (process.env.NODE_ENV === 'production') {
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      hash: false,
+      // favicon: base('static/favicon.ico'),
+      filename: 'index.html',
+      inject: 'body',
+      minify: {
+        collapseWhitespace: true
+      },
+      title: 'wechat-dev',
+      env: {
+				production: true
+			}
     })
   ])
 

@@ -7,7 +7,7 @@ const MOUNT_NODE = document.getElementById('app');
 let render = () => {
   const routes = require('./router/index').default();
   ReactDOM.render(
-    <App routes={routes}/>,
+    <App routes={routes} />,
     MOUNT_NODE
   )
 };
