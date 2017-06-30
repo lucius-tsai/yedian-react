@@ -22,7 +22,7 @@ var webpackConfig = {
     vendor: ['react', 'react-dom', 'react-router'],
   },
   output: {
-    path: path.resolve(__dirname, './app'),
+    path: path.resolve(__dirname, './app_tmp'),
     publicPath: '/app/',
     filename: `[name].[hash:8].js`
   },
@@ -98,6 +98,32 @@ var webpackConfig = {
     })
   ]
 
+}
+
+if(process.env.NODE_ENV === 'localhost') {
+  webpackConfig.plugins = (webpackConfig.plugins || []).concat([
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('localhost')
+      },
+      BASENAME: JSON.stringify("/app/"),
+      'process.env.IP': JSON.stringify(getIPAdress())
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      hash: false,
+      // favicon: base('static/favicon.ico'),
+      filename: 'index.html',
+      inject: 'body',
+      minify: {
+        collapseWhitespace: true
+      },
+      title: 'wechat-dev',
+      env: {
+				production: false
+			}
+    })
+  ]);
 }
 
 if (process.env.NODE_ENV === 'development') {
