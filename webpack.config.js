@@ -154,6 +154,34 @@ if (process.env.NODE_ENV === 'development') {
   fs.copySync(path.resolve(__dirname, './mockData'), path.resolve(__dirname, './app/mockData'))
 }
 
+if (process.env.NODE_ENV === 'staging') {
+  webpackConfig.plugins = (webpackConfig.plugins || []).concat([
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('staging')
+      },
+      BASENAME: JSON.stringify("/app/"),
+      'process.env.IP': JSON.stringify(getIPAdress())
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      hash: false,
+      // favicon: base('static/favicon.ico'),
+      filename: 'index.html',
+      inject: 'body',
+      minify: {
+        collapseWhitespace: true
+      },
+      title: 'wechat-dev',
+      env: {
+				production: false
+			}
+    })
+  ]);
+  fs.ensureDirSync(path.resolve(__dirname, './app/mockData'));
+  fs.copySync(path.resolve(__dirname, './mockData'), path.resolve(__dirname, './app/mockData'))
+}
+
 if (process.env.NODE_ENV === 'production') {
   delete webpackConfig.devtool;
   webpackConfig.plugins = (webpackConfig.plugins || []).concat([
@@ -187,7 +215,6 @@ if (process.env.NODE_ENV === 'production') {
 			}
     })
   ])
-
 }
 
 module.exports = webpackConfig;

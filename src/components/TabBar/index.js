@@ -2,23 +2,22 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import './tabBar.scss';
 
-let domain = "";
-
+let domain = '';
+const query = '?fromwhere=community';
 switch (process.env.NODE_ENV) {
   case "development":
-    domain = "http://staging-app.ye-dian.com/dist/";
+    domain = "http://dev-app.ye-dian.com/dist/?#!/";
     break;
   case "staging":
-    domain = "http://staging-app.ye-dian.com/dist/";
+    domain = "http://staging-app.ye-dian.com/dist/?#!/";
     break;
   case "production":
-    domain = "http://staging-app.ye-dian.com/dist/";
+    domain = "http://prod-app.ye-dian.com/dist/?#!/";
     break;
   default:
-    domain = "http://staging-app.ye-dian.com/dist/";
+    domain = "http://prod-app.ye-dian.com/dist/?#!/";
     break;
 }
-
 
 class TabBar extends Component {
   render() {
@@ -26,16 +25,16 @@ class TabBar extends Component {
     return (
       <div className="tab-bar" style={{width: cellWidth, marginLeft: `-${cellWidth / 2}px`}}>
         <div className="item-index">
-          <a href={`${domain}`}>
+          <a href={`${domain}${query}`}>
             <div className="icon ion-index"></div>
             <span className="text">精选</span>
           </a>
         </div>
         <div className="item-list">
-          <Link to={{pathname: `${BASENAME}topic`, state: {id: "abc"}}}>
+          <a href={`${domain}list/ktv${query}`}>
             <div className="icon ion-list"></div>
             <span className="text">预订</span>
-          </Link>
+          </a>
         </div>
         <div className="item-community active">
           <Link to={{pathname: `${BASENAME}community`}}>
@@ -44,10 +43,10 @@ class TabBar extends Component {
           </Link>
         </div>
         <div className="item-user">
-          <Link to={{pathname: `${BASENAME}user/times`}}>
+          <a href={`${domain}user${query}`}>
             <div className="icon ion-user"></div>
             <span className="text">我的</span>
-          </Link>
+          </a>
         </div>
       </div>
     )

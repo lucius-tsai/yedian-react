@@ -1,29 +1,41 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Redirect,
   Switch,
   Route
 } from 'react-router-dom';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
+// routes
 import Community from '../Community/Community';
 import CommunityInfo from '../CommunityInfo/CommunityInfo';
 import Publish from '../Publish/Publish';
 import Search from '../Search/Search';
 import Topic from '../Topic/Topic';
 import UserTimeLine from '../UserTimeLine/UserTimeLine';
+import Login from '../Login/Login';
 import NotFound from '../NotFound/NotFound';
 
-
+// components
 import TabBar from '../../components/TabBar';
 import Loading from '../../components/Loading';
 import './app.scss';
+
+// apis
+import { getUserInfo } from '../../libs/api';
+import { cookie } from "../../libs/uitls";
+
+// redux-actions
+
+import { getUserInfoLoading, getUserInfoSuccess } from '../../store/actions/userInfo';
+
 
 class Bootstrap extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      redirectPath: '',
       loading: false,
       hideBar: false,
       router: null,
@@ -32,10 +44,25 @@ class Bootstrap extends Component {
   }
 
   componentWillMount() {
-    const {loading} = this.props;
-    this.setState({
-      loading: loading
-    })
+    const { loading, userInfo, getUserInfoLoading, getUserInfoSuccess } = this.props;
+    const token = cookie('js_session');
+    if (!token) {
+      this.setState({
+        redirectPath: 'login'
+      });
+    } else {
+      if (!userInfo.user) {
+        getUserInfoLoading();
+        getUserInfo().then(res => {
+          if (res.code === 200) {
+            getUserInfoSuccess(res.data);
+            localStorage.setItem('react_user', JSON.stringify(res.data));
+          }
+        }, error => {
+          console.log(error);
+        })
+      }
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -43,21 +70,23 @@ class Bootstrap extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {router} = this.state;
+    const { router } = this.state;
     this.setState({
       loading: nextProps.loading,
       hideBar: nextProps.hideBar,
       router: nextProps.router,
-      lastRouter: router
+      lastRouter: router,
+      userInfo: nextProps.userInfo
     });
   }
 
   componentDidMount() {
-  }
 
+  }
+  
   render() {
     let key = "app";
-    const {loading, hideBar, router, lastRouter} = this.state;
+    const { loading, hideBar, router, lastRouter, userInfo, redirectPath } = this.state;
     const pathname = router && router.location.pathname;
     const lastPathname = lastRouter && lastRouter.location.pathname;
     const cellWidth = window.innerWidth > 414 ? 414 : window.innerWidth;
@@ -73,16 +102,20 @@ class Bootstrap extends Component {
         key = "app";
         break;
     }
+    if(userInfo && userInfo.loading) {
+      return (<Loading />)
+    }
+    
     return (
       <div>
-        <Route render={({location}) => (
-          <div className={hideBar ? `${key} no-tab-bar` : key} style={{width: `${cellWidth}px`}}>
+        <Route render={({ location }) => (
+          <div className={hideBar ? `${key} no-tab-bar` : key} style={{ width: `${cellWidth}px` }}>
             <Route exact path={BASENAME} render={() => (
-              <Redirect to={`${BASENAME}community`}/>
-            )}/>
+              <Redirect to={`${BASENAME}${redirectPath}`} />
+            )} />
             <Route exact path="/" render={() => (
-              <Redirect to={`${BASENAME}community`}/>
-            )}/>
+              <Redirect to={`${BASENAME}${redirectPath}`} />
+            )} />
             {
               hideBar ? "" : <TabBar />
             }
@@ -93,36 +126,45 @@ class Bootstrap extends Component {
               transitionLeaveTimeout={300}
             >
               <Switch key={location.key} location={location}>
-                <Route exact path={`${BASENAME}community`} component={Community} name="community"/>
-                <Route exact path={`${BASENAME}message/:id`} component={CommunityInfo} name="message"/>
-                <Route exact path={`${BASENAME}publish`} component={Publish} name="publish"/>
-                <Route exact path={`${BASENAME}search`} component={Search} name="search"/>
-                <Route exact path={`${BASENAME}topic`} component={Topic} name="topic"/>
-                <Route exact path={`${BASENAME}user/times`} component={UserTimeLine} name="userTimeLine"/>
-                <Route path={`${BASENAME}*`} component={NotFound} name="notFound"/>
+                <Route exact path={`${BASENAME}community`} component={Community} name="community" />
+                <Route exact path={`${BASENAME}message/:id`} component={CommunityInfo} name="message" />
+                <Route exact path={`${BASENAME}publish`} component={Publish} name="publish" />
+                <Route exact path={`${BASENAME}search`} component={Search} name="search" />
+                <Route exact path={`${BASENAME}topic`} component={Topic} name="topic" />
+                <Route exact path={`${BASENAME}user/times`} component={UserTimeLine} name="userTimeLine" />
+                <Route exact path={`${BASENAME}login`} component={Login} name="login" />
+                <Route path={`${BASENAME}*`} component={NotFound} name="notFound" />
               </Switch>
             </CSSTransitionGroup>
             {
               loading ? <Loading /> : ""
             }
           </div>
-        )}/>
+        )} />
       </div>
     )
   }
 }
 
 const mapStateToProps = state => {
-  const {appStatus, router} = state;
+  const { appStatus, router, userInfo } = state;
   return {
     loading: appStatus.loading || false,
     hideBar: appStatus.hideBar || false,
+    userInfo,
     router
   }
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return {}
+  return {
+    getUserInfoLoading: () => {
+      dispatch(getUserInfoLoading())
+    },
+    getUserInfoSuccess: (cell) => {
+      dispatch(getUserInfoSuccess(cell))
+    }
+  }
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Bootstrap);

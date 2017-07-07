@@ -20,10 +20,9 @@ let __API_ROOT = null;
 
 if (process.env.NODE_ENV === "localhost") {
 	// localhost
-	console.log(21313213)
 	__API_ROOT = {
 		weChatAuth: userApiDomain + "/auth/wechat?",
-		getUserInfo: userApiDomain + "/internal/userInfo?_type=UserTimeLine",
+		getUserInfo: userApiDomain + "/internal/userInfo?_type=User",
 		getTopicBanner: "/api/",
 		getIndexMessage: "/api/community",
 		getIndexUserList: "/api/userlist",
@@ -31,10 +30,9 @@ if (process.env.NODE_ENV === "localhost") {
 		getSearch: "/api/search"
 	}
 } else {
-	console.log(21313213)
 	__API_ROOT = {
 		weChatAuth: userApiDomain + "/auth/wechat?",
-		getUserInfo: userApiDomain + "/internal/userInfo?_type=UserTimeLine",
+		getUserInfo: userApiDomain + "/internal/userInfo?_type=User",
 		getTopicBanner: "/app/mockData/banner.json",
 		getIndexMessage: "/app/mockData/community.json",
 		getIndexUserList: "/app/mockData/userlist.json",
