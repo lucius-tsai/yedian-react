@@ -1,38 +1,61 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
 import './login.scss';
 
+import { hideBar, showBar } from '../../store/actions/appStatus';
+
 class Login extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            account: {
-                email: "test.test.com",
-                password: "123456"
-            }
-        }
-        this.submit = this.submit.bind(this);
-    }
-    submit(event) {
-        event.preventDefault();
-        let { auth } = this.props.authData;
-        auth(this.state.account, this.props.history);
-    }
-    render() {
-        return (
-            <div className="login">
-                <div className="row">
-                    <div className="col s3">&nbsp;</div>
-                    <form className="col s6" onSubmit={this.submit}>
-                        <div className="row">
-                            <div className="input-field col s12">
-                                <button>登录</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        )
-    }
+	constructor(props) {
+		super(props);
+		this.state = {
+			account: {
+				email: "test.test.com",
+				password: "123456"
+			}
+		}
+	}
+
+	componentWillMount() {
+		const self = this;
+		const { hideBar } = this.props;
+		hideBar();
+	}
+
+	submit(event) {
+		event.preventDefault();
+		let { auth } = this.props.authData;
+		auth(this.state.account, this.props.history);
+	}
+	render() {
+		return (
+			<div className="login">
+
+			</div>
+		)
+	}
+	componentWillUnmount() {
+    const {showBar} = this.props;
+    showBar(); 
+  }
 }
 
-export default Login;
+const mapStateToProps = state => {
+	const { appStatus, router } = state;
+	return {
+		router
+	}
+};
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		hideBar: () => {
+			dispatch(hideBar())
+		},
+		showBar: () => {
+			dispatch(showBar())
+		}
+	}
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

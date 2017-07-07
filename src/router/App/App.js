@@ -35,7 +35,7 @@ class Bootstrap extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      redirectPath: '',
+      redirectPath: 'community',
       loading: false,
       hideBar: false,
       router: null,
@@ -105,7 +105,6 @@ class Bootstrap extends Component {
     if(userInfo && userInfo.loading) {
       return (<Loading />)
     }
-    
     return (
       <div>
         <Route render={({ location }) => (
