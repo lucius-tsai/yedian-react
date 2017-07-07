@@ -7,8 +7,8 @@ import { cookie } from "./uitls";
 const _instance = () => {
 	let js_session = cookie("js_session");
 
-	if (process.env.NODE_ENV === "localhost" || process.env.NODE_ENV === "development") {
-		// js_session = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0OTk0MTg2OTUsImlzcyI6IjUyMWNkZWIwLTVkNzUtMTFlNy1hOTNhLTMxM2RkYTc5ZDMzYiIsImlhdCI6MTQ5OTMzMjI5NX0.nts9Uq5Dgiz64C0wizeOJlWoiSR7og4GYrBwCiRaphQ";
+	if (process.env.NODE_ENV === "localhost") {
+		js_session = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0OTk1MDU5OTIsImlzcyI6IjUyMWNkZWIwLTVkNzUtMTFlNy1hOTNhLTMxM2RkYTc5ZDMzYiIsImlhdCI6MTQ5OTQxOTU5Mn0.AhU8HTqTSmkcsrwJVwwgRY0kajDV9nI9Q8Onu5GjzU0";
 	} else {
 		js_session = cookie("js_session");
 	}

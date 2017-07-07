@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
-import './carousel.scss';
+import style from './carousel';
 
 export default class Carousel extends Component {
   constructor(props) {
@@ -65,7 +65,7 @@ export default class Carousel extends Component {
     let startX, startY, X, Y, prev, next;
     if (dom && dom.addEventListener) {
       dom.addEventListener("touchstart", (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         if (event.targetTouches.length > 1 || event.scale && event.scale !== 1) return;
         const touch = event.targetTouches[0];
         startX = touch.pageX;
@@ -90,6 +90,7 @@ export default class Carousel extends Component {
         `;
       });
       dom.addEventListener("touchmove", (e) => {
+        // e.preventDefault();
         if (event.targetTouches.length > 1 || event.scale && event.scale !== 1) return;
         const touch = event.targetTouches[0];
         const moveEndX = touch.pageX;
@@ -102,6 +103,7 @@ export default class Carousel extends Component {
         // }
       });
       dom.addEventListener("touchend", (e) => {
+        // e.preventDefault();
         let timer = null, step = 4;
         if (X > cellWidth / 2) {
           timer = setInterval(() => {
@@ -179,9 +181,11 @@ export default class Carousel extends Component {
             transitionLeave={!touchs}
             transitionEnterTimeout={enterDelay}
             transitionLeaveTimeout={leaveDelay}>
-            <div className="slide"
+            <div className={style.slide}
               key={currentIndex}>
-              <div className="pic" style={{ backgroundImage: `url(${slides[currentIndex].topicBannerPic})` }}></div>
+              <a href={slides[currentIndex].link}>
+                <div className={style.pic} style={{ backgroundImage: `url(${slides[currentIndex].topicBannerPic})` }}></div>
+              </a>
             </div>
           </CSSTransitionGroup>
       )
@@ -189,20 +193,20 @@ export default class Carousel extends Component {
     const { num, single, slides } = this.state;
     if (slides.length === 0) {
       return (
-        <div className="carousel-box"></div>
+        <div className={style.carouselBox}></div>
       )
     } else {
       return (
-        <div className="carousel-box" >
+        <div className={style.carouselBox}>
           {
             single ?
-              <div className="slider-carousel">
-                <div className="slide">
-                  <div className="pic" style={{ backgroundImage: `url(${slides[0].topicBannerPic})` }}></div>
-                </div>
+              <div className={style.sliderCarousel}>
+                <a className={style.slide}>
+                  <div className={style.pic} style={{ backgroundImage: `url(${slides[0].topicBannerPic})` }}></div>
+                </a>
               </div>
               :
-              <div className="slider-carousel" ref={this.hanldeSwiper}>
+              <div className={style.sliderCarousel} ref={this.hanldeSwiper}>
                 <div ref="transitionGroup">
                   {slide(slides)}
                 </div>

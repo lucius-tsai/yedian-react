@@ -15,6 +15,12 @@ let render = () => {
   )
 };
 
+
+
+if (process.env.NODE_ENV === "localhost") {
+  render();
+}
+
 /**
  * wechat login by auth
  */
