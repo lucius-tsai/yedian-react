@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
-import style from './carousel';
+
+import style from './carousel.css';
+import './carousel.scss';
 
 export default class Carousel extends Component {
   constructor(props) {
@@ -62,10 +64,12 @@ export default class Carousel extends Component {
     const cellWidth = window.innerWidth > 414 ? 414 : window.innerWidth;
     const { slides } = this.props;
     const self = this, len = slides.length;
-    let startX, startY, X, Y, prev, next;
+    let startX, startY, X, Y, prev, next, firstPointTime;
     if (dom && dom.addEventListener) {
       dom.addEventListener("touchstart", (e) => {
-        // e.preventDefault();
+        X = 0, Y = 0;
+        firstPointTime = new Date().getTime();
+        e.preventDefault();
         if (event.targetTouches.length > 1 || event.scale && event.scale !== 1) return;
         const touch = event.targetTouches[0];
         startX = touch.pageX;
@@ -74,23 +78,23 @@ export default class Carousel extends Component {
         clearInterval(self.timer);
         prev = this.state.currentIndex - 1 < 0 ? slides.length - 1 : this.state.currentIndex - 1;
         next = this.state.currentIndex + 1 > slides.length - 1 ? 0 : this.state.currentIndex + 1;
-        console.log(slides.length, prev, this.state.currentIndex, next);
+
         self.refs.transitionGroup.style.display = 'none';
         self.refs.swiperDom.style.display = 'block';
         self.refs.swiperDom.innerHTML = `
-          <div class="slide">
-            <div class="pic" style="background-image: url('${slides[prev].topicBannerPic}');"></div>
+          <div class="${style.slide}">
+            <div class="${style.pic}" style="background-image: url('${slides[prev].topicBannerPic}');"></div>
           </div>
-          <div class="slide">
-            <div class="pic" style="background-image: url('${slides[this.state.currentIndex].topicBannerPic}');"></div>
+          <div class="${style.slide}">
+            <div class="${style.pic}" style="background-image: url('${slides[this.state.currentIndex].topicBannerPic}');"></div>
           </div>
-          <div class="slide">
-            <div class="pic" style="background-image: url('${slides[next].topicBannerPic}');"></div>
+          <div class="${style.slide}">
+            <div class="${style.pic}" style="background-image: url('${slides[next].topicBannerPic}');"></div>
           </div>
         `;
       });
       dom.addEventListener("touchmove", (e) => {
-        // e.preventDefault();
+        e.preventDefault();
         if (event.targetTouches.length > 1 || event.scale && event.scale !== 1) return;
         const touch = event.targetTouches[0];
         const moveEndX = touch.pageX;
@@ -103,7 +107,13 @@ export default class Carousel extends Component {
         // }
       });
       dom.addEventListener("touchend", (e) => {
-        // e.preventDefault();
+        e.preventDefault();
+        const staySeconds = (new Date().getTime() - firstPointTime);
+        if (staySeconds < 400 && Math.abs(X) < 10) {
+          location.href = slides[this.state.currentIndex].link;
+          // console.log(slides[this.state.currentIndex])
+          return false;
+        }
         let timer = null, step = 4;
         if (X > cellWidth / 2) {
           timer = setInterval(() => {
@@ -174,20 +184,18 @@ export default class Carousel extends Component {
         enterDelay = leaveDelay = 0;
       }
       return (
-          <CSSTransitionGroup
-            component={element}
-            transitionName={`carousel-${animation}`}
-            transitionEnter={!touchs}
-            transitionLeave={!touchs}
-            transitionEnterTimeout={enterDelay}
-            transitionLeaveTimeout={leaveDelay}>
-            <div className={style.slide}
-              key={currentIndex}>
-              <a href={slides[currentIndex].link}>
-                <div className={style.pic} style={{ backgroundImage: `url(${slides[currentIndex].topicBannerPic})` }}></div>
-              </a>
-            </div>
-          </CSSTransitionGroup>
+        <CSSTransitionGroup
+          component={element}
+          transitionName={`carousel-${animation}`}
+          transitionEnter={!touchs}
+          transitionLeave={!touchs}
+          transitionEnterTimeout={enterDelay}
+          transitionLeaveTimeout={leaveDelay}>
+          <div className={style.slide}
+            key={currentIndex}>
+            <div className={style.pic} style={{ backgroundImage: `url(${slides[currentIndex].topicBannerPic})` }}></div>
+          </div>
+        </CSSTransitionGroup>
       )
     };
     const { num, single, slides } = this.state;
@@ -210,7 +218,7 @@ export default class Carousel extends Component {
                 <div ref="transitionGroup">
                   {slide(slides)}
                 </div>
-                <div className="swiper clearfix" ref="swiperDom"></div>
+                <div className={`${style.swiper} clearfix`} ref="swiperDom"></div>
               </div>
           }
         </div>

@@ -46,7 +46,7 @@ class Bootstrap extends Component {
   componentWillMount() {
     const { loading, userInfo, getUserInfoLoading, getUserInfoSuccess } = this.props;
     const token = cookie('js_session');
-    if (!token) {
+    if (!token && process.env.NODE_ENV !== "localhost") {
       this.setState({
         redirectPath: 'login'
       });

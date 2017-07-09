@@ -2,6 +2,13 @@ var path = require('path');
 var webpack = require('webpack');
 var fs = require('fs-extra');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+
+const extractSass = new ExtractTextPlugin({
+  filename: "[name].[hash:8].css",
+  disable: false,
+  allChunks: true
+});
 
 var getIPAdress = function () {
   var interfaces = require('os').networkInterfaces();
@@ -44,8 +51,37 @@ var webpackConfig = {
         }
       },
       {
-        test: /\.(css|scss)$/,
-        loader: "style-loader!css-loader!sass-loader"
+        test: /\.scss$/,
+        use: extractSass.extract({
+          use: [{
+            loader: "css-loader",
+          }, {
+            loader: 'postcss-loader'
+          }, {
+            loader: "sass-loader"
+          }],
+          fallback: "style-loader"
+        })
+      },
+      {
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract({
+          fallbackLoader: 'style-loader',
+          loader: [
+            {
+              loader: 'css-loader',
+              query: {
+                modules: true,
+                sourceMap: true,
+                importLoaders: 1,
+                localIdentName: '[local]_[hash:base64:5]'
+              }
+            },
+            {
+              loader: 'postcss-loader'
+            }
+          ]
+        })
       },
       {
         test: /\.json$/,
@@ -64,15 +100,6 @@ var webpackConfig = {
         test: /\.(png|jpg|jpeg|gif)$/,
         loader: 'file-loader?hash=sha512&digest=hex&name=[hash].[ext]'
       }
-
-      // {
-      // 	test: /\.(ico|png|jpg|svg)$/,
-      // 	loader: 'file-loader',
-      // 	options: {
-      // 		limit: 10240,
-      // 		name: 'images/[name].[ext]?v=[hash:base64:5]'
-      // 	}
-      // }
     ]
   },
   devServer: {
@@ -87,7 +114,7 @@ var webpackConfig = {
     proxy: {
       "/api": {
         target: "http://localhost:4003",
-        pathRewrite: {"^/api" : ""}
+        pathRewrite: { "^/api": "" }
       }
     }
   },
@@ -95,12 +122,13 @@ var webpackConfig = {
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor'
-    })
+    }),
+    extractSass
   ]
 
 }
 
-if(process.env.NODE_ENV === 'localhost') {
+if (process.env.NODE_ENV === 'localhost') {
   webpackConfig.plugins = (webpackConfig.plugins || []).concat([
     new webpack.DefinePlugin({
       'process.env': {
@@ -120,8 +148,8 @@ if(process.env.NODE_ENV === 'localhost') {
       },
       title: 'wechat-dev',
       env: {
-				production: false
-			}
+        production: false
+      }
     })
   ]);
 }
@@ -146,8 +174,8 @@ if (process.env.NODE_ENV === 'development') {
       },
       title: 'wechat-dev',
       env: {
-				production: false
-			}
+        production: false
+      }
     })
   ]);
   fs.ensureDirSync(path.resolve(__dirname, './app/mockData'));
@@ -174,8 +202,8 @@ if (process.env.NODE_ENV === 'staging') {
       },
       title: 'wechat-dev',
       env: {
-				production: false
-			}
+        production: false
+      }
     })
   ]);
   fs.ensureDirSync(path.resolve(__dirname, './app/mockData'));
@@ -211,8 +239,8 @@ if (process.env.NODE_ENV === 'production') {
       },
       title: 'wechat-dev',
       env: {
-				production: true
-			}
+        production: true
+      }
     })
   ])
 }
