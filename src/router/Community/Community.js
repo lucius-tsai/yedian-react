@@ -11,6 +11,7 @@ import './community.scss';
 import { getCommunityBanner, getHomePostList, getIndexUserList } from '../../libs/api';
 
 import { loading, loadSuccess, loadFail } from '../../store/actions/appStatus';
+import { delAll } from '../../store/actions/publish';
 
 
 let pointY = null, unbind = false;
@@ -36,7 +37,8 @@ class Community extends Component {
   componentWillMount() {
     const self = this;
     this._isMounted = true;
-    const { loading, loadSuccess, loadFail, dispatch } = this.props;
+    const { loading, loadSuccess, loadFail, dispatch, delAll } = this.props;
+    delAll();
     loading();
     unbind = false
     Promise.all([getCommunityBanner(), getHomePostList()]).then(data => {
@@ -229,6 +231,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     loadFail: () => {
       dispatch(loadFail())
+    },
+    delAll: () => {
+      dispatch(delAll())
     }
   }
 };

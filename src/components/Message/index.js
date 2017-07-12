@@ -59,7 +59,8 @@ class Message extends Component {
   }
 
   lazyLoadPictures () {
-    const currentScrollY = window.scrollY + window.innerHeight - 30;
+    const currentScrollY = window.scrollY + window.innerHeight;
+    console.log(this.refs)
     for(const i in this.refs) {
       const cell = this.refs[i];
       if(cell.offsetTop < currentScrollY) {
@@ -73,6 +74,9 @@ class Message extends Component {
   render() {
     const {profile, post, canLink, showFollow} = this.state;
     const message = post.message;
+    if(!message) {
+      return (<div>&nbsp;</div>)
+    }
     const cellWidth = window.innerWidth > 414 ? (414 - 20) * 0.32 : (window.innerWidth - 20) * 0.32;
     let picturesList = "";
     const random = () => {
@@ -86,7 +90,7 @@ class Message extends Component {
     } else if (message.images && message.images.length > 1) {
       picturesList = message.images.map((cell, index) => {
         return (
-          <div className="img-single" key={index} style={{backgroundColor: `rgb(${random()}, ${random()}, ${random()})`, height: `${cellWidth}px`}} ref={`lazyImages-${new Date().getTime()}-${index}`} data-src={cell}>
+          <div className="img-single" key={cell} style={{backgroundColor: `rgb(${random()}, ${random()}, ${random()})`, height: `${cellWidth}px`}} ref={`lazyImages-${new Date().getTime()}-${index}`} data-src={cell}>
           </div>
         )
       });
@@ -94,7 +98,7 @@ class Message extends Component {
     return (
       <div className="card-message">
         <div className="card-message-top">
-          <Avator profile={profile} showFollow={showFollow} model={"default"}/>
+          <Avator profile={post.postedBy} showFollow={showFollow} model={"default"}/>
         </div>
         {
           !canLink ?
@@ -117,7 +121,7 @@ class Message extends Component {
               </div>
             </div>
             :
-            <Link className="card-message-content clearfix" to={{pathname: `${BASENAME}message/123`}}>
+            <Link className="card-message-content clearfix" to={{pathname: `${BASENAME}message/${post._id}`, state: {id: post._id}}}>
               <h4>{message.description}</h4>
               {
                 message.images && message.images.length > 1 ?

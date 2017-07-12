@@ -38,7 +38,7 @@ const publish = (state = {}, action) => {
 			}
 		case PUBLISH_DELETE:
 			return {
-				...state, venues: null, tags: null
+				...state, venues: null, tags: null, description: '', pictures: []
 			}
 		case PUBLISH_DESCRIPTION_SAVE:
 			return {

@@ -56,6 +56,11 @@ class Publish extends Component {
     let post = {};
     const { description, tags, venues, tmpImages } = this.state;
     const { history } = this.props;
+
+    if (!description || !venues || !tags || !tags.length) {
+      return alert('信息不全！')
+    }
+
     post.postType = 0;
     post.message = {
       images: tmpImages,

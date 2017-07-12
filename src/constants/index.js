@@ -36,6 +36,7 @@ if (process.env.NODE_ENV === "localhost") {
 		createTag: commontCoreApiDomain + "/community/tag",
 		getVenues: venuesCoreApiDomain + "/public/graphql?",
 		getMessage: commontCoreApiDomain + "/community/posts",
+		getMessageInfo: commontCoreApiDomain + "/community/post",
 		postMessage: commontCoreApiDomain + "/community/post",
 		uploadFile: venuesCoreApiDomain + "/public/file/upload",
 	}
@@ -52,6 +53,7 @@ if (process.env.NODE_ENV === "localhost") {
 		createTag: commontCoreApiDomain + "/community/tag",
 		getVenues: venuesCoreApiDomain + "/public/graphql?",
 		getMessage: commontCoreApiDomain + "/community/posts",
+		getMessageInfo: commontCoreApiDomain + "/community/post",
 		postMessage: commontCoreApiDomain + "/community/post",
 		uploadFile: venuesCoreApiDomain + "/public/file/upload",
 	}

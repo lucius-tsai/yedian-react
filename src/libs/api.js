@@ -97,8 +97,8 @@ export const getIndexUserList = () => {
 /**
  * 获取消息详情
  */
-export const getMessageInfo = () => {
-	return __promiseTask(_instance().get(API_ROOT.getMessageInfo));
+export const getMessageInfo = (id) => {
+	return __promiseTask(_instance().get(`${API_ROOT.getMessageInfo}/${id}`));
 };
 
 export const getSearch = () => {

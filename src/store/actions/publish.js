@@ -40,3 +40,8 @@ export const saveDescription = newState => ({
     type: PUBLISH_DESCRIPTION_SAVE,
     newState
 });
+
+export const delAll = newState => ({
+    type: PUBLISH_DELETE,
+    newState
+});

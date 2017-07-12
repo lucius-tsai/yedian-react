@@ -20,14 +20,21 @@ class CommunityInfo extends Component {
 
   componentWillMount() {
     const self = this;
-    const {loading, loadSuccess, loadFail, hideBar} = this.props;
+    this._isMounted = true;
+    const {loading, loadSuccess, loadFail, hideBar, location} = this.props;
+    // console.log(this.props)
+    const id = location && location.state && location.state.id ? location.state.id: '';
     hideBar();
     loading();
-    getMessageInfo().then(res => {
+    getMessageInfo(id).then(res => {
       loadSuccess();
-      self.setState({
-        messageInfo: res.data
-      });
+      if(res.code === 200) {
+        self._isMounted && self.setState({
+          messageInfo: res.data[0]
+        });
+      } else {
+
+      }
     }, error => {
       loadFail();
       console.log(error);
@@ -46,10 +53,10 @@ class CommunityInfo extends Component {
     return (
       <div className="community-info-box">
         <div className="community-info">
-          <Message profile={messageInfo.profile} message={messageInfo.message} canLink={false}/>
+            <Message profile={messageInfo.profile} post={messageInfo} canLink={false}/> 
           <a href={`http://staging-app.ye-dian.com/dist/?#!/ktv/59281d23b5e3cf15cd65a88c`}>
             <VenuesCell />
-          </a>
+          </a> 
         </div>
         <Comment />
       </div>
@@ -58,10 +65,12 @@ class CommunityInfo extends Component {
 
   componentDidMount() {
     document.title = "Night+--呃呃呃～算是吧～";
+    this._isMounted = true;
   }
 
   componentWillUnmount() {
     const {showBar, router} = this.props;
+    this._isMounted = false;
     const pathname = router.location.pathname;
     if (pathname !== `${BASENAME}topic`) {
       showBar();
