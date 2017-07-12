@@ -78,7 +78,7 @@ class Message extends Component {
     
     if (message.images && message.images.length === 1) {
       picturesList = (
-        <img src={message.pictures[0]} alt="" data-src={message.pictures[0]}/>
+        <img src={message.images[0]} alt="" data-src={message.images[0]}/>
       );
     } else if (message.images && message.images.length > 1) {
       picturesList = message.images.map((cell, index) => {
