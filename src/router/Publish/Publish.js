@@ -10,29 +10,34 @@ import VenuesCell from '../../components/VenuesCell';
 import Tag from '../../components/Tag';
 
 import { hideBar, showBar, deleteUnmount } from '../../store/actions/appStatus';
-import { addPictures, removeTopic, removeVenues } from '../../store/actions/publish';
+import { addPictures, removeTag, removeVenues, saveDescription } from '../../store/actions/publish';
+
+import { postMessage, uploadFile } from '../../libs/api';
 
 class Publish extends Component {
   constructor(props) {
     super(props);
     this.state = {
       show: true,
-      topics: [],
+      description: '',
+      tags: [],
       venues: null,
       tmpImages: []
     };
     this.submit = this.submit.bind(this);
     this.handleFileUpload = this.handleFileUpload.bind(this);
-    this.removeTopic = this.removeTopic.bind(this);
+    this.removeTag = this.removeTag.bind(this);
     this.handleRemoveVenues = this.handleRemoveVenues.bind(this);
+    this.input = this.input.bind(this);
+    this.blur = this.blur.bind(this);
   }
 
   componentWillMount() {
     const { hideBar, publish, appStatus, router } = this.props;
-
     hideBar();
     this.setState({
-      topics: publish.topics,
+      tags: publish.tags,
+      description: publish.publish,
       venues: publish.venues,
       tmpImages: publish.pictures ? publish.pictures : []
     });
@@ -40,12 +45,34 @@ class Publish extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      topics: nextProps.publish.topics,
+      tags: nextProps.publish.tags,
       venues: nextProps.publish.venues,
-    })
+      description: nextProps.publish.description
+    });
   }
 
-  submit() {
+  submit(e) {
+    e.preventDefault();
+    let post = {};
+    const { description, tags, venues, tmpImages } = this.state;
+    const { history } = this.props;
+    post.postType = 0;
+    post.message = {
+      images: tmpImages,
+      description: description
+    }
+    post.tags = tags.map(cell => {
+      return {
+        tag: cell.tag
+      }
+    });
+    postMessage(post).then(res => {
+      if(res.code === 200) {
+        history.goBack();
+      }
+    }, error => {
+      console.log(error);
+    })
   }
 
   handleFileUpload(e) {
@@ -55,33 +82,51 @@ class Publish extends Component {
     const files = e.target.files;
     for (let index = 0; index < files.length; index++) {
       const file = files[index];
-      fd.append("files", file);
-      tmpImages.push(file)
+      fd.append("file", file);
+      // tmpImages.push(file)
     }
-    this.setState({
-      tmpImages: tmpImages
-    });
-    addPictures(tmpImages);
+
+    uploadFile(fd).then(res => {
+      if(res.code === 200) {
+        const tmp = tmpImages.concat(res.data);
+        this.setState({
+          tmpImages: tmp
+        });
+        addPictures(tmp);
+      }
+    }, error => {
+      console.log(error);
+    })
   }
 
   previewImage(file, e) {
-    const reader = new FileReader();
-    reader.onload = (function (pic) {
-      return function (e) {
-        if (pic) {
-          pic.style.backgroundImage = `url(${e.target.result})`;
-        }
-      };
-    })(e);
-    reader.readAsDataURL(file);
+    // const reader = new FileReader();
+    // reader.onload = (function (pic) {
+    //   return function (e) {
+    //     if (pic) {
+    //       pic.style.backgroundImage = `url(${e.target.result})`;
+    //     }
+    //   };
+    // })(e);
+    // reader.readAsDataURL(file);
   }
   loadPage() {
 
   }
+
+  input(e) {
+    this.setState({
+      description: e.target.value
+    });
+  }
+  blur(e) {
+    const { saveDescription } = this.props;
+    saveDescription(e.target.value);
+  }
+
   handleRemoveVenues(dom) {
     const self = this;
     let startX, startY, X, Y;
-    console.log(dom);
     if (!dom) return false;
     if (dom.addEventListener) {
       dom.addEventListener("touchstart", (e) => {
@@ -114,7 +159,6 @@ class Publish extends Component {
           dom.removeAttribute("style");
           dom.className = "venues-holder"
         }
-
         /**
          * 处理 删除venues
          */
@@ -126,11 +170,11 @@ class Publish extends Component {
     }
   }
 
-  removeTopic(index) {
-    const { topics } = this.state;
-    const { removeTopic } = this.props;
-    topics.splice(index, 1);
-    removeTopic(topics);
+  removeTag(index) {
+    const { tags } = this.state;
+    const { removeTag } = this.props;
+    tags.splice(index, 1);
+    removeTag(tags);
   }
 
   removeVenue() {
@@ -138,17 +182,17 @@ class Publish extends Component {
   }
 
   render() {
-    const { show, topics, venues, tmpImages, showRomeVenues } = this.state;
+    const { show, description, tags, venues, tmpImages, showRomeVenues } = this.state;
     const tmpImageStr = tmpImages.map((cell, index) => {
       return (
-        <div className="pic" key={index} ref={this.previewImage.bind(this, cell)}></div>
+        <div className="pic" key={index} style={{backgroundImage: `url(${cell})`}}></div>
       );
     });
 
     return (
       <div className="publish" style={show ? { display: "block" } : { display: "none" }}>
         <form action="" className="publish-form" ref={this.loadPage}>
-          <textarea name="" id="" cols="30" rows="10" placeholder="Show出你的夜生活～"></textarea>
+          <textarea value={description} cols="30" rows="10" placeholder="Show出你的夜生活～" onChange={this.input} onBlur={this.blur}></textarea>
           <div className="pics-box">
             {tmpImageStr}
             <div className="file">
@@ -165,7 +209,7 @@ class Publish extends Component {
               venues ?
                 <div className="venues-box">
                   <div className="venues-holder" ref={this.handleRemoveVenues}>
-                    <VenuesCell simple={true} />
+                    <VenuesCell simple={true} venuesInfo={venues} />
                     <div className="remove" onClick={this.removeVenue}>
                       <span className="remove">删除</span>
                     </div>
@@ -176,14 +220,14 @@ class Publish extends Component {
           </div>
           <div className="select">
             <p className="_cell">
-              <Link to={{ pathname: `${BASENAME}search`, state: { type: "topic" } }}>
+              <Link to={{ pathname: `${BASENAME}search`, state: { type: "tags" } }}>
                 <i className="icon ion-topic"></i> <span>添加话题</span> <i className="icon ion-angle-right"></i>
               </Link>
             </p>
             <div className="tags-box">
               {
-                topics ? topics.map((cell, index) => {
-                  return <Tag word={cell.topic} cell={cell} remove={this.removeTopic.bind(this, index)} key={index} />
+                tags ? tags.map((cell, index) => {
+                  return <Tag word={cell.tag} cell={cell} remove={this.removeTag.bind(this, index)} key={cell._id} />
                 })
                   : ""
               }
@@ -231,8 +275,11 @@ const mapDispatchToProps = (dispatch) => {
     addPictures: (cell) => {
       dispatch(addPictures(cell))
     },
-    removeTopic: (cell) => {
-      dispatch(removeTopic(cell))
+    saveDescription: (cell) => {
+      dispatch(saveDescription(cell))
+    },
+    removeTag: (cell) => {
+      dispatch(removeTag(cell))
     },
     removeVenues: () => {
       dispatch(removeVenues())

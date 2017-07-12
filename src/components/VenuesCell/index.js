@@ -9,13 +9,17 @@ export default class VenuesCell extends Component {
 		super(props);
 	}
 	render() {
-		const { simple } = this.props;
+		const { simple, venuesInfo } = this.props;
+
+		const picture = venuesInfo && venuesInfo.images ? venuesInfo.images[0] : 'http://ooa2erl8d.bkt.clouddn.com/e7e137bdcce28ade3568385ba936f480';
+		const name = venuesInfo && venuesInfo.name ? venuesInfo.name : 'UFO';
+		const id = venuesInfo && venuesInfo._id ? venuesInfo._id : '';
 		return (
 			<div className="venues-cell clearfix">
-				<div className="img-holder" style={{ backgroundImage: 'url(http://ooa2erl8d.bkt.clouddn.com/e7e137bdcce28ade3568385ba936f480)' }}>
+				<div className="img-holder" style={{ backgroundImage: `url(${picture})` }}>
 				</div>
 				<p className="name">
-					<span>欢乐迪氧吧KTV</span>
+					<span>{name}</span>
 				</p>
 				{
 					simple ? ""

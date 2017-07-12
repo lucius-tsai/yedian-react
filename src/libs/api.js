@@ -8,11 +8,10 @@ const _instance = () => {
 	let js_session = cookie("js_session");
 
 	if (process.env.NODE_ENV === "localhost") {
-		js_session = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0OTk2OTUyNjUsImlzcyI6IjUyMWNkZWIwLTVkNzUtMTFlNy1hOTNhLTMxM2RkYTc5ZDMzYiIsImlhdCI6MTQ5OTYwODg2NX0.2HBf--AfTtv_Zbkk6VVHpAQBINyQ5b5wM276Xu6UAcA";
+		js_session = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0OTk5MjY1MzYsImlzcyI6IjM0MjQ3MzkwLTY1ZjAtMTFlNy05YjRhLWRkNDViMTgxNWUyZSIsImlhdCI6MTQ5OTg0MDEzNn0.0b5DSlpE1gkki0v-WUVxfyariC2pmHDYaa-t22EuzEk";
 	} else {
 		// js_session = cookie("js_session");
 	}
-	console.log(js_session);
 	if (js_session) {
 		if (process.env.NODE_ENV === "development") { // eslint-disable-line
 			return axios.create({
@@ -74,13 +73,11 @@ export const getUserInfo = () => {
 	return __promiseTask(_instance().get(API_ROOT.getUserInfo));
 };
 
-
-
 /**
  * 获取HOME页面 Banner列表
  */
-export const getTopicBanner = () => {
-	return __promiseTask(_instance().get(API_ROOT.getTopicBanner));
+export const getCommunityBanner = () => {
+	return __promiseTask(_instance().get(API_ROOT.getCommunityBanner));
 };
 
 /**
@@ -107,3 +104,30 @@ export const getMessageInfo = () => {
 export const getSearch = () => {
 	return __promiseTask(_instance().get(API_ROOT.getSearch));
 };
+
+
+
+export const getTags = (query) => {
+	return __promiseTask(_instance().get(API_ROOT.getTags + query));
+}
+
+export const creatTag = (data) => {
+	return __promiseTask(_instance().post(API_ROOT.createTag, data));
+}
+
+
+export const getHomePostList = (data) => {
+	return __promiseTask(_instance().get(API_ROOT.getMessage, data));
+}
+
+export const getVenues = (query) => {
+	return __promiseTask(_instance().get(`${API_ROOT.getVenues}${query}`));
+}
+
+export const postMessage = (data) => {
+	return __promiseTask(_instance().post(API_ROOT.postMessage, data));
+}
+
+export const uploadFile = (data) => {
+	return __promiseTask(_instance().post(API_ROOT.uploadFile, data));
+}

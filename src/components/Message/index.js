@@ -22,7 +22,7 @@ class Message extends Component {
     super(props);
     this.state = {
       profile: defaultProfile,
-      message: defaultMessage,
+      post: defaultMessage,
       canLink: false,
       showFollow: true
     };
@@ -31,21 +31,21 @@ class Message extends Component {
   }
 
   componentWillMount() {
-    const {profile, message, canLink, showFollow} = this.props;
+    const {profile, post, canLink, showFollow} = this.props;
 
     this.setState({
       profile: profile ? profile : defaultProfile,
-      message: message ? message : defaultMessage,
+      post: post ? post : defaultMessage,
       canLink: canLink === true,
       showFollow: showFollow
     });
   }
 
   componentWillReceiveProps(nextProps) {
-    const {profile, message, canLink, showFollow} = nextProps;
+    const {profile, post, canLink, showFollow} = nextProps;
     this.setState({
       profile: profile ? profile : defaultProfile,
-      message: message ? message : defaultMessage,
+      post: post ? post : defaultMessage,
       canLink: canLink === true,
       showFollow: showFollow
     })
@@ -71,15 +71,17 @@ class Message extends Component {
   }
 
   render() {
-    const {profile, message, canLink, showFollow} = this.state;
+    const {profile, post, canLink, showFollow} = this.state;
+    const message = post.message;
     const cellWidth = window.innerWidth > 414 ? (414 - 20) * 0.32 : (window.innerWidth - 20) * 0.32;
     let picturesList = "";
-    if (message.pictures.length === 1) {
+    
+    if (message.images && message.images.length === 1) {
       picturesList = (
         <img src={message.pictures[0]} alt="" data-src={message.pictures[0]}/>
       );
-    } else if (message.pictures.length > 1) {
-      picturesList = message.pictures.map((cell, index) => {
+    } else if (message.images && message.images.length > 1) {
+      picturesList = message.images.map((cell, index) => {
         return (
           <div className="img-single" key={index} style={{backgroundColor: `#3023AE`, height: `${cellWidth}px`}} ref={`lazyImages-${new Date().getTime()}-${index}`} data-src={cell}>
           </div>
@@ -96,7 +98,7 @@ class Message extends Component {
             <div className="card-message-content">
               <h4>{message.description}</h4>
               {
-                message.pictures.length > 1 ?
+                message.images.length > 1 ?
                   <div className="imgs">
                     {picturesList}
                   </div>
@@ -115,7 +117,7 @@ class Message extends Component {
             <Link className="card-message-content clearfix" to={{pathname: `${BASENAME}message/123`}}>
               <h4>{message.description}</h4>
               {
-                message.pictures.length > 1 ?
+                message.images && message.images.length > 1 ?
                   <div className="imgs">
                     {picturesList}
                   </div>
@@ -128,7 +130,7 @@ class Message extends Component {
         }
         {
           <div className={"card-message-bottom"}>
-            <CTABar fix={canLink}/>
+            <CTABar fix={canLink} post={post}/>
           </div>
         }
 

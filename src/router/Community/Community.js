@@ -8,7 +8,7 @@ import ActionBar from '../../components/ActionBar';
 import LoadMore from '../../components/LoadMore';
 
 import './community.scss';
-import { getTopicBanner, getIndexMessage, getIndexUserList } from '../../libs/api';
+import { getCommunityBanner, getHomePostList, getIndexUserList } from '../../libs/api';
 
 import { loading, loadSuccess, loadFail } from '../../store/actions/appStatus';
 
@@ -20,7 +20,6 @@ const f = () => {
 }
 
 class Community extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -36,16 +35,29 @@ class Community extends Component {
 
   componentWillMount() {
     const self = this;
+    this._isMounted = true;
     const { loading, loadSuccess, loadFail, dispatch } = this.props;
     loading();
     unbind = false
-    Promise.all([getTopicBanner(), getIndexMessage(), getIndexUserList()]).then(data => {
+    Promise.all([getCommunityBanner(), getHomePostList()]).then(data => {
       loadSuccess();
-      self.setState({
-        slides: data[0].data,
-        messages: data[1].data,
-        specialMessages: data[1].data,
-        userList: data[2].data
+      const messages = [], slides = [];
+      data[1] && data[1].code === 200 && data[1].data.forEach(cell => {
+        if (cell.postType === 0) {
+          messages.push(cell);
+        }
+      });
+      data[0] && data[0].code === 200 && data[0].data.forEach(cell => {
+        slides.push(cell);
+      });
+
+      console.log(data);
+
+      self._isMounted && self.setState({
+        slides,
+        messages,
+        specialMessages: [],
+        userList: []
       });
     }, error => {
       loadFail();
@@ -68,25 +80,42 @@ class Community extends Component {
   }
 
   handleScroll() {
+    // console.log(this.isMounted);
+    // return false;
     const self = this;
+    this._isMounted = true;
     const { loading, messages } = self.state;
     const documentHeight = document.body.clientHeight;
     const scrollHeight = window.scrollY;
     const distance = documentHeight - scrollHeight;
-    if (distance < 700 && !self.state.loading && pointY < scrollHeight && !unbind) {
-      self.setState({
+    if (distance < 700 && !this.state.loading && pointY < scrollHeight && !unbind) {
+      self._isMounted && self.setState({
         loading: true
       });
 
-      getIndexMessage().then(res => {
-        const merge = messages.concat(res.data);
-        // console.log(res)
-        !unbind && self.setState({
-          loading: false,
-          messages: merge
-        });
+      getHomePostList().then(res => {
+        if (res.code === 200) {
+          const list = [];
+          res.data.forEach(cell => {
+            if (cell.postType === 0) {
+              list.push(cell);
+            }
+          });
+          const merge = messages.concat(list);
+          // console.log(res)
+          !unbind && self._isMounted && self.setState({
+            loading: false,
+            messages: merge
+          });
+        } else {
+          self._isMounted && self.setState({
+            loading: false
+          });
+        }
       }, error => {
-
+        self._isMounted && self.setState({
+          loading: false
+        });
       });
     }
   }
@@ -101,14 +130,13 @@ class Community extends Component {
     window.addEventListener("click", f);
   }
 
-
   render() {
     const { slides, messages, userList, loading, specialMessages } = this.state;
 
     const messagesList = messages.map((cell, index) => {
       return (
         <li className="message-cell" key={index}>
-          <Message profile={cell.profile} message={cell.message} canLink={true} />
+          <Message profile={cell.profile} post={cell} canLink={true} />
         </li>
       )
     });
@@ -116,7 +144,7 @@ class Community extends Component {
     const specialMessagesList = specialMessages.map((cell, index) => {
       return (
         <li className="message-cell" key={index}>
-          <Message profile={cell.profile} message={cell.message} canLink={true} />
+          <Message profile={cell.profile} post={cell} canLink={true} />
         </li>
       )
     });
@@ -174,10 +202,12 @@ class Community extends Component {
 
   componentDidMount() {
     document.title = "Night+--社区";
+    this._isMounted = true;
   }
 
   componentWillUnmount() {
-    
+    this._isMounted = false;
+    console.log(12333333)
   }
 }
 

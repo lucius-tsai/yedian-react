@@ -21,8 +21,8 @@ if (process.env.NODE_ENV === "localhost") {
   render();
 } else {
   /**
- * wechat login by auth
- */
+   * wechat login by auth
+   */
   const token = cookie('js_session');
   const isWechat = !!(/micromessenger|webbrowser/i).test(navigator.userAgent);
   if (!token) {
