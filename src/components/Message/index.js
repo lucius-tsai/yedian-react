@@ -75,6 +75,9 @@ class Message extends Component {
     const message = post.message;
     const cellWidth = window.innerWidth > 414 ? (414 - 20) * 0.32 : (window.innerWidth - 20) * 0.32;
     let picturesList = "";
+    const random = () => {
+      return Math.floor(Math.random()*255);
+    }
     
     if (message.images && message.images.length === 1) {
       picturesList = (
@@ -83,7 +86,7 @@ class Message extends Component {
     } else if (message.images && message.images.length > 1) {
       picturesList = message.images.map((cell, index) => {
         return (
-          <div className="img-single" key={index} style={{backgroundColor: `#3023AE`, height: `${cellWidth}px`}} ref={`lazyImages-${new Date().getTime()}-${index}`} data-src={cell}>
+          <div className="img-single" key={index} style={{backgroundColor: `rgb(${random()}, ${random()}, ${random()})`, height: `${cellWidth}px`}} ref={`lazyImages-${new Date().getTime()}-${index}`} data-src={cell}>
           </div>
         )
       });

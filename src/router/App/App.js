@@ -79,10 +79,6 @@ class Bootstrap extends Component {
       userInfo: nextProps.userInfo
     });
   }
-
-  componentDidMount() {
-
-  }
   
   render() {
     let key = "app";
@@ -143,6 +139,12 @@ class Bootstrap extends Component {
       </div>
     )
   }
+
+  componentDidMount() {
+    const height =  window.innerHeight;
+    document.getElementById("app").style.height = `${height}px`;
+  }
+
 }
 
 const mapStateToProps = state => {
