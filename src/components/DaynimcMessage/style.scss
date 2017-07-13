@@ -1,0 +1,43 @@
+.message-animate-cell {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  .avator-box {
+    width: 36px; // float: left;
+  }
+  ._text {
+    flex: 1;
+    width: 100px;
+    height: 26px;
+    font-size: 14px;
+    color: #666666;
+    text-align: left;
+    word-break: keep-all;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/**
+ *  渐变
+ */
+.daynimc-fade-enter {
+  position: absolute;
+  opacity: 0.01;
+  transition: .7s opacity ease-in-out;
+}
+
+.daynimc-fade-enter.daynimc-fade-enter-active {
+  opacity: 1;
+}
+
+.daynimc-fade-leave {
+  position: absolute;
+  opacity: 1;
+  transition: .7s opacity ease-in-out;
+}
+
+.daynimc-fade-leave.daynimc-fade-leave-active {
+  opacity: 0.01;
+}

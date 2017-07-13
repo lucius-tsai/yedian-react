@@ -8,7 +8,7 @@ import {
 } from '../actions/appStatus';
 
 const appStatus = (state = { loading: false }, action) => {
-    console.log(action);
+    // console.log(action);
     switch (action.type) {
         case APP_REQUEST_LOADING:
             return {

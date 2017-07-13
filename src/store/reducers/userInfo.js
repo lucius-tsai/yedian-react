@@ -5,7 +5,7 @@ import {
 } from '../actions/userInfo';
 
 const publish = (state = {}, action) => {
-	console.log(action);
+	// console.log(action);
 	switch (action.type) {
 		case GET_USER_INFO_REQUEST:
 			return {

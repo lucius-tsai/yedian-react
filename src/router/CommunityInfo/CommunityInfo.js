@@ -1,14 +1,14 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {Link} from 'react-router-dom';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import Message from '../../components/Message';
 import VenuesCell from '../../components/VenuesCell';
 import Comment from '../../components/Comment';
 import './communityInfo.scss';
-import {getMessageInfo} from '../../libs/api';
+import { getMessageInfo } from '../../libs/api';
 
-import {loading, loadSuccess, loadFail, hideBar, showBar} from '../../store/actions/appStatus';
+import { loading, loadSuccess, loadFail, hideBar, showBar } from '../../store/actions/appStatus';
 
 class CommunityInfo extends Component {
   constructor(props) {
@@ -21,14 +21,14 @@ class CommunityInfo extends Component {
   componentWillMount() {
     const self = this;
     this._isMounted = true;
-    const {loading, loadSuccess, loadFail, hideBar, location} = this.props;
+    const { loading, loadSuccess, loadFail, hideBar, location } = this.props;
     // console.log(this.props)
-    const id = location && location.state && location.state.id ? location.state.id: '';
+    const id = location && location.state && location.state.id ? location.state.id : '';
     hideBar();
     loading();
     getMessageInfo(id).then(res => {
       loadSuccess();
-      if(res.code === 200) {
+      if (res.code === 200) {
         self._isMounted && self.setState({
           messageInfo: res.data[0]
         });
@@ -49,14 +49,26 @@ class CommunityInfo extends Component {
   }
 
   render() {
-    const {messageInfo} = this.state;
+    const { messageInfo } = this.state;
+    let venuesID = null;
+    messageInfo && messageInfo.affiliates && messageInfo.affiliates.forEach(cell => {
+      venuesID = cell.type === 'venues' ? cell.targetId : null;
+    });
     return (
       <div className="community-info-box">
         <div className="community-info">
-            <Message profile={messageInfo.profile} post={messageInfo} canLink={false}/> 
-          <a href={`http://staging-app.ye-dian.com/dist/?#!/ktv/59281d23b5e3cf15cd65a88c`}>
-            <VenuesCell />
-          </a> 
+          {
+            messageInfo ?
+              <Message profile={messageInfo.profile} post={messageInfo} canLink={false} />
+              : ""
+          }
+          {
+            venuesID ?
+              <a href={`http://staging-app.ye-dian.com/dist/?#!/ktv/${venuesID}`}>
+                <VenuesCell />
+              </a>
+              : ""
+          }
         </div>
         <Comment />
       </div>
@@ -69,7 +81,7 @@ class CommunityInfo extends Component {
   }
 
   componentWillUnmount() {
-    const {showBar, router} = this.props;
+    const { showBar, router } = this.props;
     this._isMounted = false;
     const pathname = router.location.pathname;
     if (pathname !== `${BASENAME}topic`) {
@@ -79,7 +91,7 @@ class CommunityInfo extends Component {
 }
 
 const mapStateToProps = state => {
-  const {router, appStatus} = state;
+  const { router, appStatus } = state;
   return {
     router
   }

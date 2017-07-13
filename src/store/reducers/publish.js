@@ -10,7 +10,7 @@ import {
 } from '../actions/publish';
 
 const publish = (state = {}, action) => {
-	console.log(action);
+	// console.log(action);
 	switch (action.type) {
 		case PUBLISH_VENUES_ADD:
 			return {

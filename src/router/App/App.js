@@ -141,8 +141,6 @@ class Bootstrap extends Component {
   }
 
   componentDidMount() {
-    const height =  window.innerHeight;
-    document.getElementById("app").style.height = `${height}px`;
   }
 
 }

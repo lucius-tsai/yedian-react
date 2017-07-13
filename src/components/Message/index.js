@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {Link, withRouter} from 'react-router-dom';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { Link, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import Avator from '../Avator';
 import CTABar from '../CTABar';
 import './message.scss';
@@ -31,7 +31,7 @@ class Message extends Component {
   }
 
   componentWillMount() {
-    const {profile, post, canLink, showFollow} = this.props;
+    const { profile, post, canLink, showFollow } = this.props;
 
     this.setState({
       profile: profile ? profile : defaultProfile,
@@ -42,7 +42,7 @@ class Message extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {profile, post, canLink, showFollow} = nextProps;
+    const { profile, post, canLink, showFollow } = nextProps;
     this.setState({
       profile: profile ? profile : defaultProfile,
       post: post ? post : defaultMessage,
@@ -58,39 +58,39 @@ class Message extends Component {
     }
   }
 
-  lazyLoadPictures () {
-    const currentScrollY = window.scrollY + window.innerHeight;
-    console.log(this.refs)
-    for(const i in this.refs) {
+  lazyLoadPictures(e) {
+    const currentScrollY = window.scrollY + window.innerHeight - 40;
+    for (const i in this.refs) {
       const cell = this.refs[i];
-      if(cell.offsetTop < currentScrollY) {
+      if (cell.offsetTop < currentScrollY) {
         const originSrc = cell.getAttribute("data-src");
         cell.style.backgroundImage = `url(${originSrc})`;
         delete this.refs[i];
       }
     }
+    e && e.target && e.target.removeEventListener(e.type, this.lazyLoadPictures);
   }
 
   render() {
-    const {profile, post, canLink, showFollow} = this.state;
+    const { profile, post, canLink, showFollow } = this.state;
     const message = post.message;
-    if(!message) {
-      return (<div>&nbsp;</div>)
+    const tags = post.tags;
+    if (!message) {
+      return (<div></div>)
     }
     const cellWidth = window.innerWidth > 414 ? (414 - 20) * 0.32 : (window.innerWidth - 20) * 0.32;
     let picturesList = "";
     const random = () => {
-      return Math.floor(Math.random()*255);
+      return Math.floor(Math.random() * 255);
     }
-    
     if (message.images && message.images.length === 1) {
       picturesList = (
-        <img src={message.images[0]} alt="" data-src={message.images[0]}/>
+        <img src={message.images[0]} alt="" data-src={message.images[0]} />
       );
     } else if (message.images && message.images.length > 1) {
       picturesList = message.images.map((cell, index) => {
         return (
-          <div className="img-single" key={cell} style={{backgroundColor: `rgb(${random()}, ${random()}, ${random()})`, height: `${cellWidth}px`}} ref={`lazyImages-${new Date().getTime()}-${index}`} data-src={cell}>
+          <div className="img-single" key={`${post._id}${index}`} style={{ backgroundColor: `rgb(${random()}, ${random()}, ${random()})`, height: `${cellWidth}px` }} ref={`lazyImages-${new Date().getTime()}-${index}`} data-src={cell}>
           </div>
         )
       });
@@ -98,7 +98,7 @@ class Message extends Component {
     return (
       <div className="card-message">
         <div className="card-message-top">
-          <Avator profile={post.postedBy} showFollow={showFollow} model={"default"}/>
+          <Avator profile={post.postedBy} showFollow={showFollow} model={"default"} />
         </div>
         {
           !canLink ?
@@ -115,13 +115,16 @@ class Message extends Component {
                   </p>
               }
               <div className="topics">
-                <a href="#">#最浪漫的夜生活#</a>
-                <a href="#">#最浪漫的夜生活#</a>
+                {
+                  tags.map(cell =>{
+                    return (<a key={cell._id}>{`#${cell.tag}#`}</a>)
+                  })
+                }
                 <span className="city">上海</span>
               </div>
             </div>
             :
-            <Link className="card-message-content clearfix" to={{pathname: `${BASENAME}message/${post._id}`, state: {id: post._id}}}>
+            <Link className="card-message-content clearfix" to={{ pathname: `${BASENAME}message/${post._id}`, state: { id: post._id } }}>
               <h4>{message.description}</h4>
               {
                 message.images && message.images.length > 1 ?
@@ -137,7 +140,7 @@ class Message extends Component {
         }
         {
           <div className={"card-message-bottom"}>
-            <CTABar fix={canLink} post={post}/>
+            <CTABar fix={canLink} post={post} />
           </div>
         }
 
@@ -146,17 +149,27 @@ class Message extends Component {
   }
 
   componentDidMount() {
+    const { post } = this.state;
     window.addEventListener("scroll", this.lazyLoadPictures);
-    this.lazyLoadPictures();
-
+    if (post && post.message && post.message.images) {
+      this.lazyLoadPictures();
+    }
   }
+
+  componentDidUpdate() {
+    const { post } = this.state;
+    if (post && post.message && post.message.images) {
+      this.lazyLoadPictures();
+    }
+  }
+
   componentWillUnmount() {
     window.removeEventListener("scroll", this.lazyLoadPictures)
   }
 }
 
 const mapStateToProps = state => {
-  const {router} = state;
+  const { router } = state;
   return {
     router
   }

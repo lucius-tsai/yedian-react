@@ -71,6 +71,12 @@ class Publish extends Component {
         tag: cell.tag
       }
     });
+
+    post.affiliates = [{
+      type: 'venues',
+      targetId: venues._id
+    }];
+    
     postMessage(post).then(res => {
       if(res.code === 200) {
         history.goBack();
