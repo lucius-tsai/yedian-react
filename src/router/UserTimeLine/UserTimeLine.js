@@ -89,7 +89,7 @@ class UserTimeLine extends Component {
     const messagesList = messages.map((cell, index) => {
       return (
         <li className="message-cell" key={index}>
-          <Message profile={cell.profile} post={cell} canLink={true} showFollow={false} />
+          <Message profile={cell.profile} post={cell} canLink={true} showFollow={false} disabledLink={true} />
         </li>
       )
     });

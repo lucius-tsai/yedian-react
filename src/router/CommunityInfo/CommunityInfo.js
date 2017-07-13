@@ -6,7 +6,7 @@ import Message from '../../components/Message';
 import VenuesCell from '../../components/VenuesCell';
 import Comment from '../../components/Comment';
 import './communityInfo.scss';
-import { getMessageInfo } from '../../libs/api';
+import { getMessageInfo, getVenues } from '../../libs/api';
 
 import { loading, loadSuccess, loadFail, hideBar, showBar } from '../../store/actions/appStatus';
 
@@ -14,7 +14,8 @@ class CommunityInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      messageInfo: {}
+      messageInfo: {},
+      venuesInfo: null
     }
   }
 
@@ -28,12 +29,33 @@ class CommunityInfo extends Component {
     loading();
     getMessageInfo(id).then(res => {
       loadSuccess();
-      if (res.code === 200) {
+      if (res.code === 200 && res.data && res.data.length) {
         self._isMounted && self.setState({
           messageInfo: res.data[0]
         });
-      } else {
+        res.data[0].affiliates && res.data[0].affiliates.forEach(cell => {
+          if(cell.type === 'venues') {
+            const query = `query=query
+            {
+              venues(isValid: 1, isDeleted: 0, _id: "${cell.targetId}"){
+                count,
+                rows{
+                  _id, name, images
+                }
+              }
+            }`
+            getVenues(query).then(res => {
+              if(res.code === 200 && res.data.venues.count === 1) {
+                const venuesInfo = res.data.venues.rows[0];
+                self._isMounted && self.setState({
+                  venuesInfo
+                });
+              }
+            }, error => {
 
+            })
+          }
+        });
       }
     }, error => {
       loadFail();
@@ -49,7 +71,7 @@ class CommunityInfo extends Component {
   }
 
   render() {
-    const { messageInfo } = this.state;
+    const { messageInfo, venuesInfo } = this.state;
     let venuesID = null;
     messageInfo && messageInfo.affiliates && messageInfo.affiliates.forEach(cell => {
       venuesID = cell.type === 'venues' ? cell.targetId : null;
@@ -59,18 +81,18 @@ class CommunityInfo extends Component {
         <div className="community-info">
           {
             messageInfo ?
-              <Message profile={messageInfo.profile} post={messageInfo} canLink={false} />
+              <Message post={messageInfo} canLink={false} />
               : ""
           }
           {
-            venuesID ?
-              <a href={`http://staging-app.ye-dian.com/dist/?#!/ktv/${venuesID}`}>
-                <VenuesCell />
+            venuesInfo ?
+              <a href={`http://staging-app.ye-dian.com/dist/?#!/ktv/${venuesInfo._id}`}>
+                <VenuesCell venuesInfo={venuesInfo}/>
               </a>
               : ""
           }
         </div>
-        <Comment />
+        <Comment target={messageInfo} />
       </div>
     )
   }

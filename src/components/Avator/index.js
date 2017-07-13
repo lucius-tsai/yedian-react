@@ -6,13 +6,26 @@ import { parseDate } from '../../libs/uitls';
 
 import defaultAvator from './default.jpg';
 
+/**
+ * [头像组件]
+ * profile [用户的名字和头像等]
+ * date [日期]
+ * size [头像大小]
+ * style [头像样式]
+ * showFollow [是否显示关注按钮]
+ * model [头像样式]
+ * disabledLink [头像是否可以点击]
+ * affiliates [商家等头像特殊处理]
+ * @export
+ * @class Avator
+ * @extends {Component}
+ */
 export default class Avator extends Component {
   constructor(props) {
     super(props);
   }
-
   componentWillMount() {
-    let { size, style, showFollow, profile, model, date, disabledLink } = this.props;
+    let { size, style, showFollow, profile, model, date, disabledLink, affiliates } = this.props;
     this.setState({
       profile: profile ? profile : {
         headImgUrl: "http://www.wangmingdaquan.cc/tx61/66.jpg",
@@ -23,7 +36,8 @@ export default class Avator extends Component {
       style: style ? style : "horizontal", //vertical
       showFollow: showFollow ? showFollow : false,
       model: model ? model : undefined,
-      disabledLink: disabledLink ? disabledLink : false
+      disabledLink: disabledLink ? disabledLink : false,
+      affiliates: affiliates ? affiliates : null
     })
   }
 
@@ -31,14 +45,14 @@ export default class Avator extends Component {
   }
 
   render() {
-    const { profile, size, style, showFollow, model, date, disabledLink } = this.state;
+    const { profile, size, style, showFollow, model, date, disabledLink, affiliates } = this.state;
     const query = '?fromwhere=community';
     let venuesId = '';
-    // post.affiliates.forEach(cell => {
-    //   if (cell.type === 'VENUES') {
-    //     venuesId = cell.targetId;
-    //   }
-    // });
+    affiliates && affiliates.forEach(cell => {
+      if (cell.type === 'VENUES') {
+        venuesId = cell.targetId;
+      }
+    });
     if (profile.userType === 'User') {
       if (disabledLink) {
         return (
@@ -156,7 +170,5 @@ export default class Avator extends Component {
           </a>
         )
     }
-
-
   }
 }

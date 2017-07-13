@@ -68,7 +68,7 @@ class Community extends Component {
                 break;
             }
           });
-          
+
           cell.customizedComponents && cell.customizedComponents.forEach(item => {
             switch (item.name) {
               case 'component-paragraph':
@@ -206,7 +206,9 @@ class Community extends Component {
     const scrollHeight = window.scrollY;
     const distance = documentHeight - scrollHeight;
     if (distance < 700 && !this.state.loading && pointY < scrollHeight && !unbind) {
-      self.fetch();
+      setTimeout(() => {
+        self.fetch();
+      }, 500);
     }
     setImmediate(() => {
       pointY = scrollHeight;
@@ -286,8 +288,11 @@ class Community extends Component {
   componentDidMount() {
     document.title = "Night+--社区";
     this._isMounted = true;
-    document.addEventListener("touchstart", this.handleTouch);
-    window.addEventListener("scroll", this.handleScroll);
+    const { messages, pagination } = this.state;
+    if (messages.length && pagination && pagination.total && pagination.total > messages.length) {
+      document.addEventListener("touchstart", this.handleTouch);
+      window.addEventListener("scroll", this.handleScroll);
+    }
   }
 
   componentWillUnmount() {

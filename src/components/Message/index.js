@@ -5,11 +5,6 @@ import Avator from '../Avator';
 import CTABar from '../CTABar';
 import './message.scss';
 
-const defaultProfile = {
-  avator: "http://www.wangmingdaquan.cc/tx61/66.jpg",
-  username: "towne",
-  date: "2017-10-8"
-};
 const defaultMessage = {
   description: "呃呃呃～算是吧～",
   pictures: [
@@ -17,45 +12,44 @@ const defaultMessage = {
   ]
 };
 
+/**
+ * [社区消息组件]
+ * post 消息对象
+ * canLink 消息卡片是否可以点击
+ * showFollow 是否可以关注
+ * @class Message
+ * @extends {Component}
+ */
 class Message extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      profile: defaultProfile,
       post: defaultMessage,
       canLink: false,
       showFollow: true
     };
-    this.go = this.go.bind(this);
+
     this.lazyLoadPictures = this.lazyLoadPictures.bind(this);
   }
 
   componentWillMount() {
-    const { profile, post, canLink, showFollow } = this.props;
-
+    const { post, canLink, showFollow, disabledLink } = this.props;
     this.setState({
-      profile: profile ? profile : defaultProfile,
       post: post ? post : defaultMessage,
       canLink: canLink === true,
-      showFollow: showFollow
+      showFollow: showFollow,
+      disabledLink: disabledLink ? disabledLink : false
     });
   }
 
   componentWillReceiveProps(nextProps) {
-    const { profile, post, canLink, showFollow } = nextProps;
+    const { post, canLink, showFollow, disabledLink } = nextProps;
     this.setState({
-      profile: profile ? profile : defaultProfile,
       post: post ? post : defaultMessage,
       canLink: canLink === true,
-      showFollow: showFollow
+      showFollow: showFollow,
+      disabledLink: disabledLink ? disabledLink : false
     })
-  }
-
-  go(event, router) {
-    console.log(this);
-    console.log(event, router);
-    if (router) {
-    }
   }
 
   lazyLoadPictures(e) {
@@ -72,16 +66,12 @@ class Message extends Component {
   }
 
   render() {
-    const { profile, post, canLink, showFollow } = this.state;
+    const { post, canLink, showFollow, disabledLink } = this.state;
     const message = post.message;
+    const affiliates = post.affiliates;
     const tags = post.tags;
     const query = '?fromwhere=community';
-    let venuesId = '';
-    post.affiliates && post.affiliates.forEach(cell => {
-      if (cell.type === 'VENUES') {
-        venuesId = cell.targetId;
-      }
-    });
+    
     if (!message) {
       return (<div></div>)
     }
@@ -105,7 +95,7 @@ class Message extends Component {
     return (
       <div className="card-message">
         <div className="card-message-top">
-          <Avator profile={post.postedBy} showFollow={showFollow} model={"default"} />
+          <Avator profile={post.postedBy} showFollow={showFollow} model={"default"} disabledLink={disabledLink} affiliates={affiliates}/>
         </div>
         {
           !canLink && <div className="card-message-content">
@@ -146,7 +136,7 @@ class Message extends Component {
           </Link>
         }
         {
-          canLink && post.postType === 1 && <a className="card-message-content clearfix" href={`${location.origin}/dist/?#!/ktv/${venuesId}${query}`}>
+          canLink && post.postType === 1 && <a className="card-message-content clearfix" href={`${location.origin}/dist/?#!/venues/event/${post._id}${query}`}>
             <h4>{message.description}</h4>
             {
               message.images && message.images.length > 1 ?
@@ -190,16 +180,16 @@ class Message extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  const { router } = state;
-  return {
-    router
-  }
-};
+// const mapStateToProps = state => {
+//   const { router } = state;
+//   return {
+//     router
+//   }
+// };
 
-const mapDispatchToProps = (dispatch) => {
-  return {}
-};
+// const mapDispatchToProps = (dispatch) => {
+//   return {}
+// };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Message));
-// export default Message;
+// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Message));
+export default Message;
