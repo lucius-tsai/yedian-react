@@ -64,7 +64,7 @@ class UserTimeLine extends Component {
         });
         const merge = messages.concat(list);
         // console.log(res)
-        !unbind && self.setState({
+        !unbind && self._isMounted && self.setState({
           loading: false,
           messages: merge,
           pagination: {
@@ -73,7 +73,7 @@ class UserTimeLine extends Component {
           }
         });
       } else {
-        self.setState({
+        self._isMounted && self.setState({
           loading: false
         });
       }
@@ -110,6 +110,15 @@ class UserTimeLine extends Component {
         </div>
       </div>
     )
+  }
+
+  componentDidMount() {
+    document.title = "Night+--社区";
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 }
 

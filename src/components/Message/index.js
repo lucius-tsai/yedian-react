@@ -75,6 +75,13 @@ class Message extends Component {
     const { profile, post, canLink, showFollow } = this.state;
     const message = post.message;
     const tags = post.tags;
+    const query = '?fromwhere=community';
+    let venuesId = '';
+    post.affiliates && post.affiliates.forEach(cell => {
+      if (cell.type === 'VENUES') {
+        venuesId = cell.targetId;
+      }
+    });
     if (!message) {
       return (<div></div>)
     }
@@ -101,42 +108,57 @@ class Message extends Component {
           <Avator profile={post.postedBy} showFollow={showFollow} model={"default"} />
         </div>
         {
-          !canLink ?
-            <div className="card-message-content">
-              <h4>{message.description}</h4>
+          !canLink && <div className="card-message-content">
+            <h4>{message.description}</h4>
+            {
+              message.images.length > 1 ?
+                <div className="imgs">
+                  {picturesList}
+                </div>
+                :
+                <p className="img-single">
+                  {picturesList}
+                </p>
+            }
+            <div className="topics">
               {
-                message.images.length > 1 ?
-                  <div className="imgs">
-                    {picturesList}
-                  </div>
-                  :
-                  <p className="img-single">
-                    {picturesList}
-                  </p>
+                tags.map(cell => {
+                  return (<a key={cell._id}>{`#${cell.tag}#`}</a>)
+                })
               }
-              <div className="topics">
-                {
-                  tags.map(cell =>{
-                    return (<a key={cell._id}>{`#${cell.tag}#`}</a>)
-                  })
-                }
-                <span className="city">上海</span>
-              </div>
+              <span className="city">上海</span>
             </div>
-            :
-            <Link className="card-message-content clearfix" to={{ pathname: `${BASENAME}message/${post._id}`, state: { id: post._id } }}>
-              <h4>{message.description}</h4>
-              {
-                message.images && message.images.length > 1 ?
-                  <div className="imgs">
-                    {picturesList}
-                  </div>
-                  :
-                  <p className="img-single">
-                    {picturesList}
-                  </p>
-              }
-            </Link>
+          </div>
+        }
+        {
+          canLink && post.postType === 0 && <Link className="card-message-content clearfix" to={{ pathname: `${BASENAME}message/${post._id}`, state: { id: post._id } }}>
+            <h4>{message.description}</h4>
+            {
+              message.images && message.images.length > 1 ?
+                <div className="imgs">
+                  {picturesList}
+                </div>
+                :
+                <p className="img-single">
+                  {picturesList}
+                </p>
+            }
+          </Link>
+        }
+        {
+          canLink && post.postType === 1 && <a className="card-message-content clearfix" href={`${location.origin}/dist/?#!/ktv/${venuesId}${query}`}>
+            <h4>{message.description}</h4>
+            {
+              message.images && message.images.length > 1 ?
+                <div className="imgs">
+                  {picturesList}
+                </div>
+                :
+                <p className="img-single">
+                  {picturesList}
+                </p>
+            }
+          </a>
         }
         {
           <div className={"card-message-bottom"}>

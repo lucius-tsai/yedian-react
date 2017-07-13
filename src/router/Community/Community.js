@@ -19,10 +19,6 @@ import { delAll } from '../../store/actions/publish';
 
 let pointY = null, unbind = false;
 
-const f = () => {
-  console.log(123123)
-}
-
 class Community extends Component {
   constructor(props) {
     super(props);
@@ -33,9 +29,10 @@ class Community extends Component {
       userList: [],
       loading: false,
       pagination: {
-				pageSize: 10,
-				current: 1
-			}
+        pageSize: 10,
+        current: 1
+      },
+      completed: false,
     };
     this.handleLoad = this.handleLoad.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
@@ -55,10 +52,33 @@ class Community extends Component {
       offset: (pagination.current - 1) * pagination.pageSize
     })]).then(data => {
       loadSuccess();
-      const messages = [], slides = [];
+      const messages = [], slides = [], total = data[1].count;
 
       data[1] && data[1].code === 200 && data[1].data.forEach(cell => {
         if (cell.postType === 0) {
+          messages.push(cell);
+        } else if (cell.postType === 1) {
+          let images = [], description = '';
+          cell.defaultComponents && cell.defaultComponents.forEach(item => {
+            switch (item.name) {
+              case 'component-banner':
+                images = [item.content[0].url];
+                break;
+              default:
+                break;
+            }
+          });
+          
+          cell.customizedComponents && cell.customizedComponents.forEach(item => {
+            switch (item.name) {
+              case 'component-paragraph':
+                description = item.content;
+                break;
+              default:
+                break;
+            }
+          });
+          cell.message = { description, images };
           messages.push(cell);
         }
       });
@@ -73,6 +93,7 @@ class Community extends Component {
         dynamicMessages: messages,
         userList: [],
         pagination: {
+          total,
           pageSize: 10,
           current: pagination.current++
         }
@@ -85,12 +106,11 @@ class Community extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { router } = nextProps
-    if (this.props.router.location.pathname !== router.location.pathname) {
-      unbind = true;
-      document.removeEventListener("touchstart", this.handleTouch);
-      window.removeEventListener("scroll", this.handleScroll);
-      window.removeEventListener("click", f);
-    }
+    // if (this.props.router.location.pathname !== router.location.pathname) {
+    //   unbind = true;
+    //   document.removeEventListener("touchstart", this.handleTouch);
+    //   window.removeEventListener("scroll", this.handleScroll);
+    // }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -101,23 +121,67 @@ class Community extends Component {
     const self = this;
     const { pagination, messages } = this.state;
     const { loading, loadSuccess, loadFail } = this.props;
+
+    if (messages.length === pagination.total) {
+    }
+
+    if (this.state.completed) {
+      console.log('over');
+      return false;
+    }
+    const offset = !(pagination.current - 1) ? pagination.pageSize : (pagination.current - 1) * pagination.pageSize;
     getHomePostList({
       limit: pagination.pageSize,
-      offset: (pagination.current - 1) * pagination.pageSize
+      offset
     }).then(res => {
       if (res.code === 200) {
-        const list = [];
+        const list = [], total = res.count;
         res.data.forEach(cell => {
           if (cell.postType === 0) {
+            list.push(cell);
+          } else if (cell.postType === 1) {
+            let images = [], description = '';
+            cell.defaultComponents && cell.defaultComponents.forEach(item => {
+              switch (cell.name) {
+                case 'component-banner':
+                  images = cell.content;
+                  break;
+
+                default:
+                  break;
+              }
+            });
+            cell.customizedComponents && cell.customizedComponents.forEach(item => {
+              switch (cell.name) {
+                case 'component-paragraph':
+                  description = cell.content;
+                  break;
+                default:
+                  break;
+              }
+            });
+            cell.message = { description, images };
             list.push(cell);
           }
         });
         const merge = messages.concat(list);
+        if (merge.length === total) {
+          console.log("over");
+        }
+
+        if (!res.data.length) {
+          document.removeEventListener("touchstart", this.handleTouch);
+          window.removeEventListener("scroll", this.handleScroll);
+          self.setState({
+            completed: true
+          });
+        }
         // console.log(res)
         !unbind && self._isMounted && self.setState({
           loading: false,
           messages: merge,
           pagination: {
+            total,
             pageSize: 10,
             current: pagination.current++
           }
@@ -134,9 +198,7 @@ class Community extends Component {
     });
   }
 
-  handleScroll() {
-    // console.log(this.isMounted);
-    // return false;
+  handleScroll(e) {
     const self = this;
     this._isMounted = true;
     const { loading } = self.state;
@@ -146,16 +208,14 @@ class Community extends Component {
     if (distance < 700 && !this.state.loading && pointY < scrollHeight && !unbind) {
       self.fetch();
     }
+    setImmediate(() => {
+      pointY = scrollHeight;
+    });
   }
-  handleTouch() {
+  handleTouch(e) {
     pointY = window.scrollY;
   }
   handleLoad(dom) {
-    const self = this;
-    const { loading, messages } = this.state;
-    document.addEventListener("touchstart", this.handleTouch);
-    window.addEventListener("scroll", this.handleScroll);
-    window.addEventListener("click", f);
   }
 
   render() {
@@ -226,10 +286,14 @@ class Community extends Component {
   componentDidMount() {
     document.title = "Night+--社区";
     this._isMounted = true;
+    document.addEventListener("touchstart", this.handleTouch);
+    window.addEventListener("scroll", this.handleScroll);
   }
 
   componentWillUnmount() {
     this._isMounted = false;
+    document.removeEventListener("touchstart", this.handleTouch);
+    window.removeEventListener("scroll", this.handleScroll);
   }
 }
 

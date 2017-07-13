@@ -125,9 +125,10 @@ export const creatTag = (data) => {
 	return __promiseTask(_instance().post(API_ROOT.createTag, data));
 }
 
-
 export const getHomePostList = (data) => {
-	return __promiseTask(_instance().get(API_ROOT.getMessage, data));
+	return __promiseTask(_instance().get(API_ROOT.getMessage, {
+		params: data
+	}));
 }
 
 export const getVenues = (query) => {
