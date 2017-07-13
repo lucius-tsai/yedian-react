@@ -31,20 +31,29 @@ class Community extends Component {
       dynamicMessages: [],
       messages: [],
       userList: [],
-      loading: false
+      loading: false,
+      pagination: {
+				pageSize: 10,
+				current: 1
+			}
     };
     this.handleLoad = this.handleLoad.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
+    this.fetch = this.fetch.bind(this);
   }
 
   componentWillMount() {
     const self = this;
     this._isMounted = true;
+    const { pagination } = this.state;
     const { loading, loadSuccess, loadFail, dispatch, delAll } = this.props;
     delAll();
     loading();
     unbind = false;
-    Promise.all([getCommunityBanner(), getHomePostList()]).then(data => {
+    Promise.all([getCommunityBanner(), getHomePostList({
+      limit: pagination.pageSize,
+      offset: (pagination.current - 1) * pagination.pageSize
+    })]).then(data => {
       loadSuccess();
       const messages = [], slides = [];
 
@@ -62,7 +71,11 @@ class Community extends Component {
         slides,
         messages,
         dynamicMessages: messages,
-        userList: []
+        userList: [],
+        pagination: {
+          pageSize: 10,
+          current: pagination.current++
+        }
       });
     }, error => {
       loadFail();
@@ -75,7 +88,7 @@ class Community extends Component {
     if (this.props.router.location.pathname !== router.location.pathname) {
       unbind = true;
       document.removeEventListener("touchstart", this.handleTouch);
-      // window.removeEventListener("scroll", this.handleScroll);
+      window.removeEventListener("scroll", this.handleScroll);
       window.removeEventListener("click", f);
     }
   }
@@ -84,44 +97,54 @@ class Community extends Component {
     return true;
   }
 
+  fetch() {
+    const self = this;
+    const { pagination, messages } = this.state;
+    const { loading, loadSuccess, loadFail } = this.props;
+    getHomePostList({
+      limit: pagination.pageSize,
+      offset: (pagination.current - 1) * pagination.pageSize
+    }).then(res => {
+      if (res.code === 200) {
+        const list = [];
+        res.data.forEach(cell => {
+          if (cell.postType === 0) {
+            list.push(cell);
+          }
+        });
+        const merge = messages.concat(list);
+        // console.log(res)
+        !unbind && self._isMounted && self.setState({
+          loading: false,
+          messages: merge,
+          pagination: {
+            pageSize: 10,
+            current: pagination.current++
+          }
+        });
+      } else {
+        self._isMounted && self.setState({
+          loading: false
+        });
+      }
+    }, error => {
+      self._isMounted && self.setState({
+        loading: false
+      });
+    });
+  }
+
   handleScroll() {
     // console.log(this.isMounted);
     // return false;
     const self = this;
     this._isMounted = true;
-    const { loading, messages } = self.state;
+    const { loading } = self.state;
     const documentHeight = document.body.clientHeight;
     const scrollHeight = window.scrollY;
     const distance = documentHeight - scrollHeight;
     if (distance < 700 && !this.state.loading && pointY < scrollHeight && !unbind) {
-      self._isMounted && self.setState({
-        loading: true
-      });
-
-      getHomePostList().then(res => {
-        if (res.code === 200) {
-          const list = [];
-          res.data.forEach(cell => {
-            if (cell.postType === 0) {
-              list.push(cell);
-            }
-          });
-          const merge = messages.concat(list);
-          // console.log(res)
-          !unbind && self._isMounted && self.setState({
-            loading: false,
-            messages: merge
-          });
-        } else {
-          self._isMounted && self.setState({
-            loading: false
-          });
-        }
-      }, error => {
-        self._isMounted && self.setState({
-          loading: false
-        });
-      });
+      self.fetch();
     }
   }
   handleTouch() {

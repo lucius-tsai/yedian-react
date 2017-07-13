@@ -126,7 +126,7 @@ class Bootstrap extends Component {
                 <Route exact path={`${BASENAME}publish`} component={Publish} name="publish" />
                 <Route exact path={`${BASENAME}search`} component={Search} name="search" />
                 <Route exact path={`${BASENAME}topic/:id`} component={Topic} name="topic" />
-                <Route exact path={`${BASENAME}user/times`} component={UserTimeLine} name="userTimeLine" />
+                <Route exact path={`${BASENAME}user/times/:id`} component={UserTimeLine} name="userTimeLine" />
                 <Route exact path={`${BASENAME}login`} component={Login} name="login" />
                 <Route path={`${BASENAME}*`} component={NotFound} name="notFound" />
               </Switch>

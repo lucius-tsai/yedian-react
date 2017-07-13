@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import './avator.scss';
 
-import {parseDate} from '../../libs/uitls';
+import { parseDate } from '../../libs/uitls';
 
 export default class Avator extends Component {
   constructor(props) {
@@ -10,7 +10,7 @@ export default class Avator extends Component {
   }
 
   componentWillMount() {
-    let {size, style, showFollow, profile, model, date} = this.props;
+    let { size, style, showFollow, profile, model, date, disabledLink } = this.props;
     this.setState({
       profile: profile ? profile : {
         headImgUrl: "http://www.wangmingdaquan.cc/tx61/66.jpg",
@@ -20,7 +20,8 @@ export default class Avator extends Component {
       size: size ? size : "normal",
       style: style ? style : "horizontal", //vertical
       showFollow: showFollow ? showFollow : false,
-      model: model ? model : undefined
+      model: model ? model : undefined,
+      disabledLink: disabledLink ? disabledLink : false
     })
   }
 
@@ -28,11 +29,50 @@ export default class Avator extends Component {
   }
 
   render() {
-    const {profile, size, style, showFollow, model, date} = this.state;
+    const { profile, size, style, showFollow, model, date, disabledLink } = this.state;
+    if (disabledLink) {
+      return (
+        <div className={`avator-box clearfix ${style} ${size}`}>
+          <div className="avator">
+            <img src={profile.headImgUrl} alt="" />
+          </div>
+          {
+            model === "default" ?
+              <div className="profile">
+                <strong>{profile.displayName}</strong>
+                <p>{date}</p>
+              </div>
+              : ''
+          }
+          {
+            model === "followCard" ?
+              <div className="profile">
+                <strong>{profile.username}</strong>
+                <p>{`${profile.city}-${profile.area}`}</p>
+              </div>
+              : ''
+          }
+          {
+            model === "userTimeLine" ?
+              <div className="profile user-time-line">
+                <strong>{profile.username}</strong>
+              </div>
+              : ''
+          }
+          {
+            showFollow ?
+              <div className="follow-box">
+                <button>关注</button>
+              </div>
+              : ''
+          }
+        </div>
+      )
+    }
     return (
-      <div className={`avator-box clearfix ${style} ${size}`}>
+      <Link className={`avator-box clearfix ${style} ${size}`} to={{ pathname: `${BASENAME}user/times/${profile._id}`, state: profile }}>
         <div className="avator">
-          <img src={profile.headImgUrl} alt=""/>
+          <img src={profile.headImgUrl} alt="" />
         </div>
         {
           model === "default" ?
@@ -64,7 +104,7 @@ export default class Avator extends Component {
             </div>
             : ''
         }
-      </div>
+      </Link>
     )
   }
 }
