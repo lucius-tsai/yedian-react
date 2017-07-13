@@ -27,6 +27,7 @@ if (process.env.NODE_ENV === "localhost") {
 	__API_ROOT = {
 		weChatAuth: userApiDomain + "/auth/wechat?",
 		getUserInfo: userApiDomain + "/internal/userInfo?_type=User",
+		getWeChatSDKSign: userApiDomain + "/auth/wechat/signature",
 		getCommunityBanner: commontCoreApiDomain + "/community/banners",
 		getIndexMessage: "/api/community",
 		getIndexUserList: "/api/userlist",
@@ -44,6 +45,7 @@ if (process.env.NODE_ENV === "localhost") {
 	__API_ROOT = {
 		weChatAuth: userApiDomain + "/auth/wechat?",
 		getUserInfo: userApiDomain + "/internal/userInfo?_type=User",
+		getWeChatSDKSign: userApiDomain + "/auth/wechat/signature",
 		getCommunityBanner: "/app/mockData/banner.json",
 		getIndexMessage: "/app/mockData/community.json",
 		getIndexUserList: "/app/mockData/userlist.json",

@@ -8,7 +8,7 @@ const _instance = () => {
 	let js_session = cookie("js_session");
 
 	if (process.env.NODE_ENV === "localhost") {
-		js_session = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0OTk5MjY1MzYsImlzcyI6IjM0MjQ3MzkwLTY1ZjAtMTFlNy05YjRhLWRkNDViMTgxNWUyZSIsImlhdCI6MTQ5OTg0MDEzNn0.0b5DSlpE1gkki0v-WUVxfyariC2pmHDYaa-t22EuzEk";
+		js_session = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDAwMTA5MTcsImlzcyI6IjM0MjQ3MzkwLTY1ZjAtMTFlNy05YjRhLWRkNDViMTgxNWUyZSIsImlhdCI6MTQ5OTkyNDUxN30.b4pgf5AK025v8Imzp8ZI-fS_q41h_3rerZSoNTwAUuE";
 	} else {
 		// js_session = cookie("js_session");
 	}
@@ -73,6 +73,12 @@ export const getUserInfo = () => {
 	return __promiseTask(_instance().get(API_ROOT.getUserInfo));
 };
 
+export const getWeChatSDKSign = () => {
+	return __promiseTask(_instance().post(API_ROOT.getWeChatSDKSign, {
+        url: location.href.split('#')[0]
+    }))
+}
+
 /**
  * 获取HOME页面 Banner列表
  */
@@ -106,6 +112,10 @@ export const getSearch = () => {
 };
 
 
+export const likeMessage = () => {
+	return __promiseTask(_instance().get(API_ROOT.getSearch));
+}
+
 
 export const getTags = (query) => {
 	return __promiseTask(_instance().get(API_ROOT.getTags + query));
@@ -130,4 +140,12 @@ export const postMessage = (data) => {
 
 export const uploadFile = (data) => {
 	return __promiseTask(_instance().post(API_ROOT.uploadFile, data));
+}
+
+/**
+ * 通用
+ */
+
+export const getScripts = (url) => {
+	return __promiseTask(_instance().get(`${location.protocol}//${url}`))
 }

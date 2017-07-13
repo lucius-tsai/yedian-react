@@ -67,3 +67,71 @@ export const parseDate = (format, date) => {
 	}
 	return format;
 }
+
+export const weChatSDKInstall = (data) => {
+	if (data && data.appId) {
+		wx.config({
+			debug: false,
+			appId: data.appId,
+			timestamp: Number(data.timestamp),
+			nonceStr: data.nonceStr,
+			signature: data.signature,
+			jsApiList: ["onMenuShareTimeline", "onMenuShareAppMessage", "onMenuShareQQ", "onMenuShareWeibo", "onMenuShareQZone", "getLocation", "openLocation", "closeWindow", "chooseWXPay"]
+		});
+
+		wx.ready(function () {
+			window.isWXReady = true;
+
+			wx.onMenuShareTimeline(window.shareDataTL);
+			wx.onMenuShareAppMessage(window.shareData);
+			wx.onMenuShareQQ(window.shareData);
+			wx.onMenuShareQZone(window.shareData);
+		});
+
+		wx.error(function (res) {
+			window.isWXReady = false;
+			window.wxErrorMsg = res.errMsg;
+		});
+	} else {
+		alert(data.msg);
+	}
+}
+
+export const getLocation = () => {
+	const sessionData = sessionStorage.getItem('location');
+	const	cachedData = sessionData ? JSON.parse(sessionData) : null;
+	return new Promise((resolve, reject) => {
+		if (cachedData) {
+			resolve(cachedData, 'cache')
+		} else if (typeof wx !== 'undefined' && window.isWXReady) {
+			wx.ready(function () {
+				wx.getLocation({
+					type: 'gcj02',
+					success: function (res) {
+						resolve({
+							lat: res.latitude,
+							lng: res.longitude
+						}, 'sdk')
+					},
+					fail: reject(new Error(), 'sdk'),
+					cancel: reject(new Error(), 'sdk')
+				});
+			});
+		} else if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(function ({ coords }) {
+				resolve({
+					lat: coords.latitude,
+					lng: coords.longitude
+				}, 'geolocation');
+			}, err => {
+				reject(err, 'geolocation');
+			}, {
+					enableHighAccuracy: false,
+					timeout: 5e3,
+					maximumAge: 10e3
+				});
+		} else {
+			reject(new Error(), 'null');
+		}
+	})
+}

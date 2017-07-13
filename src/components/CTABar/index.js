@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './ctabar.scss';
 
+import { likeMessage } from '../../libs/api';
+
 export default class CTABar extends Component {
 	constructor(props) {
 		super(props);
@@ -10,7 +12,8 @@ export default class CTABar extends Component {
 	componentWillMount() {
 	}
 
-	componentWillUnmount() {
+	like() {
+		
 	}
 
 	render() {
@@ -19,7 +22,7 @@ export default class CTABar extends Component {
 		return (
 			<div className={fix ? "cta-box clearfix" : "cta-box fix"}>
 				<div className="cell _like">
-					<div className="icon ion-cta-like">&nbsp;</div>
+					<div className="icon ion-cta-like" onClick={this.like}>&nbsp;</div>
 					<span className="text">{post.likeCount}</span>
 				</div>
 				<div className="cell _collection">
@@ -32,5 +35,7 @@ export default class CTABar extends Component {
 				</div>
 			</div>
 		)
+	}
+	componentWillUnmount() {
 	}
 }

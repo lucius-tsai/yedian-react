@@ -59,6 +59,9 @@ class Bootstrap extends Component {
             localStorage.setItem('react_user', JSON.stringify(res.data));
           }
         }, error => {
+          if (error.status === 403 && error.responseJSON && error.responseJSON.exp === "token expired") {
+            console.log(12313);
+          }
           console.log(error);
         })
       }
