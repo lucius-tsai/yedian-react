@@ -5,6 +5,7 @@ export const APP_REQUEST_FAIL = "APP_REQUEST_FAIL";
 
 export const APP_HIDE_BAR = "APP_HIDE_BAR";
 export const APP_SHOW_BAR = "APP_SHOW_BAR";
+export const APP_SET_GPS = "APP_SET_GPS";
 
 export const loading = state => ({
     type: APP_REQUEST_LOADING,
@@ -29,4 +30,9 @@ export const showBar = state => ({
 export const hideBar = state => ({
     type: APP_HIDE_BAR,
     state
+});
+
+export const setLocation = newState => ({
+    type: APP_SET_GPS,
+    newState
 });

@@ -56,7 +56,8 @@ export default class DaynimcMessage extends Component {
   }
 
   render() {
-    const textWidth = window.innerWidth ? window.innerWidth - 110 : 414 - 110; 
+    const textWidth = window.innerWidth ? window.innerWidth - 110 : 414 - 110;
+    const query = '?fromwhere=community';
     const slide = (list) => {
       const { currentIndex } = this.state;
       let { element, enterDelay, leaveDelay, animation } = this.props;
@@ -73,8 +74,13 @@ export default class DaynimcMessage extends Component {
           transitionEnterTimeout={enterDelay}
           transitionLeaveTimeout={leaveDelay}>
           <div className="message-animate-cell clearfix" key={currentIndex}>
-            <Avator size={"sx"} profile={list[currentIndex].postedBy}/>
-            <p className={`_text`} style={{width: `${textWidth}px`}}>{`${list[currentIndex].postedBy.displayName}啊刚刚发布了一条动态`}</p>
+            <Avator size={"sx"} profile={list[currentIndex].postedBy} affiliates={list[currentIndex].affiliates}/>
+            {
+              list[currentIndex].postType === 0 ?
+                <Link to={{ pathname: `${BASENAME}message/${list[currentIndex]._id}`, state: { id: list[currentIndex]._id } }} className={`_text`} style={{ width: `${textWidth}px` }}>{`${list[currentIndex].postedBy.displayName}啊刚刚发布了一条动态`}</Link>
+                :
+                <a href={`${location.origin}/dist/?#!/venues/event/${list[currentIndex]._id}${query}`} className={`_text`} style={{ width: `${textWidth}px` }}>{`${list[currentIndex].postedBy.displayName}啊刚刚发布了一条动态`}</a>
+            }
           </div>
         </CSSTransitionGroup>
       )
@@ -87,7 +93,7 @@ export default class DaynimcMessage extends Component {
     } else {
       return (
         <div>
-          { slide(list) }
+          {slide(list)}
         </div>
       )
     }

@@ -73,11 +73,15 @@ export const getUserInfo = () => {
 	return __promiseTask(_instance().get(API_ROOT.getUserInfo));
 };
 
+export const getUserInfoById = (id) => {
+	return __promiseTask(_instance().get(`${API_ROOT.getUserInfoById}${id}?_type=User`));
+};
+
 export const getWeChatSDKSign = () => {
 	return __promiseTask(_instance().post(API_ROOT.getWeChatSDKSign, {
-        url: location.href.split('#')[0]
-    }))
-}
+		url: location.href.split('#')[0]
+	}));
+};
 
 /**
  * 获取HOME页面 Banner列表
@@ -112,28 +116,44 @@ export const getSearch = () => {
 };
 
 
-export const likeMessage = () => {
-	return __promiseTask(_instance().get(API_ROOT.getSearch));
-}
+export const likeMessage = (data) => {
+	return __promiseTask(_instance().post(API_ROOT.likeMessage, data));
+};
+
+export const delLikeMessage = () => {
+	return __promiseTask(_instance().get(API_ROOT.delLikeMessage));
+};
+
+export const favoriteMessage = () => {
+	return __promiseTask(_instance().post(API_ROOT.favoriteMessage));
+};
+
+export const delFavoriteMessage = () => {
+	return __promiseTask(_instance().get(API_ROOT.delFavoriteMessage));
+};
+
+export const commentMessage = () => {
+	return __promiseTask(_instance().get(API_ROOT.commentMessage));
+};
 
 
 export const getTags = (query) => {
 	return __promiseTask(_instance().get(API_ROOT.getTags + query));
-}
+};
 
 export const creatTag = (data) => {
 	return __promiseTask(_instance().post(API_ROOT.createTag, data));
-}
+};
 
 export const getHomePostList = (data) => {
 	return __promiseTask(_instance().get(API_ROOT.getMessage, {
 		params: data
 	}));
-}
+};
 
 export const getVenues = (query) => {
 	return __promiseTask(_instance().get(`${API_ROOT.getVenues}${query}`));
-}
+};
 
 export const postMessage = (data) => {
 	return __promiseTask(_instance().post(API_ROOT.postMessage, data));

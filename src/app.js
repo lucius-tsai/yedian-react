@@ -25,11 +25,11 @@ const sdk = () => {
   });
 }
 
-getLocation().then(res => {
-  console.log(res);
-}, error => {
-  console.log(error)
-})
+// getLocation().then(res => {
+//   console.log(res);
+// }, error => {
+//   console.log(error)
+// })
 
 if (isWechat) {
   if (typeof wx !== "undefined") {

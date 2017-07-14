@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import './search.scss';
 import { getVenues, getTags, creatTag } from '../../libs/api';
 
-import { loading, loadSuccess, loadFail } from '../../store/actions/appStatus';
+import { loading, loadSuccess, loadFail, hideBar, showBar } from '../../store/actions/appStatus';
 import { addTag, addVenues } from '../../store/actions/publish';
 
 class Search extends Component {
@@ -18,6 +18,7 @@ class Search extends Component {
       pageIndex: 0,
       limit: 20,
       list: [],
+      gps: null,
       total: 0,
       search: "",
       searchPlaceholder: null,
@@ -31,7 +32,8 @@ class Search extends Component {
   }
 
   componentWillMount() {
-    const { location } = this.props;
+    const { location, hideBar, gps } = this.props;
+    hideBar();
     const type = location && location.state && location.state.type;
     let searchPlaceholder = null;
     switch (type) {
@@ -47,22 +49,28 @@ class Search extends Component {
     }
     this.setState({
       searchPlaceholder: searchPlaceholder,
-      type: type
+      type: type,
+      gps
     }, () => {
       this.fetch();
     });
   }
+  componentWillReceiveProps(nextProps) {
+    const { gps } = nextProps;
+    this.setState({ gps })
+  }
 
   fetch() {
     const self = this;
-    const { pageIndex, limit, search, type } = this.state;
+    const { pageIndex, limit, search, type, gps } = this.state;
     const { loading, loadSuccess, loadFail, location } = this.props;
     loading();
     if (type === 'venues') {
       const key = search ? `, key: "${search}"` : '';
+      const gpsStr = (gps && gps.lat && gps.lng) ? `, latitude: "${gps.lat}", longitude: "${gps.lng}"` : '';
       const query = `query=query
       {
-        venues(isValid: 1, isDeleted: 0, offset: ${pageIndex * limit}, limit: ${limit}${key}){
+        venues(isValid: 1, isDeleted: 0, offset: ${pageIndex * limit}, limit: ${limit}${key}${gpsStr}){
           count,
           rows{
             _id, name, address, images
@@ -189,12 +197,21 @@ class Search extends Component {
       </div>
     )
   }
+  componentWillUnmount() {
+    const { showBar, router } = this.props;
+    const pathname = router.location.pathname;
+    // if (pathname !== `${BASENAME}topic`) {
+    //   showBar();
+    // }
+  }
 }
 
 const mapStateToProps = state => {
   const { appStatus, router, publish } = state;
   return {
     loading: appStatus.loading || false,
+    gps: appStatus.gps || false,
+    router,
     publish
   }
 };
@@ -215,6 +232,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     addVenues: (cell) => {
       dispatch(addVenues(cell))
+    },
+    hideBar: () => {
+      dispatch(hideBar())
+    },
+    showBar: () => {
+      dispatch(showBar())
     }
   }
 };

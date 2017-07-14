@@ -22,9 +22,8 @@ class CommunityInfo extends Component {
   componentWillMount() {
     const self = this;
     this._isMounted = true;
-    const { loading, loadSuccess, loadFail, hideBar, location } = this.props;
-    // console.log(this.props)
-    const id = location && location.state && location.state.id ? location.state.id : '';
+    const { loading, loadSuccess, loadFail, hideBar, location, match } = this.props;
+    const id = match && match.params && match.params.id ? match.params.id : '';
     hideBar();
     loading();
     getMessageInfo(id).then(res => {
@@ -44,7 +43,7 @@ class CommunityInfo extends Component {
                 }
               }
             }`
-            getVenues(query).then(res => {
+            getVenues(encodeURI(query)).then(res => {
               if(res.code === 200 && res.data.venues.count === 1) {
                 const venuesInfo = res.data.venues.rows[0];
                 self._isMounted && self.setState({
@@ -99,6 +98,7 @@ class CommunityInfo extends Component {
 
   componentDidMount() {
     document.title = "Night+--呃呃呃～算是吧～";
+    document.body.scrollTop = 0;
     this._isMounted = true;
   }
 

@@ -4,7 +4,8 @@ import {
     APP_REQUEST_FAIL,
     APP_HIDE_BAR,
     APP_SHOW_BAR,
-    APP_UNMOUNT_DELETE
+    APP_UNMOUNT_DELETE,
+    APP_SET_GPS
 } from '../actions/appStatus';
 
 const appStatus = (state = { loading: false }, action) => {
@@ -33,6 +34,10 @@ const appStatus = (state = { loading: false }, action) => {
         case APP_UNMOUNT_DELETE:
             return {
                 ...state, Unmount: true
+            }
+        case APP_SET_GPS:
+            return {
+                ...state, gps: action.newState
             }
         default:
             return state

@@ -260,7 +260,7 @@ class Publish extends Component {
 
   componentWillUnmount() {
     const { showBar, appStatus, deleteUnmount, router } = this.props;
-    if (router.location.pathname !== `${BASENAME}topic`) {
+    if (router.location.pathname !== `${BASENAME}topic` && router.location.pathname !== `${BASENAME}search`) {
       showBar();
     }
   }

@@ -23,11 +23,12 @@ import Loading from '../../components/Loading';
 import './app.scss';
 
 // apis
-import { getUserInfo } from '../../libs/api';
+import { getUserInfo, getLocation } from '../../libs/api';
 import { cookie } from "../../libs/uitls";
 
 // redux-actions
 
+import { setLocation } from '../../store/actions/appStatus';
 import { getUserInfoLoading, getUserInfoSuccess } from '../../store/actions/userInfo';
 
 
@@ -44,7 +45,7 @@ class Bootstrap extends Component {
   }
 
   componentWillMount() {
-    const { loading, userInfo, getUserInfoLoading, getUserInfoSuccess } = this.props;
+    const { loading, userInfo, getUserInfoLoading, getUserInfoSuccess, setLocation } = this.props;
     const token = cookie('js_session');
     if (!token && process.env.NODE_ENV !== "localhost") {
       this.setState({
@@ -60,10 +61,17 @@ class Bootstrap extends Component {
           }
         }, error => {
           if (error.status === 403 && error.responseJSON && error.responseJSON.exp === "token expired") {
-            console.log(12313);
+            // console.log(12313);
           }
           console.log(error);
-        })
+        });
+        getLocation().then(res => {
+          if(res && res.lat && res.lng) {
+            setLocation(res);
+          }
+        }, error => {
+          console.log(error)
+        });
       }
     }
   }
@@ -165,6 +173,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     getUserInfoSuccess: (cell) => {
       dispatch(getUserInfoSuccess(cell))
+    },
+    setLocation: (cell) => {
+      dispatch(setLocation(cell));
     }
   }
 };

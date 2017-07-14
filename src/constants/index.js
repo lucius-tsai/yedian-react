@@ -27,24 +27,37 @@ if (process.env.NODE_ENV === "localhost") {
 	__API_ROOT = {
 		weChatAuth: userApiDomain + "/auth/wechat?",
 		getUserInfo: userApiDomain + "/internal/userInfo?_type=User",
+		getUserInfoById: userApiDomain + "/internal/users/",
 		getWeChatSDKSign: userApiDomain + "/auth/wechat/signature",
+
 		getCommunityBanner: commontCoreApiDomain + "/community/banners",
 		getIndexMessage: "/api/community",
 		getIndexUserList: "/api/userlist",
 		getMessageInfo: "/api/message",
 		getSearch: "/api/search",
+
 		getTags: commontCoreApiDomain + "/community/tags",
 		createTag: commontCoreApiDomain + "/community/tag",
+
 		getVenues: venuesCoreApiDomain + "/public/graphql?",
+
 		getMessage: commontCoreApiDomain + "/community/posts",
 		getMessageInfo: commontCoreApiDomain + "/community/post",
+
 		postMessage: commontCoreApiDomain + "/community/post",
 		uploadFile: venuesCoreApiDomain + "/public/file/upload",
+
+		likeMessage: commontCoreApiDomain + "/users/likes",
+		delLikeMessage: commontCoreApiDomain + "/users/likes/",
+		favoriteMessage: commontCoreApiDomain + "/users/favorites",
+		delFavoriteMessage: commontCoreApiDomain + "/users/favorites/",
+		commentMessage: commontCoreApiDomain + "/users/comments"
 	}
 } else {
 	__API_ROOT = {
 		weChatAuth: userApiDomain + "/auth/wechat?",
 		getUserInfo: userApiDomain + "/internal/userInfo?_type=User",
+		getUserInfoById: userApiDomain + "/internal/users/",
 		getWeChatSDKSign: userApiDomain + "/auth/wechat/signature",
 		getCommunityBanner: "/app/mockData/banner.json",
 		getIndexMessage: "/app/mockData/community.json",
@@ -58,6 +71,11 @@ if (process.env.NODE_ENV === "localhost") {
 		getMessageInfo: commontCoreApiDomain + "/community/post",
 		postMessage: commontCoreApiDomain + "/community/post",
 		uploadFile: venuesCoreApiDomain + "/public/file/upload",
+		likeMessage: commontCoreApiDomain + "/users/likes",
+		delLikeMessage: commontCoreApiDomain + "/users/likes/",
+		favoriteMessage: commontCoreApiDomain + "/users/favorites",
+		delFavoriteMessage: commontCoreApiDomain + "/users/favorites/",
+		commentMessage: commontCoreApiDomain + "/users/comments"
 	}
 }
 export const API_ROOT = __API_ROOT;
