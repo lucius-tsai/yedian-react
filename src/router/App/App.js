@@ -23,8 +23,8 @@ import Loading from '../../components/Loading';
 import './app.scss';
 
 // apis
-import { getUserInfo, getLocation } from '../../libs/api';
-import { cookie } from "../../libs/uitls";
+import { getUserInfo } from '../../libs/api';
+import { cookie, getLocation } from "../../libs/uitls";
 
 // redux-actions
 
