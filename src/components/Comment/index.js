@@ -9,6 +9,8 @@ import Avator from '../Avator';
 import './comment.scss';
 import { getComments } from '../../libs/api';
 
+import { showComment } from '../../store/actions/appStatus';
+
 class Comment extends Component {
 
 	constructor(props) {
@@ -18,11 +20,11 @@ class Comment extends Component {
 			target: null,
 			data: []
 		}
+		this.__openComment = this.__openComment.bind(this);
 	}
 
 	componentWillMount() {
 		const { userInfo, target } = this.props;
-		// console.log(target);
 		if (userInfo && userInfo.user && userInfo.user.id) {
 			this.setState({
 				profile: {
@@ -83,9 +85,9 @@ class Comment extends Component {
 	}
 
 	__openComment(e) {
-		e.stopPropagation();
-		const { openComment } = this.props;
-		openComment(true);
+		e.nativeEvent.stopImmediatePropagation();
+		const { showComment } = this.props;
+		showComment();
 	}
 
 	render() {
@@ -97,7 +99,7 @@ class Comment extends Component {
 					<div className="user-self">
 						<Avator profile={profile} />
 					</div>
-					<div className="input-enter" onClick={this.__openComment.bind(this)}>我也要留下一评</div>
+					<div className="input-enter" onClick={this.__openComment}>我也要留下一评</div>
 				</div>
 				<ul className="comment-content">
 					{
@@ -114,6 +116,11 @@ class Comment extends Component {
 			</div>
 		)
 	}
+	componentDidMount() {
+	}
+
+	componentWillUnmount() {
+	}
 }
 
 
@@ -127,6 +134,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
+		showComment: (cell) => {
+			dispatch(showComment(cell))
+		}
 	}
 };
 

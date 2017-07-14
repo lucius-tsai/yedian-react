@@ -3,7 +3,17 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import './ctabar.scss';
 
-import { getLikes, likeMessage, delLikeMessage, getFavorites, favoriteMessage, delFavoriteMessage, commentMessage } from '../../libs/api';
+import {
+	getLikes,
+	likeMessage,
+	delLikeMessage,
+	getFavorites,
+	favoriteMessage,
+	delFavoriteMessage,
+	commentMessage
+} from '../../libs/api';
+
+import { showComment, hiddenComment } from '../../store/actions/appStatus';
 
 class CTABar extends Component {
 	constructor(props) {
@@ -25,16 +35,17 @@ class CTABar extends Component {
 		this.comment = this.comment.bind(this);
 		this.openComment = this.openComment.bind(this);
 		this.input = this.input.bind(this);
+		this.__hidden = this.__hidden.bind(this);
 	}
 
 	componentWillMount() {
-		const { post, userInfo, __showComment } = this.props;
+		const { post, userInfo, showComment } = this.props;
 		const userId = userInfo && userInfo.user ? userInfo.user.id : null;
 		this.setState({
 			likeCount: post.likeCount,
 			favoriteCount: post.favoriteCount,
 			commentCount: post.commentCount,
-			showComment: __showComment
+			showComment
 		});
 		getLikes({
 			type: "POST",
@@ -73,10 +84,8 @@ class CTABar extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		const { __showComment } = nextProps;
-		this.setState({
-			showComment: __showComment
-		});
+		const { showComment } = nextProps;
+		this.setState({ showComment });
 	}
 
 	like() {
@@ -146,15 +155,11 @@ class CTABar extends Component {
 	}
 
 	openComment() {
-		this.setState({
-			showComment: true
-		});
-		// alert('comment');
+		const { __showComment } = this.props;
+		__showComment();
 	}
 	comment(e) {
-		e.stopPropagation();
 		const { post, userInfo } = this.props;
-		// if (userInfo && userInfo.user && userInfo.user.id) {
 		commentMessage({
 			type: 'POST',
 			targetId: post._id,
@@ -167,8 +172,6 @@ class CTABar extends Component {
 		}, error => {
 
 		});
-		// }
-
 	}
 
 	focus(ref) {
@@ -186,6 +189,11 @@ class CTABar extends Component {
 		});
 	}
 
+	__hidden(e) {
+		const { __hiddenComment } = this.props;
+		__hiddenComment();
+	}
+
 	render() {
 		const { showComment, showBtn, favorited, liked, likeCount, favoriteCount, commentCount } = this.state;
 		const { fix, post } = this.props;
@@ -199,7 +207,7 @@ class CTABar extends Component {
 		}
 
 		return (
-			<div>
+			<div onClick={e => { e.nativeEvent.stopImmediatePropagation(); }}>
 				<div className={showComment ? `${catBarClass} bar-hidden` : catBarClass}>
 					<div className="cell _like">
 						<div className={liked ? "icon ion-cta-like active" : "icon ion-cta-like"} onClick={this.like}>&nbsp;</div>
@@ -228,16 +236,12 @@ class CTABar extends Component {
 			</div>
 		)
 	}
-
+	
 	componentDidUpdate() {
-		const { showComment } = this.state;
-		document.addEventListener('click', this.__hidden);
-		// if (showComment) {
-
-		// 	document.body.setAttribute('class', 'no-scroll');
-		// } else {
-		// 	document.body.removeAttribute('class');
-		// }
+		const { showComment } = this.props;
+		if(showComment) {
+			document.addEventListener('click', this.__hidden);
+		}
 	}
 
 	componentWillUnmount() {
@@ -247,14 +251,22 @@ class CTABar extends Component {
 
 
 const mapStateToProps = state => {
-	const { userInfo } = state;
+	const { userInfo, appStatus } = state;
 	return {
-		userInfo
+		userInfo,
+		showComment: appStatus.showComment || false
 	}
 };
 
 const mapDispatchToProps = (dispatch) => {
-	return {}
+	return {
+		__showComment: (cell) => {
+			dispatch(showComment(cell));
+		},
+		__hiddenComment: (cell) => {
+			dispatch(hiddenComment(cell));
+		}
+	}
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CTABar);

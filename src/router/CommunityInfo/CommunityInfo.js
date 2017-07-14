@@ -16,10 +16,7 @@ class CommunityInfo extends Component {
     this.state = {
       messageInfo: null,
       venuesInfo: null,
-      __showComment: false,
     }
-    this.__openComment = this.__openComment.bind(this);
-    this.__hiddenComment = this.__hiddenComment.bind(this);
   }
 
   componentWillMount() {
@@ -72,17 +69,6 @@ class CommunityInfo extends Component {
     return true;
   }
 
-  __openComment(show) {
-    this.setState({
-      __showComment: show
-    });
-  }
-  __hiddenComment(e) {
-    this.setState({
-      __showComment: false
-    });
-  }
-
   render() {
     const { messageInfo, venuesInfo, __showComment } = this.state;
     let venuesID = null;
@@ -90,11 +76,11 @@ class CommunityInfo extends Component {
       venuesID = cell.type === 'venues' ? cell.targetId : null;
     });
     return (
-      <div className="community-info-box" onClick={this.__hiddenComment}>
+      <div className="community-info-box">
         <div className="community-info">
           {
             messageInfo ?
-              <Message post={messageInfo} canLink={false} __showComment={__showComment} />
+              <Message post={messageInfo} canLink={false}/>
               : ""
           }
           {
@@ -107,7 +93,7 @@ class CommunityInfo extends Component {
         </div>
         {
           messageInfo ?
-            <Comment target={messageInfo} openComment={this.__openComment} />
+            <Comment target={messageInfo}/>
             : ''
         }
       </div>
