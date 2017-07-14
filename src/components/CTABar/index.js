@@ -69,10 +69,10 @@ export default class CTABar extends Component {
 	render() {
 		const { showComment } = this.state;
 		const { fix, post } = this.props;
-		
+
 		let catBarClass = 'cta-box';
 
-		if(fix) {
+		if (fix) {
 			catBarClass = `${catBarClass} clearfix`;
 		} else {
 			catBarClass = `${catBarClass} fix`;
@@ -91,19 +91,30 @@ export default class CTABar extends Component {
 					</div>
 					<div className="cell _comment">
 						{
-							fix ? <Link className="icon ion-cta-comment" to={{ pathname: `${BASENAME}message/${post._id}`, state: { id: post._id }}}>&nbsp;</Link>
-							: <div className="icon ion-cta-comment" onClick={this.openComment}>&nbsp;</div>
+							fix ? <Link className="icon ion-cta-comment" to={{ pathname: `${BASENAME}message/${post._id}`, state: { id: post._id } }}>&nbsp;</Link>
+								: <div className="icon ion-cta-comment" onClick={this.openComment}>&nbsp;</div>
 						}
 						<span className="text">{post.comentCount}</span>
 					</div>
 				</div>
-				<div className={ showComment ? 'comment-box': 'comment-box bar-hidden' }>
+				<div className={showComment ? 'comment-box' : 'comment-box bar-hidden'}>
 					<textarea className='comment-txt' placeholder='我也要留下一评'></textarea>
 					<button className='comment-btn' onClick={this.comment}>提交</button>
 				</div>
 			</div>
 		)
 	}
+
+	componentDidUpdate() {
+		const { showComment } = this.state;
+		if (showComment) {
+			document.body.scrollTop = document.body.clientHeight;
+			document.body.setAttribute('class', 'no-scroll');
+		} else {
+			document.body.removeAttribute('class');
+		}
+	}
+
 	componentWillUnmount() {
 	}
 }
