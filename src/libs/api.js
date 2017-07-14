@@ -8,7 +8,7 @@ const _instance = () => {
 	let js_session = cookie("js_session");
 
 	if (process.env.NODE_ENV === "localhost") {
-		js_session = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDAwMTA5MTcsImlzcyI6IjM0MjQ3MzkwLTY1ZjAtMTFlNy05YjRhLWRkNDViMTgxNWUyZSIsImlhdCI6MTQ5OTkyNDUxN30.b4pgf5AK025v8Imzp8ZI-fS_q41h_3rerZSoNTwAUuE";
+		js_session = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDAwOTczNzksImlzcyI6IjM0MjQ3MzkwLTY1ZjAtMTFlNy05YjRhLWRkNDViMTgxNWUyZSIsImlhdCI6MTUwMDAxMDk3OX0.2UJRMiyxQp3WZbUtpCy9JgqdJTo85Dya2kX_nEdUhpg";
 	} else {
 		// js_session = cookie("js_session");
 	}
@@ -124,12 +124,20 @@ export const delLikeMessage = () => {
 	return __promiseTask(_instance().get(API_ROOT.delLikeMessage));
 };
 
+export const getLikes = (id) => {
+	return __promiseTask(_instance().get(`${API_ROOT.getLikes}${id}`));
+}
+
 export const favoriteMessage = () => {
 	return __promiseTask(_instance().post(API_ROOT.favoriteMessage));
 };
 
 export const delFavoriteMessage = () => {
 	return __promiseTask(_instance().get(API_ROOT.delFavoriteMessage));
+};
+
+export const getFavorites = (id) => {
+	return __promiseTask(_instance().get(`${API_ROOT.getFavorites}${id}`));
 };
 
 export const commentMessage = () => {

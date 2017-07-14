@@ -133,6 +133,7 @@ class UserTimeLine extends Component {
   componentDidMount() {
     document.title = "Night+--社区";
     this._isMounted = true;
+    document.body.scrollTop = 0;
   }
 
   componentWillUnmount() {

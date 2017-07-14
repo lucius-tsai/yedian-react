@@ -47,8 +47,11 @@ if (process.env.NODE_ENV === "localhost") {
 		postMessage: commontCoreApiDomain + "/community/post",
 		uploadFile: venuesCoreApiDomain + "/public/file/upload",
 
+		getLikes: commontCoreApiDomain + "/users/likes/",
 		likeMessage: commontCoreApiDomain + "/users/likes",
 		delLikeMessage: commontCoreApiDomain + "/users/likes/",
+
+		getFavorites: commontCoreApiDomain + "/users/favorites/",
 		favoriteMessage: commontCoreApiDomain + "/users/favorites",
 		delFavoriteMessage: commontCoreApiDomain + "/users/favorites/",
 		commentMessage: commontCoreApiDomain + "/users/comments"
@@ -71,8 +74,12 @@ if (process.env.NODE_ENV === "localhost") {
 		getMessageInfo: commontCoreApiDomain + "/community/post",
 		postMessage: commontCoreApiDomain + "/community/post",
 		uploadFile: venuesCoreApiDomain + "/public/file/upload",
+
+		getLikes: commontCoreApiDomain + "/users/likes/",
 		likeMessage: commontCoreApiDomain + "/users/likes",
 		delLikeMessage: commontCoreApiDomain + "/users/likes/",
+		
+		getFavorites: commontCoreApiDomain + "/users/favorites/",
 		favoriteMessage: commontCoreApiDomain + "/users/favorites",
 		delFavoriteMessage: commontCoreApiDomain + "/users/favorites/",
 		commentMessage: commontCoreApiDomain + "/users/comments"
