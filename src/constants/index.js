@@ -54,7 +54,9 @@ if (process.env.NODE_ENV === "localhost") {
 		getFavorites: commontCoreApiDomain + "/users/favorites",
 		favoriteMessage: commontCoreApiDomain + "/users/favorites",
 		delFavoriteMessage: commontCoreApiDomain + "/users/favorites/",
-		commentMessage: commontCoreApiDomain + "/users/comments"
+
+		commentMessage: commontCoreApiDomain + "/users/comments",
+		getComments: commontCoreApiDomain + "/users/comments/byTargetId"
 	}
 } else {
 	__API_ROOT = {
@@ -82,7 +84,9 @@ if (process.env.NODE_ENV === "localhost") {
 		getFavorites: commontCoreApiDomain + "/users/favorites",
 		favoriteMessage: commontCoreApiDomain + "/users/favorites",
 		delFavoriteMessage: commontCoreApiDomain + "/users/favorites/",
-		commentMessage: commontCoreApiDomain + "/users/comments"
+
+		commentMessage: commontCoreApiDomain + "/users/comments",
+		getComments: commontCoreApiDomain + "/users/comments/byTargetId"
 	}
 }
 export const API_ROOT = __API_ROOT;

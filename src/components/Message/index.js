@@ -16,6 +16,7 @@ const defaultMessage = {
  * post 消息对象
  * canLink 消息卡片是否可以点击
  * showFollow 是否可以关注
+ * __showComment 子组件CTABar 是否显示评论输入框
  * @class Message
  * @extends {Component}
  */
@@ -25,29 +26,32 @@ class Message extends Component {
     this.state = {
       post: defaultMessage,
       canLink: false,
-      showFollow: true
+      showFollow: true,
+      __showComment: false
     };
 
     this.lazyLoadPictures = this.lazyLoadPictures.bind(this);
   }
 
   componentWillMount() {
-    const { post, canLink, showFollow, disabledLink } = this.props;
+    const { post, canLink, showFollow, disabledLink, __showComment } = this.props;
     this.setState({
       post: post ? post : defaultMessage,
       canLink: canLink === true,
       showFollow: showFollow,
-      disabledLink: disabledLink ? disabledLink : false
+      disabledLink: disabledLink ? disabledLink : false,
+      __showComment
     });
   }
 
   componentWillReceiveProps(nextProps) {
-    const { post, canLink, showFollow, disabledLink } = nextProps;
+    const { post, canLink, showFollow, disabledLink, __showComment } = nextProps;
     this.setState({
       post: post ? post : defaultMessage,
       canLink: canLink === true,
       showFollow: showFollow,
-      disabledLink: disabledLink ? disabledLink : false
+      disabledLink: disabledLink ? disabledLink : false,
+      __showComment
     })
   }
 
@@ -65,7 +69,8 @@ class Message extends Component {
   }
 
   render() {
-    const { post, canLink, showFollow, disabledLink } = this.state;
+    const { post, canLink, showFollow, disabledLink, __showComment} = this.state;
+    const {__parentOpenComment} = this.props;
     const message = post.message;
     const affiliates = post.affiliates;
     const tags = post.tags;
@@ -151,7 +156,7 @@ class Message extends Component {
         }
         {
           <div className={"card-message-bottom"}>
-            <CTABar fix={canLink} post={post} />
+            <CTABar fix={canLink} post={post} __showComment={__showComment}/>
           </div>
         }
 

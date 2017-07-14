@@ -14,9 +14,12 @@ class CommunityInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      messageInfo: {},
-      venuesInfo: null
+      messageInfo: null,
+      venuesInfo: null,
+      __showComment: false,
     }
+    this.__openComment = this.__openComment.bind(this);
+    this.__hiddenComment = this.__hiddenComment.bind(this);
   }
 
   componentWillMount() {
@@ -33,7 +36,7 @@ class CommunityInfo extends Component {
           messageInfo: res.data[0]
         });
         res.data[0].affiliates && res.data[0].affiliates.forEach(cell => {
-          if(cell.type === 'venues') {
+          if (cell.type === 'venues') {
             const query = `query=query
             {
               venues(isValid: 1, isDeleted: 0, _id: "${cell.targetId}"){
@@ -44,7 +47,7 @@ class CommunityInfo extends Component {
               }
             }`
             getVenues(encodeURI(query)).then(res => {
-              if(res.code === 200 && res.data.venues.count === 1) {
+              if (res.code === 200 && res.data.venues.count === 1) {
                 const venuesInfo = res.data.venues.rows[0];
                 self._isMounted && self.setState({
                   venuesInfo
@@ -69,29 +72,44 @@ class CommunityInfo extends Component {
     return true;
   }
 
+  __openComment(show) {
+    this.setState({
+      __showComment: show
+    });
+  }
+  __hiddenComment(e) {
+    this.setState({
+      __showComment: false
+    });
+  }
+
   render() {
-    const { messageInfo, venuesInfo } = this.state;
+    const { messageInfo, venuesInfo, __showComment } = this.state;
     let venuesID = null;
     messageInfo && messageInfo.affiliates && messageInfo.affiliates.forEach(cell => {
       venuesID = cell.type === 'venues' ? cell.targetId : null;
     });
     return (
-      <div className="community-info-box">
+      <div className="community-info-box" onClick={this.__hiddenComment}>
         <div className="community-info">
           {
             messageInfo ?
-              <Message post={messageInfo} canLink={false} />
+              <Message post={messageInfo} canLink={false} __showComment={__showComment} />
               : ""
           }
           {
             venuesInfo ?
               <a href={`http://staging-app.ye-dian.com/dist/?#!/ktv/${venuesInfo._id}`}>
-                <VenuesCell venuesInfo={venuesInfo}/>
+                <VenuesCell venuesInfo={venuesInfo} />
               </a>
               : ""
           }
         </div>
-        <Comment target={messageInfo} />
+        {
+          messageInfo ?
+            <Comment target={messageInfo} openComment={this.__openComment} />
+            : ''
+        }
       </div>
     )
   }

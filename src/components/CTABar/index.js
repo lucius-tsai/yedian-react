@@ -18,7 +18,7 @@ class CTABar extends Component {
 			favoriteID: null,
 			likeCount: 0,
 			favoriteCount: 0,
-			comentCount: 0
+			commentCount: 0
 		}
 		this.like = this.like.bind(this);
 		this.favorite = this.favorite.bind(this);
@@ -28,12 +28,13 @@ class CTABar extends Component {
 	}
 
 	componentWillMount() {
-		const { post, userInfo } = this.props;
+		const { post, userInfo, __showComment } = this.props;
 		const userId = userInfo && userInfo.user ? userInfo.user.id : null;
 		this.setState({
 			likeCount: post.likeCount,
 			favoriteCount: post.favoriteCount,
-			comentCount: post.comentCount
+			commentCount: post.commentCount,
+			showComment: __showComment
 		});
 		getLikes({
 			type: "POST",
@@ -68,6 +69,13 @@ class CTABar extends Component {
 			}
 		}, error => {
 			console.log(error);
+		});
+	}
+
+	componentWillReceiveProps(nextProps) {
+		const { __showComment } = nextProps;
+		this.setState({
+			showComment: __showComment
 		});
 	}
 
@@ -129,7 +137,7 @@ class CTABar extends Component {
 					self.setState({
 						favorited: true,
 						favoriteID: res.data._id,
-						favoriteCount: (self.state.favoriteCount*1+1)
+						favoriteCount: (self.state.favoriteCount * 1 + 1)
 					});
 				}
 			}, error => {
@@ -143,22 +151,23 @@ class CTABar extends Component {
 		});
 		// alert('comment');
 	}
-	comment() {
+	comment(e) {
+		e.stopPropagation();
 		const { post, userInfo } = this.props;
-		if (userInfo && userInfo.user && userInfo.user.id) {
-			commentMessage({
-				type: 'POST',
-				targetId: post._id,
-				userId: userInfo.user.id,
-				isDisplay: true
-			}).then(res => {
-				this.setState({
-					showComment: false
-				});
-			}, error => {
-
+		// if (userInfo && userInfo.user && userInfo.user.id) {
+		commentMessage({
+			type: 'POST',
+			targetId: post._id,
+			isDisplay: true,
+			comment: this.state.comment
+		}).then(res => {
+			this.setState({
+				showComment: false
 			});
-		}
+		}, error => {
+
+		});
+		// }
 
 	}
 
@@ -178,7 +187,7 @@ class CTABar extends Component {
 	}
 
 	render() {
-		const { showComment, showBtn, favorited, liked, likeCount, favoriteCount, comentCount } = this.state;
+		const { showComment, showBtn, favorited, liked, likeCount, favoriteCount, commentCount } = this.state;
 		const { fix, post } = this.props;
 
 		let catBarClass = 'cta-box';
@@ -205,7 +214,7 @@ class CTABar extends Component {
 							fix ? <Link className="icon ion-cta-comment" to={{ pathname: `${BASENAME}message/${post._id}`, state: { id: post._id } }}>&nbsp;</Link>
 								: <div className="icon ion-cta-comment" onClick={this.openComment}>&nbsp;</div>
 						}
-						<span className="text">{comentCount}</span>
+						<span className="text">{commentCount}</span>
 					</div>
 				</div>
 				<div className={showComment ? 'comment-box' : 'comment-box bar-hidden'}>
@@ -222,6 +231,7 @@ class CTABar extends Component {
 
 	componentDidUpdate() {
 		const { showComment } = this.state;
+		document.addEventListener('click', this.__hidden);
 		// if (showComment) {
 
 		// 	document.body.setAttribute('class', 'no-scroll');
@@ -231,6 +241,7 @@ class CTABar extends Component {
 	}
 
 	componentWillUnmount() {
+		document.removeEventListener('click', this.__hidden);
 	}
 }
 

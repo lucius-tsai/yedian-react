@@ -120,9 +120,11 @@ export const likeMessage = (data) => {
 	return __promiseTask(_instance().post(API_ROOT.likeMessage, data));
 };
 
+
 export const delLikeMessage = (id) => {
 	return __promiseTask(_instance().delete(`${API_ROOT.delLikeMessage}${id}`));
 };
+
 
 export const getLikes = (data) => {
 	return __promiseTask(_instance().get(API_ROOT.getLikes, {
@@ -147,6 +149,14 @@ export const getFavorites = (data) => {
 export const commentMessage = (data) => {
 	return __promiseTask(_instance().post(API_ROOT.commentMessage, data));
 };
+
+export const getComments= (data) => {
+	return __promiseTask(_instance().get(API_ROOT.getComments,  {
+		params: data
+	}));
+}
+
+
 
 export const getTags = (query) => {
 	return __promiseTask(_instance().get(API_ROOT.getTags + query));

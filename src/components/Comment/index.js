@@ -7,17 +7,22 @@ import { connect } from 'react-redux';
 import Avator from '../Avator';
 
 import './comment.scss';
+import { getComments } from '../../libs/api';
 
 class Comment extends Component {
+
 	constructor(props) {
 		super(props);
 		this.state = {
 			profile: null,
-			target: null
+			target: null,
+			data: []
 		}
 	}
+
 	componentWillMount() {
 		const { userInfo, target } = this.props;
+		// console.log(target);
 		if (userInfo && userInfo.user && userInfo.user.id) {
 			this.setState({
 				profile: {
@@ -29,7 +34,9 @@ class Comment extends Component {
 				target
 			})
 		}
+		this.fetch();
 	}
+
 	componentWillReceiveProps(nextProps) {
 		const { userInfo } = nextProps;
 		if (userInfo && userInfo.user && userInfo.user.id) {
@@ -44,8 +51,45 @@ class Comment extends Component {
 		}
 	}
 
+	fetch() {
+		const self = this;
+		const { target } = this.props;
+		getComments({
+			type: 'POST',
+			targetId: target._id
+		}).then(res => {
+			if(res.code === 200) {
+				const list = [];
+				res.data.commentList.forEach(cell => {
+					list.push({
+						profile: {
+							_id: cell.userId,
+							displayName: cell.userInfo.displayName,
+							headImgUrl: cell.userInfo.Wechat.headimgurl,
+							userType: 'User'
+						},
+						comment: cell.comment,
+						_id: cell._id
+					});
+				});
+				const tmp = this.state.data.concat(list);
+				self.setState({
+					data: tmp
+				});
+			}
+		}, error => {
+
+		})
+	}
+
+	__openComment(e) {
+		e.stopPropagation();
+		const { openComment } = this.props;
+		openComment(true);
+	}
+
 	render() {
-		const { profile } = this.state;
+		const { profile, data } = this.state;
 		return (
 			<div className="comment">
 				<div className="_title">夜猫子们评论</div>
@@ -53,17 +97,19 @@ class Comment extends Component {
 					<div className="user-self">
 						<Avator profile={profile} />
 					</div>
-					<div className="input-enter">我也要留下一评</div>
+					<div className="input-enter" onClick={this.__openComment.bind(this)}>我也要留下一评</div>
 				</div>
 				<ul className="comment-content">
-					{/* <li className="cell">
-						<Avator profile={profile} model={"default"} />
-						<div className="_content">看了你的攻略去了，发现真的挺好玩的，感谢分享这么全面的教程，辛苦了～</div>
-					</li>
-					<li className="cell">
-						<Avator profile={profile} model={"default"} />
-						<div className="_content">看了你的攻略去了，发现真的挺好玩的，感谢分享这么全面的教程，辛苦了～</div>
-					</li> */}
+					{
+						data.length && data.map(cell => {
+							return (
+								<li className="cell" key={cell._id}>
+									<Avator profile={cell.profile} model={"default"} />
+									<div className="_content">{cell.comment}</div>
+								</li>
+							)
+						})
+					}
 				</ul>
 			</div>
 		)
