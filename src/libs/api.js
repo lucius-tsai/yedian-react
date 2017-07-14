@@ -120,30 +120,33 @@ export const likeMessage = (data) => {
 	return __promiseTask(_instance().post(API_ROOT.likeMessage, data));
 };
 
-export const delLikeMessage = () => {
-	return __promiseTask(_instance().get(API_ROOT.delLikeMessage));
+export const delLikeMessage = (id) => {
+	return __promiseTask(_instance().delete(`${API_ROOT.delLikeMessage}${id}`));
 };
 
-export const getLikes = (id) => {
-	return __promiseTask(_instance().get(`${API_ROOT.getLikes}${id}`));
+export const getLikes = (data) => {
+	return __promiseTask(_instance().get(API_ROOT.getLikes, {
+		params: data
+	}));
 }
 
-export const favoriteMessage = () => {
-	return __promiseTask(_instance().post(API_ROOT.favoriteMessage));
+export const favoriteMessage = (data) => {
+	return __promiseTask(_instance().post(API_ROOT.favoriteMessage, data));
 };
 
-export const delFavoriteMessage = () => {
-	return __promiseTask(_instance().get(API_ROOT.delFavoriteMessage));
+export const delFavoriteMessage = (id) => {
+	return __promiseTask(_instance().get(`${API_ROOT.delFavoriteMessage}${id}`));
 };
 
-export const getFavorites = (id) => {
-	return __promiseTask(_instance().get(`${API_ROOT.getFavorites}${id}`));
+export const getFavorites = (data) => {
+	return __promiseTask(_instance().get(API_ROOT.getFavorites,  {
+		params: data
+	}));
 };
 
-export const commentMessage = () => {
-	return __promiseTask(_instance().get(API_ROOT.commentMessage));
+export const commentMessage = (data) => {
+	return __promiseTask(_instance().post(API_ROOT.commentMessage, data));
 };
-
 
 export const getTags = (query) => {
 	return __promiseTask(_instance().get(API_ROOT.getTags + query));

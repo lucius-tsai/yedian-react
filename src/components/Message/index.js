@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
 import Avator from '../Avator';
 import CTABar from '../CTABar';
 import './message.scss';

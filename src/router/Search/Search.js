@@ -29,6 +29,7 @@ class Search extends Component {
     this.change = this.change.bind(this);
     this.handler = this.handler.bind(this);
     this.getMore = this.getMore.bind(this);
+    this.creatTag = this.creatTag.bind(this);
   }
 
   componentWillMount() {
@@ -129,15 +130,31 @@ class Search extends Component {
       });
     } else {
       if (!list.length) {
-        creatTag({
-          tag: search
-        }).then(res => {
-          console.log(res);
-        }, error => {
-          console.log(error);
-        });
+        
       }
     }
+  }
+  creatTag() {
+    const { history, addTag, publish } = this.props;
+    creatTag({
+      tag: this.state.search
+    }).then(res => {
+      if(res.code === 200) {
+        const tags = publish.tags ? publish.tags : [];
+        let isRepeate = false;
+        tags.forEach(cell => {
+          if(cell._id === res.data._id) {
+            isRepeate = true;
+          }
+        });
+        if(!isRepeate) {
+          addTag(tags.concat(res.data));
+        }
+        history.goBack();
+      }
+    }, error => {
+      console.log(error);
+    });
   }
 
   change(e) {
@@ -158,7 +175,15 @@ class Search extends Component {
       });
     } else {
       const tags = publish.tags ? publish.tags : [];
-      addTag(tags.concat(cell));
+      let isRepeate = false;
+      tags.forEach(item => {
+        if(item._id === cell._id) {
+          isRepeate = true;
+        }
+      });
+      if(!isRepeate) {
+        addTag(tags.concat(cell));
+      }
     }
     history.goBack();
   }
@@ -183,6 +208,13 @@ class Search extends Component {
           <input type="text" value={search} placeholder={searchPlaceholder} className="search-input" onBlur={this.blur}
             onFocus={this.focus} onChange={this.change} />
         </div>
+        {
+          type === 'tags' && !list.length && search.length ?
+          <div className='creatTag-box'>
+            <button onClick={this.creatTag}>创建这个标签</button>
+          </div>
+          : ''
+        }
         {
           type === 'tags' ?
             <h3>热门话题</h3>

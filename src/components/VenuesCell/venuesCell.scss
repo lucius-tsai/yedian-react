@@ -14,10 +14,12 @@
   }
   .name {
     float: left;
+    width: 38%;
     height: 100%;
     margin-left: 10px;
     span {
       vertical-align: middle;
+      line-height: 1.2em;
       display: inline-block;
       color: #333333;
     }

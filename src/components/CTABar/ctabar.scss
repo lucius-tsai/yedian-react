@@ -15,6 +15,9 @@
   }
   .icon {
     color: #CCCCCC;
+    &.active {
+      color: #B33DE5;
+    }
   }
   .icon, .text {
     float: left;
@@ -104,6 +107,9 @@
     border-radius: 5px;
     background-color: #ffffff;
     outline: none;
+    &.btn-hidden {
+      width: 100%;
+    }
   }
   .comment-btn {
     display: block;
@@ -113,5 +119,12 @@
     border-radius: 3px;
     color: #ffffff;
     outline: none;
+    opacity: 1;
+    transition: all 0.3s ease-in-out;
+    &.btn-hidden {
+      width: 0;
+      height: 0;
+      opacity: 0;
+    }
   }
 }
