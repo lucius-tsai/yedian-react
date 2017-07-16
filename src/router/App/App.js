@@ -45,35 +45,6 @@ class Bootstrap extends Component {
   }
 
   componentWillMount() {
-    const { loading, userInfo, getUserInfoLoading, getUserInfoSuccess, setLocation } = this.props;
-    const token = cookie('js_session');
-    if (!token && process.env.NODE_ENV !== "localhost") {
-      this.setState({
-        redirectPath: 'login'
-      });
-    } else {
-      if (!userInfo.user) {
-        getUserInfoLoading();
-        getUserInfo().then(res => {
-          if (res.code === 200) {
-            getUserInfoSuccess(res.data);
-            localStorage.setItem('react_user', JSON.stringify(res.data));
-          }
-        }, error => {
-          if (error.status === 403 && error.responseJSON && error.responseJSON.exp === "token expired") {
-            // console.log(12313);
-          }
-          console.log(error);
-        });
-        getLocation().then(res => {
-          if(res && res.lat && res.lng) {
-            setLocation(res);
-          }
-        }, error => {
-          console.log(error)
-        });
-      }
-    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -152,8 +123,36 @@ class Bootstrap extends Component {
   }
 
   componentDidMount() {
+    const { loading, userInfo, getUserInfoLoading, getUserInfoSuccess, setLocation } = this.props;
+    const token = cookie('js_session');
+    if (!token && process.env.NODE_ENV !== "localhost") {
+      this.setState({
+        redirectPath: 'login'
+      });
+    } else {
+      if (!userInfo.user) {
+        getUserInfoLoading();
+        getUserInfo().then(res => {
+          if (res.code === 200) {
+            getUserInfoSuccess(res.data);
+            localStorage.setItem('react_user', JSON.stringify(res.data));
+          }
+        }, error => {
+          if (error.status === 403 && error.responseJSON && error.responseJSON.exp === "token expired") {
+            // console.log(12313);
+          }
+          console.log(error);
+        });
+        getLocation().then(res => {
+          if(res && res.lat && res.lng) {
+            setLocation(res);
+          }
+        }, error => {
+          console.log(error)
+        });
+      }
+    }
   }
-
 }
 
 const mapStateToProps = state => {

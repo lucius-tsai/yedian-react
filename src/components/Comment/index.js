@@ -36,7 +36,6 @@ class Comment extends Component {
 				target
 			})
 		}
-		this.fetch();
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -117,6 +116,7 @@ class Comment extends Component {
 		)
 	}
 	componentDidMount() {
+		this.fetch();
 	}
 
 	componentWillUnmount() {

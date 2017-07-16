@@ -40,68 +40,6 @@ class Community extends Component {
   }
 
   componentWillMount() {
-    const self = this;
-    this._isMounted = true;
-    const { pagination } = this.state;
-    const { loading, loadSuccess, loadFail, dispatch, delAll } = this.props;
-    delAll();
-    loading();
-    unbind = false;
-    Promise.all([getCommunityBanner(), getHomePostList({
-      limit: pagination.pageSize,
-      offset: (pagination.current - 1) * pagination.pageSize
-    })]).then(data => {
-      loadSuccess();
-      const messages = [], slides = [], total = data[1].count;
-
-      data[1] && data[1].code === 200 && data[1].data.forEach(cell => {
-        if (cell.postType === 0) {
-          messages.push(cell);
-        } else if (cell.postType === 1) {
-          let images = [], description = '';
-          cell.defaultComponents && cell.defaultComponents.forEach(item => {
-            switch (item.name) {
-              case 'component-banner':
-                images = [item.content[0].url];
-                break;
-              default:
-                break;
-            }
-          });
-
-          cell.customizedComponents && cell.customizedComponents.forEach(item => {
-            switch (item.name) {
-              case 'component-paragraph':
-                description = item.content;
-                break;
-              default:
-                break;
-            }
-          });
-          cell.message = { description, images };
-          messages.push(cell);
-        }
-      });
-
-      data[0] && data[0].code === 200 && data[0].data.forEach(cell => {
-        slides.push(cell);
-      });
-
-      self._isMounted && self.setState({
-        slides,
-        messages,
-        dynamicMessages: messages,
-        userList: [],
-        pagination: {
-          total,
-          pageSize: 10,
-          current: pagination.current++
-        }
-      });
-    }, error => {
-      loadFail();
-      console.log(error);
-    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -293,6 +231,69 @@ class Community extends Component {
       document.addEventListener("touchstart", this.handleTouch);
       window.addEventListener("scroll", this.handleScroll);
     }
+
+    const self = this;
+    this._isMounted = true;
+    const { pagination } = this.state;
+    const { loading, loadSuccess, loadFail, dispatch, delAll } = this.props;
+    delAll();
+    loading();
+    unbind = false;
+    Promise.all([getCommunityBanner(), getHomePostList({
+      limit: pagination.pageSize,
+      offset: (pagination.current - 1) * pagination.pageSize
+    })]).then(data => {
+      loadSuccess();
+      const messages = [], slides = [], total = data[1].count;
+
+      data[1] && data[1].code === 200 && data[1].data.forEach(cell => {
+        if (cell.postType === 0) {
+          messages.push(cell);
+        } else if (cell.postType === 1) {
+          let images = [], description = '';
+          cell.defaultComponents && cell.defaultComponents.forEach(item => {
+            switch (item.name) {
+              case 'component-banner':
+                images = [item.content[0].url];
+                break;
+              default:
+                break;
+            }
+          });
+
+          cell.customizedComponents && cell.customizedComponents.forEach(item => {
+            switch (item.name) {
+              case 'component-paragraph':
+                description = item.content;
+                break;
+              default:
+                break;
+            }
+          });
+          cell.message = { description, images };
+          messages.push(cell);
+        }
+      });
+
+      data[0] && data[0].code === 200 && data[0].data.forEach(cell => {
+        slides.push(cell);
+      });
+
+      self._isMounted && self.setState({
+        slides,
+        messages,
+        dynamicMessages: messages,
+        userList: [],
+        pagination: {
+          total,
+          pageSize: 10,
+          current: pagination.current++
+        }
+      });
+    }, error => {
+      loadFail();
+      console.log(error);
+    });
   }
 
   componentWillUnmount() {

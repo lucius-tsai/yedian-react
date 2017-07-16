@@ -29,40 +29,6 @@ class UserTimeLine extends Component {
   }
 
   componentWillMount() {
-    const self = this;
-    this._isMounted = true;
-    const { loading, loadSuccess, loadFail, location, match } = this.props;
-    // loading();
-    if(location.state) {
-      this.setState({
-        user: location.state
-      });
-    } else {
-      if(match && match.params && match.params.id) {
-        getUserInfoById(match.params.id).then(res => {
-          if(res.code === 200) {
-            self._isMounted && self.setState({
-              user: {
-                displayName: res.data.displayName,
-                _id: res.data.id,
-                userType: 'User',
-                headImgUrl: res.data.Wechat.headimgurl
-              }
-            });
-          }
-        }, error => {
-
-        })
-      }
-      
-      // this.setState({
-      //   user: {
-      //     displayName: 'test',
-      //     _id: 'xxx'
-      //   }
-      // });
-    }
-    this.fetch();
   }
 
   fetch() {
@@ -134,6 +100,40 @@ class UserTimeLine extends Component {
     document.title = "Night+--社区";
     this._isMounted = true;
     document.body.scrollTop = 0;
+
+    const self = this;
+    const { loading, loadSuccess, loadFail, location, match } = this.props;
+    // loading();
+    if(location.state) {
+      this.setState({
+        user: location.state
+      });
+    } else {
+      if(match && match.params && match.params.id) {
+        getUserInfoById(match.params.id).then(res => {
+          if(res.code === 200) {
+            self._isMounted && self.setState({
+              user: {
+                displayName: res.data.displayName,
+                _id: res.data.id,
+                userType: 'User',
+                headImgUrl: res.data.Wechat.headimgurl
+              }
+            });
+          }
+        }, error => {
+
+        })
+      }
+      
+      // this.setState({
+      //   user: {
+      //     displayName: 'test',
+      //     _id: 'xxx'
+      //   }
+      // });
+    }
+    this.fetch();
   }
 
   componentWillUnmount() {

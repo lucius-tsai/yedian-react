@@ -20,46 +20,6 @@ class CommunityInfo extends Component {
   }
 
   componentWillMount() {
-    const self = this;
-    this._isMounted = true;
-    const { loading, loadSuccess, loadFail, hideBar, location, match } = this.props;
-    const id = match && match.params && match.params.id ? match.params.id : '';
-    hideBar();
-    loading();
-    getMessageInfo(id).then(res => {
-      loadSuccess();
-      if (res.code === 200 && res.data && res.data.length) {
-        self._isMounted && self.setState({
-          messageInfo: res.data[0]
-        });
-        res.data[0].affiliates && res.data[0].affiliates.forEach(cell => {
-          if (cell.type === 'venues') {
-            const query = `query=query
-            {
-              venues(isValid: 1, isDeleted: 0, _id: "${cell.targetId}"){
-                count,
-                rows{
-                  _id, name, images
-                }
-              }
-            }`
-            getVenues(encodeURI(query)).then(res => {
-              if (res.code === 200 && res.data.venues.count === 1) {
-                const venuesInfo = res.data.venues.rows[0];
-                self._isMounted && self.setState({
-                  venuesInfo
-                });
-              }
-            }, error => {
-
-            })
-          }
-        });
-      }
-    }, error => {
-      loadFail();
-      console.log(error);
-    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -104,6 +64,45 @@ class CommunityInfo extends Component {
     document.title = "Night+--呃呃呃～算是吧～";
     document.body.scrollTop = 0;
     this._isMounted = true;
+    const self = this;
+    const { loading, loadSuccess, loadFail, hideBar, location, match } = this.props;
+    const id = match && match.params && match.params.id ? match.params.id : '';
+    hideBar();
+    loading();
+    getMessageInfo(id).then(res => {
+      loadSuccess();
+      if (res.code === 200 && res.data && res.data.length) {
+        self._isMounted && self.setState({
+          messageInfo: res.data[0]
+        });
+        res.data[0].affiliates && res.data[0].affiliates.forEach(cell => {
+          if (cell.type === 'venues') {
+            const query = `query=query
+            {
+              venues(isValid: 1, isDeleted: 0, _id: "${cell.targetId}"){
+                count,
+                rows{
+                  _id, name, images
+                }
+              }
+            }`
+            getVenues(encodeURI(query)).then(res => {
+              if (res.code === 200 && res.data.venues.count === 1) {
+                const venuesInfo = res.data.venues.rows[0];
+                self._isMounted && self.setState({
+                  venuesInfo
+                });
+              }
+            }, error => {
+
+            })
+          }
+        });
+      }
+    }, error => {
+      loadFail();
+      console.log(error);
+    });
   }
 
   componentWillUnmount() {

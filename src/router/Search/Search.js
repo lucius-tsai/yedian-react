@@ -33,28 +33,6 @@ class Search extends Component {
   }
 
   componentWillMount() {
-    const { location, hideBar, gps } = this.props;
-    hideBar();
-    const type = location && location.state && location.state.type;
-    let searchPlaceholder = null;
-    switch (type) {
-      case "venues":
-        searchPlaceholder = "搜索商户关键字";
-        break;
-      case "tags":
-        searchPlaceholder = "搜索话题关键字";
-        break;
-      default:
-        searchPlaceholder = "搜索商户关键字";
-        break;
-    }
-    this.setState({
-      searchPlaceholder: searchPlaceholder,
-      type: type,
-      gps
-    }, () => {
-      this.fetch();
-    });
   }
   componentWillReceiveProps(nextProps) {
     const { gps } = nextProps;
@@ -230,11 +208,29 @@ class Search extends Component {
     )
   }
   componentWillUnmount() {
-    const { showBar, router } = this.props;
+    const { showBar, router, location, hideBar, gps } = this.props;
     const pathname = router.location.pathname;
-    // if (pathname !== `${BASENAME}topic`) {
-    //   showBar();
-    // }
+    hideBar();
+    const type = location && location.state && location.state.type;
+    let searchPlaceholder = null;
+    switch (type) {
+      case "venues":
+        searchPlaceholder = "搜索商户关键字";
+        break;
+      case "tags":
+        searchPlaceholder = "搜索话题关键字";
+        break;
+      default:
+        searchPlaceholder = "搜索商户关键字";
+        break;
+    }
+    this.setState({
+      searchPlaceholder: searchPlaceholder,
+      type: type,
+      gps
+    }, () => {
+      this.fetch();
+    });
   }
 }
 
