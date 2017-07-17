@@ -98,24 +98,24 @@ class Publish extends Component {
       return false;
     }
 
-    let fd = new FormData();
-    for (let index = 0; index < files.length; index++) {
-      const file = files[index];
-      fd.append("file", file);
-    }
+    // let fd = new FormData();
+    // for (let index = 0; index < files.length; index++) {
+    //   const file = files[index];
+    //   fd.append("file", file);
+    // }
 
-    uploadFile(fd).then(res => {
-      if (res.code === 200) {
-        const tmp = tmpImages.concat(res.data);
-        this.setState({
-          tmpImages: tmp
-        });
-        addPictures(tmp);
-      }
-    }, error => {
-      console.log(error);
-    })
-    return false;
+    // uploadFile(fd).then(res => {
+    //   if (res.code === 200) {
+    //     const tmp = tmpImages.concat(res.data);
+    //     this.setState({
+    //       tmpImages: tmp
+    //     });
+    //     addPictures(tmp);
+    //   }
+    // }, error => {
+    //   console.log(error);
+    // })
+    // return false;
 
     minSizeImage(files).then(data => {
       console.log(data)

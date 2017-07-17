@@ -31,7 +31,8 @@ var webpackConfig = {
   output: {
     path: path.resolve(__dirname, './app_tmp'),
     publicPath: '/app/',
-    filename: `[name].[hash:8].js`
+    filename: `[name].[hash:8].js`,
+    chunkFilename: `[name]-[id].[chunkhash:8].bundle.js`
   },
   resolve: {
     modules: ['./src', './node_modules'],

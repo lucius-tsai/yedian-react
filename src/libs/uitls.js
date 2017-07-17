@@ -165,23 +165,34 @@ export const getLocation = () => {
  * @return {Promise}
  */
 export const minSizeImage = (files) => {
-	const p = [];
+	const p = [], MAX_HEIGHT = 500;
 	for (let index = 0; index < files.length; index++) {
 		const file = files[index];
 		p.push(new Promise((resolve, reject) => {
 			let reader = new FileReader();
 			reader.readAsDataURL(file);
 			reader.onloadend = function (e) {
+				console.log(this)
 				const dataURL = this.result;
 				let image = new Image();
 				image.src = dataURL;
 				image.onload = function () {
+					let originalWidth = image.width, originalHeight = image.height;
+
+					if (image.height > MAX_HEIGHT) {
+						originalWidth = (MAX_HEIGHT / image.height) * originalWidth;
+						originalHeight = MAX_HEIGHT;
+					}
 					let canvas = document.createElement('canvas');
+
 					let ctxt = canvas.getContext('2d');
+					ctxt.clearRect(0, 0, canvas.width, canvas.height);
 
-					ctxt.drawImage(image, 0, 0);
+					canvas.width = originalWidth;
+					canvas.height = originalHeight;
 
-					const newFile = canvas.toDataURL('image/jpg', 0.5);
+					ctxt.drawImage(image, 0, 0, originalWidth, originalHeight);
+					const newFile = canvas.toDataURL('image/jpeg', 0.6);
 					resolve(newFile);
 				}
 			}

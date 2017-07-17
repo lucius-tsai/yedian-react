@@ -11,7 +11,7 @@ import LoadMore from '../../components/LoadMore';
 import './community.scss';
 import style from './community.css';
 
-import { getCommunityBanner, getHomePostList, getIndexUserList } from '../../libs/api';
+import { getCommunityBanner, getPostList, getIndexUserList } from '../../libs/api';
 
 import { loading, loadSuccess, loadFail } from '../../store/actions/appStatus';
 import { delAll } from '../../store/actions/publish';
@@ -29,7 +29,7 @@ class Community extends Component {
       userList: [],
       loading: false,
       pagination: {
-        pageSize: 10,
+        pageSize: 5,
         current: 1
       },
       completed: false,
@@ -37,18 +37,14 @@ class Community extends Component {
     this.handleLoad = this.handleLoad.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
     this.fetch = this.fetch.bind(this);
+    this.pointY = null;
   }
 
   componentWillMount() {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { router } = nextProps
-    // if (this.props.router.location.pathname !== router.location.pathname) {
-    //   unbind = true;
-    //   document.removeEventListener("touchstart", this.handleTouch);
-    //   window.removeEventListener("scroll", this.handleScroll);
-    // }
+
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -63,97 +59,102 @@ class Community extends Component {
     if (messages.length === pagination.total) {
     }
 
-    if (this.state.completed) {
-      console.log('over');
+    if (this.state.completed || this.state.loading) {
       return false;
     }
+    
     const offset = !(pagination.current - 1) ? pagination.pageSize : (pagination.current - 1) * pagination.pageSize;
-    getHomePostList({
-      limit: pagination.pageSize,
-      offset
-    }).then(res => {
-      if (res.code === 200) {
-        const list = [], total = res.count;
-        res.data.forEach(cell => {
-          if (cell.postType === 0) {
-            list.push(cell);
-          } else if (cell.postType === 1) {
-            let images = [], description = '';
-            cell.defaultComponents && cell.defaultComponents.forEach(item => {
-              switch (cell.name) {
-                case 'component-banner':
-                  images = cell.content;
-                  break;
 
-                default:
-                  break;
-              }
-            });
-            cell.customizedComponents && cell.customizedComponents.forEach(item => {
-              switch (cell.name) {
-                case 'component-paragraph':
-                  description = cell.content;
-                  break;
-                default:
-                  break;
-              }
-            });
-            cell.message = { description, images };
-            list.push(cell);
-          }
-        });
-        const merge = messages.concat(list);
-        if (merge.length === total) {
-          console.log("over");
-        }
-
-        if (!res.data.length) {
-          document.removeEventListener("touchstart", this.handleTouch);
-          window.removeEventListener("scroll", this.handleScroll);
-          self.setState({
-            completed: true
+    this.setState({
+      loading: true,
+    }, () => {
+      getPostList({
+        limit: pagination.pageSize,
+        offset
+      }).then(res => {
+        if (res.code === 200) {
+          const list = [], total = res.count;
+          res.data.forEach(cell => {
+            if (cell.postType === 0) {
+              list.push(cell);
+            } else if (cell.postType === 1) {
+              let images = [], description = '';
+              cell.defaultComponents && cell.defaultComponents.forEach(item => {
+                switch (cell.name) {
+                  case 'component-banner':
+                    images = cell.content;
+                    break;
+                  default:
+                    break;
+                }
+              });
+              cell.customizedComponents && cell.customizedComponents.forEach(item => {
+                switch (cell.name) {
+                  case 'component-paragraph':
+                    description = cell.content;
+                    break;
+                  default:
+                    break;
+                }
+              });
+              cell.message = { description, images };
+              list.push(cell);
+            }
           });
-        }
-        // console.log(res)
-        !unbind && self._isMounted && self.setState({
-          loading: false,
-          messages: merge,
-          pagination: {
-            total,
-            pageSize: 10,
-            current: pagination.current++
+          const merge = messages.concat(list);
+          if (merge.length === total) {
+            document.removeEventListener("touchstart", this.handleTouch);
+            window.removeEventListener("scroll", this.handleScroll);
+            self.setState({
+              completed: true
+            });
           }
-        });
-      } else {
-        self._isMounted && self.setState({
+
+          if (!res.data.length) {
+            document.removeEventListener("touchstart", this.handleTouch);
+            window.removeEventListener("scroll", this.handleScroll);
+            self.setState({
+              completed: true
+            });
+          }
+          // console.log(res)
+          self._isMounted && self.setState({
+            messages: merge,
+            loading: false,
+            pagination: {
+              total,
+              pageSize: pagination.pageSize,
+              current: (pagination.current + 1)
+            }
+          });
+        } else {
+          self.setState({
+            loading: false
+          })
+        }
+      }, error => {
+        self.setState({
           loading: false
-        });
-      }
-    }, error => {
-      self._isMounted && self.setState({
-        loading: false
+        })
       });
     });
+
   }
 
   handleScroll(e) {
     const self = this;
-    this._isMounted = true;
-    const { loading } = self.state;
     const documentHeight = document.body.clientHeight;
     const scrollHeight = window.scrollY;
     const distance = documentHeight - scrollHeight;
-    if (distance < 700 && !this.state.loading && pointY < scrollHeight) {
-      setTimeout(() => {
-        self.fetch();
-      }, 500);
+    if (distance < 700 && !this.state.loading && self.pointY < scrollHeight) {
+      self.fetch();
     }
     setImmediate(() => {
-      pointY = scrollHeight;
+      self.pointY = scrollHeight;
     });
   }
   handleTouch(e) {
-    pointY = window.scrollY;
+    self.pointY = window.scrollY;
   }
   handleLoad(dom) {
   }
@@ -231,67 +232,70 @@ class Community extends Component {
     const { messages, pagination } = this.state;
     const { loading, loadSuccess, loadFail, dispatch, delAll } = this.props;
 
-    if (messages.length && pagination && pagination.total && pagination.total > messages.length) {
-      document.addEventListener("touchstart", this.handleTouch);
-      window.addEventListener("scroll", this.handleScroll);
-    }
+    document.removeEventListener("touchstart", this.handleTouch);
+    window.removeEventListener("scroll", this.handleScroll);
+    document.addEventListener("touchstart", this.handleTouch);
+    window.addEventListener("scroll", this.handleScroll);
 
     delAll();
-    loading();
-    
-    Promise.all([getCommunityBanner(), getHomePostList({
-      limit: pagination.pageSize,
-      offset: (pagination.current - 1) * pagination.pageSize
-    })]).then(data => {
-      loadSuccess();
-      const messages = [], slides = [], total = data[1].count;
-      data[1] && data[1].code === 200 && data[1].data.forEach(cell => {
-        if (cell.postType === 0) {
-          messages.push(cell);
-        } else if (cell.postType === 1) {
-          let images = [], description = '';
-          cell.defaultComponents && cell.defaultComponents.forEach(item => {
-            switch (item.name) {
-              case 'component-banner':
-                images = [item.content[0].url];
-                break;
-              default:
-                break;
-            }
-          });
+    self.setState({
+      loading: true
+    }, () => {
+      Promise.all([getCommunityBanner(), getPostList({
+        limit: pagination.pageSize,
+        offset: (pagination.current - 1) * pagination.pageSize
+      })]).then(data => {
+        const messages = [], slides = [], total = data[1].count;
+        data[1] && data[1].code === 200 && data[1].data.forEach(cell => {
+          if (cell.postType === 0) {
+            messages.push(cell);
+          } else if (cell.postType === 1) {
+            let images = [], description = '';
+            cell.defaultComponents && cell.defaultComponents.forEach(item => {
+              switch (item.name) {
+                case 'component-banner':
+                  images = [item.content[0].url];
+                  break;
+                default:
+                  break;
+              }
+            });
+            cell.customizedComponents && cell.customizedComponents.forEach(item => {
+              switch (item.name) {
+                case 'component-paragraph':
+                  description = item.content;
+                  break;
+                default:
+                  break;
+              }
+            });
+            cell.message = { description, images };
+            messages.push(cell);
+          }
+        });
 
-          cell.customizedComponents && cell.customizedComponents.forEach(item => {
-            switch (item.name) {
-              case 'component-paragraph':
-                description = item.content;
-                break;
-              default:
-                break;
-            }
-          });
-          cell.message = { description, images };
-          messages.push(cell);
-        }
-      });
+        data[0] && data[0].code === 200 && data[0].data.forEach(cell => {
+          slides.push(cell);
+        });
 
-      data[0] && data[0].code === 200 && data[0].data.forEach(cell => {
-        slides.push(cell);
+        self._isMounted && self.setState({
+          slides,
+          messages,
+          dynamicMessages: messages,
+          userList: [],
+          loading: false,
+          pagination: {
+            total,
+            pageSize: pagination.pageSize,
+            current: (pagination.current + 1)
+          }
+        });
+      }, error => {
+        self.setState({
+          loading: false
+        });
+        console.log(error);
       });
-
-      self._isMounted && self.setState({
-        slides,
-        messages,
-        dynamicMessages: messages,
-        userList: [],
-        pagination: {
-          total,
-          pageSize: 10,
-          current: pagination.current++
-        }
-      });
-    }, error => {
-      loadFail();
-      console.log(error);
     });
   }
 
@@ -305,7 +309,8 @@ class Community extends Component {
 const mapStateToProps = state => {
   const { appStatus, router } = state;
   return {
-    router
+    router,
+    loading: appStatus.loading || false
   }
 };
 

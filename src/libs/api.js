@@ -15,17 +15,17 @@ const _instance = () => {
 	if (js_session) {
 		if (process.env.NODE_ENV === "development") { // eslint-disable-line
 			return axios.create({
-				timeout: 5000,
+				timeout: 500000,
 				headers: { "Authorization": `Bearer ${js_session}` }
 			});
 		}
 		return axios.create({
-			timeout: 5000,
+			timeout: 500000,
 			headers: { "Authorization": `Bearer ${js_session}` }
 		});
 	}
 	return axios.create({
-		timeout: 5000
+		timeout: 500000
 	});
 };
 /**
@@ -166,7 +166,7 @@ export const creatTag = (data) => {
 	return __promiseTask(_instance().post(API_ROOT.createTag, data));
 };
 
-export const getHomePostList = (data) => {
+export const getPostList = (data) => {
 	return __promiseTask(_instance().get(API_ROOT.getMessage, {
 		params: data
 	}));

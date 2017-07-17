@@ -1,0 +1,55 @@
+.commentBox {
+  max-width: 414px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 7px;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  height: 50px;
+  z-index: 9;
+  background: #14171b;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 -3px 5px 0 rgba(0, 0, 0, .2);
+  transform: translateX(-50%);
+  transition: all 0.3s ease-in-out;
+}
+.commentBox.barHidden {
+  bottom: -100px;
+}
+.commentBox .commentTxt {
+  width: 82%;
+  height: 32px;
+  line-height: 22px;
+  box-sizing: border-box;
+  padding: 5px 8px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  outline: none;
+}
+.commentBox .commentTxt.btnHidden {
+  width: 100%;
+}
+.commentBox .commentBtn {
+  display: block;
+  height: 32px;
+  width: 15%;
+  background-color: #B33DE5;
+  border-radius: 3px;
+  color: #ffffff;
+  outline: none;
+  opacity: 1;
+  transition: all 0.3s ease-in-out;
+}
+.commentBox .commentBtn.btnHidden {
+  width: 0;
+  height: 0;
+  opacity: 0;
+}

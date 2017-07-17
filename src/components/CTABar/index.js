@@ -9,8 +9,7 @@ import {
 	delLikeMessage,
 	getFavorites,
 	favoriteMessage,
-	delFavoriteMessage,
-	commentMessage
+	delFavoriteMessage
 } from '../../libs/api';
 
 import { showComment, hiddenComment } from '../../store/actions/appStatus';
@@ -32,9 +31,7 @@ class CTABar extends Component {
 		}
 		this.like = this.like.bind(this);
 		this.favorite = this.favorite.bind(this);
-		this.comment = this.comment.bind(this);
 		this.openComment = this.openComment.bind(this);
-		this.input = this.input.bind(this);
 		this.__hidden = this.__hidden.bind(this);
 	}
 
@@ -93,7 +90,6 @@ class CTABar extends Component {
 		const { post } = this.props;
 		if (this.state.liked) {
 			delLikeMessage(this.state.likeID).then(res => {
-				console.log(res);
 				if (res.code === 200) {
 					self.setState({
 						liked: false,
@@ -158,44 +154,24 @@ class CTABar extends Component {
 		const { __showComment } = this.props;
 		__showComment();
 	}
-	comment(e) {
-		const { post, userInfo } = this.props;
-		commentMessage({
-			type: 'POST',
-			targetId: post._id,
-			isDisplay: true,
-			comment: this.state.comment
-		}).then(res => {
-			this.setState({
-				showComment: false
-			});
-		}, error => {
-
-		});
-	}
-
-	focus(ref) {
-		if (ref) {
-			ref.focus();
-			document.body.scrollTop = document.body.clientHeight;
-		}
-	}
-
-	input(e) {
-		const input = e.target.value.trim();
-		this.setState({
-			comment: input,
-			showBtn: !!input.length
-		});
-	}
 
 	__hidden(e) {
 		const { __hiddenComment } = this.props;
 		__hiddenComment();
 	}
 
+	handleClick(ref) {
+		const className = ref && ref.className;
+		ref && ref.addEventListener && ref.addEventListener('click', (e) => {
+			ref.className = `${ref.className} bounceIn animated`;
+			setTimeout(() => {
+				ref.className = className;
+			}, 400);
+		});
+	}
+
 	render() {
-		const { showComment, showBtn, favorited, liked, likeCount, favoriteCount, commentCount } = this.state;
+		const { showComment, favorited, liked, likeCount, favoriteCount, commentCount } = this.state;
 		const { fix, post } = this.props;
 
 		let catBarClass = 'cta-box';
@@ -209,13 +185,13 @@ class CTABar extends Component {
 		return (
 			<div onClick={e => { e.nativeEvent.stopImmediatePropagation(); }}>
 				<div className={showComment ? `${catBarClass} bar-hidden` : catBarClass}>
-					<div className="cell _like">
-						<div className={liked ? "icon ion-cta-like active" : "icon ion-cta-like"} onClick={this.like}>&nbsp;</div>
-						<span className="text">{likeCount}</span>
+					<div className={liked ? "cell _like active" : "cell _like"}>
+						<div className="icon ion-cta-like" onClick={this.like} ref={this.handleClick}>&nbsp;</div>
+						<span className="text" style={{width: `${String(likeCount).length * 10}px`}}>{likeCount}</span>
 					</div>
-					<div className="cell _collection">
-						<div className={favorited ? "icon ion-cta-collection active" : "icon ion-cta-collection"} onClick={this.favorite}>&nbsp;</div>
-						<span className="text">{favoriteCount}</span>
+					<div className={favorited ? "cell _collection active" : "cell _collection"}>
+						<div className="icon ion-cta-collection" onClick={this.favorite} ref={this.handleClick}>&nbsp;</div>
+						<span className="text" style={{width: `${String(favoriteCount).length * 10}px`}}>{favoriteCount}</span>
 					</div>
 					<div className="cell _comment">
 						{
@@ -224,14 +200,6 @@ class CTABar extends Component {
 						}
 						<span className="text">{commentCount}</span>
 					</div>
-				</div>
-				<div className={showComment ? 'comment-box' : 'comment-box bar-hidden'}>
-					{
-						showComment ?
-							<textarea className={showBtn ? 'comment-txt' : 'comment-txt btn-hidden'} placeholder='我也要留下一评' ref={this.focus} onChange={this.input}></textarea>
-							: ''
-					}
-					<button className={showBtn ? 'comment-btn' : 'comment-btn btn-hidden'} onClick={this.comment}>提交</button>
 				</div>
 			</div>
 		)

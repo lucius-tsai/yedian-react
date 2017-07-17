@@ -8,8 +8,8 @@ import { connect } from 'react-redux';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 // routes
-import Community from '../Community/Community';
-import CommunityInfo from '../CommunityInfo/CommunityInfo';
+import Community from '../Community/';
+import CommunityInfo from '../CommunityInfo/';
 import Publish from '../Publish/Publish';
 import Search from '../Search/Search';
 import Topic from '../Topic/Topic';

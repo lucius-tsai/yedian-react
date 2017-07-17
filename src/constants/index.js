@@ -46,7 +46,7 @@ if (process.env.NODE_ENV === "localhost") {
 
 		postMessage: commontCoreApiDomain + "/community/post",
 		
-		// uploadFile: "/api/file",
+		// uploadFile: "http://10.85.108.33:3007/public/file/upload",
 		uploadFile: venuesCoreApiDomain + "/public/file/upload",
 
 		getLikes: commontCoreApiDomain + "/users/likes",
