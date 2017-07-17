@@ -207,7 +207,7 @@ class Search extends Component {
       </div>
     )
   }
-  componentWillUnmount() {
+  componentDidMount() {
     const { showBar, router, location, hideBar, gps } = this.props;
     const pathname = router.location.pathname;
     hideBar();
@@ -231,6 +231,9 @@ class Search extends Component {
     }, () => {
       this.fetch();
     });
+  }
+  componentWillUnmount() {
+    
   }
 }
 
