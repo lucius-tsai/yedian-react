@@ -17,7 +17,7 @@ import { loading, loadSuccess, loadFail } from '../../store/actions/appStatus';
 import { delAll } from '../../store/actions/publish';
 
 
-let pointY = null, unbind = false;
+let pointY = null;
 
 class Community extends Component {
   constructor(props) {
@@ -143,7 +143,7 @@ class Community extends Component {
     const documentHeight = document.body.clientHeight;
     const scrollHeight = window.scrollY;
     const distance = documentHeight - scrollHeight;
-    if (distance < 700 && !this.state.loading && pointY < scrollHeight && !unbind) {
+    if (distance < 700 && !this.state.loading && pointY < scrollHeight) {
       setTimeout(() => {
         self.fetch();
       }, 500);
@@ -224,28 +224,27 @@ class Community extends Component {
   }
 
   componentDidMount() {
-    document.title = "Night+--社区";
+    const self = this;
     this._isMounted = true;
+
+    document.title = "Night+--社区";
     const { messages, pagination } = this.state;
+    const { loading, loadSuccess, loadFail, dispatch, delAll } = this.props;
+
     if (messages.length && pagination && pagination.total && pagination.total > messages.length) {
       document.addEventListener("touchstart", this.handleTouch);
       window.addEventListener("scroll", this.handleScroll);
     }
 
-    const self = this;
-    this._isMounted = true;
-    const { pagination } = this.state;
-    const { loading, loadSuccess, loadFail, dispatch, delAll } = this.props;
     delAll();
     loading();
-    unbind = false;
+    
     Promise.all([getCommunityBanner(), getHomePostList({
       limit: pagination.pageSize,
       offset: (pagination.current - 1) * pagination.pageSize
     })]).then(data => {
       loadSuccess();
       const messages = [], slides = [], total = data[1].count;
-
       data[1] && data[1].code === 200 && data[1].data.forEach(cell => {
         if (cell.postType === 0) {
           messages.push(cell);

@@ -97,11 +97,12 @@ class UserTimeLine extends Component {
   }
 
   componentDidMount() {
-    document.title = "Night+--社区";
-    this._isMounted = true;
-    document.body.scrollTop = 0;
-
     const self = this;
+    this._isMounted = true;
+
+    document.title = "Night+--社区";
+    document.body.scrollTop = 0;
+    
     const { loading, loadSuccess, loadFail, location, match } = this.props;
     // loading();
     if(location.state) {
@@ -125,13 +126,6 @@ class UserTimeLine extends Component {
 
         })
       }
-      
-      // this.setState({
-      //   user: {
-      //     displayName: 'test',
-      //     _id: 'xxx'
-      //   }
-      // });
     }
     this.fetch();
   }

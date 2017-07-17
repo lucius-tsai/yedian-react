@@ -29,7 +29,7 @@ import { cookie, getLocation } from "../../libs/uitls";
 // redux-actions
 
 import { setLocation } from '../../store/actions/appStatus';
-import { getUserInfoLoading, getUserInfoSuccess } from '../../store/actions/userInfo';
+import { getUserInfoLoading, getUserInfoSuccess, getUserInfoFail } from '../../store/actions/userInfo';
 
 
 class Bootstrap extends Component {
@@ -82,48 +82,49 @@ class Bootstrap extends Component {
     }
     if(userInfo && userInfo.loading) {
       return (<Loading />)
+    } else {
+      return (
+        <div>
+          <Route render={({ location }) => (
+            <div className={hideBar ? `${key} no-tab-bar` : key} style={{ width: `${cellWidth}px` }}>
+              <Route exact path={BASENAME} render={() => (
+                <Redirect to={`${BASENAME}${redirectPath}`} />
+              )} />
+              <Route exact path="/" render={() => (
+                <Redirect to={`${BASENAME}${redirectPath}`} />
+              )} />
+              {
+                hideBar ? "" : <TabBar />
+              }
+              <CSSTransitionGroup
+                component='div'
+                transitionName={key}
+                transitionEnterTimeout={300}
+                transitionLeaveTimeout={300}
+              >
+                <Switch key={location.key} location={location}>
+                  <Route exact path={`${BASENAME}community`} component={Community} name="community" />
+                  <Route exact path={`${BASENAME}message/:id`} component={CommunityInfo} name="message" />
+                  <Route exact path={`${BASENAME}publish`} component={Publish} name="publish" />
+                  <Route exact path={`${BASENAME}search`} component={Search} name="search" />
+                  <Route exact path={`${BASENAME}topic/:id`} component={Topic} name="topic" />
+                  <Route exact path={`${BASENAME}user/times/:id`} component={UserTimeLine} name="userTimeLine" />
+                  <Route exact path={`${BASENAME}login`} component={Login} name="login" />
+                  <Route path={`${BASENAME}*`} component={NotFound} name="notFound" />
+                </Switch>
+              </CSSTransitionGroup>
+              {
+                loading ? <Loading /> : ""
+              }
+            </div>
+          )} />
+        </div>
+      )
     }
-    return (
-      <div>
-        <Route render={({ location }) => (
-          <div className={hideBar ? `${key} no-tab-bar` : key} style={{ width: `${cellWidth}px` }}>
-            <Route exact path={BASENAME} render={() => (
-              <Redirect to={`${BASENAME}${redirectPath}`} />
-            )} />
-            <Route exact path="/" render={() => (
-              <Redirect to={`${BASENAME}${redirectPath}`} />
-            )} />
-            {
-              hideBar ? "" : <TabBar />
-            }
-            <CSSTransitionGroup
-              component="div"
-              transitionName={key}
-              transitionEnterTimeout={300}
-              transitionLeaveTimeout={300}
-            >
-              <Switch key={location.key} location={location}>
-                <Route exact path={`${BASENAME}community`} component={Community} name="community" />
-                <Route exact path={`${BASENAME}message/:id`} component={CommunityInfo} name="message" />
-                <Route exact path={`${BASENAME}publish`} component={Publish} name="publish" />
-                <Route exact path={`${BASENAME}search`} component={Search} name="search" />
-                <Route exact path={`${BASENAME}topic/:id`} component={Topic} name="topic" />
-                <Route exact path={`${BASENAME}user/times/:id`} component={UserTimeLine} name="userTimeLine" />
-                <Route exact path={`${BASENAME}login`} component={Login} name="login" />
-                <Route path={`${BASENAME}*`} component={NotFound} name="notFound" />
-              </Switch>
-            </CSSTransitionGroup>
-            {
-              loading ? <Loading /> : ""
-            }
-          </div>
-        )} />
-      </div>
-    )
   }
 
   componentDidMount() {
-    const { loading, userInfo, getUserInfoLoading, getUserInfoSuccess, setLocation } = this.props;
+    const { loading, userInfo, getUserInfoLoading, getUserInfoSuccess, getUserInfoFail, setLocation } = this.props;
     const token = cookie('js_session');
     if (!token && process.env.NODE_ENV !== "localhost") {
       this.setState({
@@ -136,12 +137,14 @@ class Bootstrap extends Component {
           if (res.code === 200) {
             getUserInfoSuccess(res.data);
             localStorage.setItem('react_user', JSON.stringify(res.data));
+          } else {
+            getUserInfoFail()
           }
-        }, error => {
-          if (error.status === 403 && error.responseJSON && error.responseJSON.exp === "token expired") {
-            // console.log(12313);
+        }).catch(error => {
+          const msg = error.message;
+          if (/403/g.test(msg)) {
+            // cookie('js_session', null, -1);
           }
-          console.log(error);
         });
         getLocation().then(res => {
           if(res && res.lat && res.lng) {
@@ -172,6 +175,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     getUserInfoSuccess: (cell) => {
       dispatch(getUserInfoSuccess(cell))
+    },
+    getUserInfoFail: (cell) => {
+      dispatch(getUserInfoFail(cell));
     },
     setLocation: (cell) => {
       dispatch(setLocation(cell));

@@ -61,14 +61,18 @@ class CommunityInfo extends Component {
   }
 
   componentDidMount() {
-    document.title = "Night+--呃呃呃～算是吧～";
-    document.body.scrollTop = 0;
     this._isMounted = true;
     const self = this;
+
+    document.title = "Night+--呃呃呃～算是吧～";
+    document.body.scrollTop = 0;
+
     const { loading, loadSuccess, loadFail, hideBar, location, match } = this.props;
     const id = match && match.params && match.params.id ? match.params.id : '';
+
     hideBar();
     loading();
+    
     getMessageInfo(id).then(res => {
       loadSuccess();
       if (res.code === 200 && res.data && res.data.length) {
