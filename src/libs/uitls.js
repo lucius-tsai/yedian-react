@@ -1,4 +1,11 @@
 // const jwtDecode = require("jwt-decode");
+
+/**
+ * cookie
+ * @param {*} name 
+ * @param {*} value 
+ * @param {*} options 
+ */
 export const cookie = (name, value, options) => {
 	if (typeof value != "undefined") {
 		options = options || {};
@@ -38,7 +45,10 @@ export const cookie = (name, value, options) => {
 	}
 };
 
-
+/**
+ * 获取 url search
+ * @param {String} name 
+ */
 export const getQueryString = (name) => {
 	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
 	var rr = window.location.search.substr(1).match(reg);
@@ -48,6 +58,11 @@ export const getQueryString = (name) => {
 	return null;
 }
 
+/**
+ * 格式化日期
+ * @param {String} format 
+ * @param {Date} date 
+ */
 export const parseDate = (format, date) => {
 	if (!(date instanceof Date)) return;
 	var o = {
@@ -68,6 +83,10 @@ export const parseDate = (format, date) => {
 	return format;
 }
 
+/**
+ * 安装微信SDK
+ * @param {*} data 
+ */
 export const weChatSDKInstall = (data) => {
 	if (data && data.appId) {
 		wx.config({
@@ -97,9 +116,13 @@ export const weChatSDKInstall = (data) => {
 	}
 }
 
+/**
+ * 获取经纬度
+ * @return {Promise}
+ */
 export const getLocation = () => {
 	const sessionData = sessionStorage.getItem('location');
-	const	cachedData = sessionData ? JSON.parse(sessionData) : null;
+	const cachedData = sessionData ? JSON.parse(sessionData) : null;
 	return new Promise((resolve, reject) => {
 		if (cachedData) {
 			resolve(cachedData, 'cache')
@@ -134,4 +157,35 @@ export const getLocation = () => {
 			reject(new Error(), 'null');
 		}
 	})
+}
+
+/**
+ * 上传图片压缩处理
+ * @param {*} files
+ * @return {Promise}
+ */
+export const minSizeImage = (files) => {
+	const p = [];
+	for (let index = 0; index < files.length; index++) {
+		const file = files[index];
+		p.push(new Promise((resolve, reject) => {
+			let reader = new FileReader();
+			reader.readAsDataURL(file);
+			reader.onloadend = function (e) {
+				const dataURL = this.result;
+				let image = new Image();
+				image.src = dataURL;
+				image.onload = function () {
+					let canvas = document.createElement('canvas');
+					let ctxt = canvas.getContext('2d');
+
+					ctxt.drawImage(image, 0, 0);
+
+					const newFile = canvas.toDataURL('image/jpg', 0.5);
+					resolve(newFile);
+				}
+			}
+		}));
+	}
+	return Promise.all(p);
 }

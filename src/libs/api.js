@@ -8,7 +8,7 @@ const _instance = () => {
 	let js_session = cookie("js_session");
 
 	if (process.env.NODE_ENV === "localhost") {
-		js_session = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDAwOTczNzksImlzcyI6IjM0MjQ3MzkwLTY1ZjAtMTFlNy05YjRhLWRkNDViMTgxNWUyZSIsImlhdCI6MTUwMDAxMDk3OX0.2UJRMiyxQp3WZbUtpCy9JgqdJTo85Dya2kX_nEdUhpg";
+		js_session = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDAzNDMwNzAsImlzcyI6IjM0MjQ3MzkwLTY1ZjAtMTFlNy05YjRhLWRkNDViMTgxNWUyZSIsImlhdCI6MTUwMDI1NjY3MH0.fRFXSM47Cq6YIl2Z1aMPrwrNcXp94P8kbCWOjqY2oOA";
 	} else {
 		// js_session = cookie("js_session");
 	}

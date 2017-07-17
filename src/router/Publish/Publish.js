@@ -13,6 +13,7 @@ import { hideBar, showBar, deleteUnmount } from '../../store/actions/appStatus';
 import { addPictures, removeTag, removeVenues, saveDescription } from '../../store/actions/publish';
 
 import { postMessage, uploadFile } from '../../libs/api';
+import { minSizeImage } from '../../libs/uitls';
 
 class Publish extends Component {
   constructor(props) {
@@ -66,6 +67,7 @@ class Publish extends Component {
       images: tmpImages,
       description: description
     }
+
     post.tags = tags.map(cell => {
       return {
         tag: cell.tag
@@ -76,9 +78,9 @@ class Publish extends Component {
       type: 'venues',
       targetId: venues._id
     }];
-    
+
     postMessage(post).then(res => {
-      if(res.code === 200) {
+      if (res.code === 200) {
         history.goBack();
       }
     }, error => {
@@ -89,16 +91,21 @@ class Publish extends Component {
   handleFileUpload(e) {
     const { addPictures } = this.props;
     const { tmpImages } = this.state;
-    let fd = new FormData();
     const files = e.target.files;
+
+    if ((files.length + tmpImages.length) > 9) {
+      alert('最多上传9张图片');
+      return false;
+    }
+
+    let fd = new FormData();
     for (let index = 0; index < files.length; index++) {
       const file = files[index];
       fd.append("file", file);
-      // tmpImages.push(file)
     }
 
     uploadFile(fd).then(res => {
-      if(res.code === 200) {
+      if (res.code === 200) {
         const tmp = tmpImages.concat(res.data);
         this.setState({
           tmpImages: tmp
@@ -108,6 +115,27 @@ class Publish extends Component {
     }, error => {
       console.log(error);
     })
+    return false;
+
+    minSizeImage(files).then(data => {
+      console.log(data)
+      let fd = new FormData();
+      data.forEach(cell => {
+        fd.append("file", cell);
+      });
+      uploadFile(fd).then(res => {
+        if (res.code === 200) {
+          const tmp = tmpImages.concat(res.data);
+          this.setState({
+            tmpImages: tmp
+          });
+          addPictures(tmp);
+        }
+      }, error => {
+        console.log(error);
+      })
+    })
+
   }
 
   previewImage(file, e) {
@@ -162,7 +190,7 @@ class Publish extends Component {
       });
       dom.addEventListener("touchend", (e) => {
         e.preventDefault();
-        
+
         if (X < -35) {
           dom.removeAttribute("style");
           dom.className = "venues-holder show-remove"
@@ -173,7 +201,7 @@ class Publish extends Component {
         /**
          * 处理 删除venues
          */
-        if(e.target && e.target.className === "remove") {
+        if (e.target && e.target.className === "remove") {
           const { removeVenues } = self.props;
           return removeVenues();
         }
@@ -196,7 +224,7 @@ class Publish extends Component {
     const { show, description, tags, venues, tmpImages, showRomeVenues } = this.state;
     const tmpImageStr = tmpImages.map((cell, index) => {
       return (
-        <div className="pic" key={index} style={{backgroundImage: `url(${cell})`}}></div>
+        <div className="pic" key={index} style={{ backgroundImage: `url(${cell})` }}></div>
       );
     });
 
@@ -251,11 +279,12 @@ class Publish extends Component {
   }
 
   componentDidUpdate() {
-    if(this.refs && this.refs.removeVenue && this.refs.removeVenue.addEventListener) {
+    if (this.refs && this.refs.removeVenue && this.refs.removeVenue.addEventListener) {
       console.log(this.refs.removeVenue);
       this.refs.removeVenue.removeEventListener("click", this.removeVenue);
       this.refs.removeVenue.addEventListener("click", this.removeVenue);
-    } 
+    }
+
   }
 
   componentWillUnmount() {

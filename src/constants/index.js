@@ -1,7 +1,7 @@
-let userApiDomain = null;
-let userCoreApiDomain = null;
-let commontCoreApiDomain = null;
-let venuesCoreApiDomain = null;
+let userApiDomain = null; // user infromation core service
+let userCoreApiDomain = null; // user buiness information core service
+let commontCoreApiDomain = null; // feedback system
+let venuesCoreApiDomain = null; // venues sysytem
 
 if (process.env.NODE_ENV === "development") {
 	userApiDomain = "http://user.dev.ye-dian.com";
@@ -45,6 +45,8 @@ if (process.env.NODE_ENV === "localhost") {
 		getMessageInfo: commontCoreApiDomain + "/community/post",
 
 		postMessage: commontCoreApiDomain + "/community/post",
+		
+		// uploadFile: "/api/file",
 		uploadFile: venuesCoreApiDomain + "/public/file/upload",
 
 		getLikes: commontCoreApiDomain + "/users/likes",
