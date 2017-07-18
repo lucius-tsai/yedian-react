@@ -16,6 +16,7 @@ import { postMessage, uploadFile } from '../../libs/api';
 import { minSizeImage } from '../../libs/uitls';
 
 class Publish extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -34,15 +35,15 @@ class Publish extends Component {
   }
 
   componentWillMount() {
-    const { hideBar, publish, appStatus, router } = this.props;
-    // console.log(router);
-    // if(router && router.location && router.location.state && router.location.state.tags) {
-    //   if(publish.tags) {
-    //     addTag(publish.tags.concat(router.location.state.tags));
-    //   } else {
-    //     addTag(router.location.state.tags);
-    //   }
-    // }
+    const { hideBar, publish, appStatus, router, addTag } = this.props;
+    if (router && router.location && router.location.state && router.location.state.tags) {
+      if (publish.tags) {
+        addTag(publish.tags.concat(router.location.state.tags));
+      } else {
+        addTag(router.location.state.tags);
+      }
+    }
+
     hideBar();
     this.setState({
       tags: publish.tags,
@@ -225,7 +226,6 @@ class Publish extends Component {
   }
 
   removeVenue() {
-    console.log(123);
   }
 
   render() {

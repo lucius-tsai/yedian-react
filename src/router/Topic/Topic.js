@@ -70,7 +70,7 @@ class Topic extends Component {
     }
 
 
-    reset && loading();
+    // reset && loading();
 
     const offset = (pagination.current - 1) * pagination.pageSize;
 
@@ -80,6 +80,7 @@ class Topic extends Component {
       getPostList({
         limit: pagination.pageSize,
         offset,
+        _tags: JSON.stringify(this.state.tags),
         sort: `-${tab}`
       }).then(res => {
         if (res.code === 200) {
@@ -118,12 +119,12 @@ class Topic extends Component {
             loading: false
           })
         }
-        reset && loadSuccess();
+        // reset && loadSuccess();
       }, error => {
         self.setState({
           // loading: false
         });
-        reset && loadFail();
+        // reset && loadFail();
       });
     });
   }
@@ -245,12 +246,13 @@ class Topic extends Component {
           tags: res.data[0].tags.map(cell => {
             return cell.tag
           })
+        }).then(() => {
+          self.fetch();
         });
       }
     }).catch(error => {
 
     });
-    this.fetch();
 
     // Promise.all([getCommunityBanner(), getPostList()]).then(data => {
     //   loadSuccess();

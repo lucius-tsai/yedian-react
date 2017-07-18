@@ -34,7 +34,7 @@ class Community extends Component {
       },
       completed: false,
     };
-    this.handleLoad = this.handleLoad.bind(this);
+    
     this.handleScroll = this.handleScroll.bind(this);
     this.fetch = this.fetch.bind(this);
     this.pointY = null;
@@ -58,14 +58,11 @@ class Community extends Component {
     const { pagination, messages } = this.state;
     const { loading, loadSuccess, loadFail } = this.props;
 
-    if (messages.length === pagination.total) {
-    }
-
     if (this.state.completed || this.state.loading) {
       return false;
     }
     
-    const offset = !(pagination.current - 1) ? pagination.pageSize : (pagination.current - 1) * pagination.pageSize;
+    const offset = (pagination.current - 1) * pagination.pageSize;
 
     this.setState({
       loading: true,
@@ -134,8 +131,6 @@ class Community extends Component {
   }
   handleTouch(e) {
     self.pointY = window.scrollY;
-  }
-  handleLoad(dom) {
   }
 
   render() {
@@ -216,65 +211,7 @@ class Community extends Component {
     document.addEventListener("touchstart", this.handleTouch);
     window.addEventListener("scroll", this.handleScroll);
 
-    self.setState({
-      loading: true
-    }, () => {
-      Promise.all([getCommunityBanner(), getPostList({
-        limit: pagination.pageSize,
-        offset: (pagination.current - 1) * pagination.pageSize
-      })]).then(data => {
-        const messages = [], slides = [], total = data[1].count;
-        data[1] && data[1].code === 200 && data[1].data.forEach(cell => {
-          if (cell.postType === 0) {
-            messages.push(cell);
-          } else if (cell.postType === 1) {
-            let images = [], description = '';
-            cell.defaultComponents && cell.defaultComponents.forEach(item => {
-              switch (item.name) {
-                case 'component-banner':
-                  images = [item.content[0].url];
-                  break;
-                default:
-                  break;
-              }
-            });
-            cell.customizedComponents && cell.customizedComponents.forEach(item => {
-              switch (item.name) {
-                case 'component-paragraph':
-                  description = item.content;
-                  break;
-                default:
-                  break;
-              }
-            });
-            cell.message = { description, images };
-            messages.push(cell);
-          }
-        });
-
-        data[0] && data[0].code === 200 && data[0].data.forEach(cell => {
-          slides.push(cell);
-        });
-
-        self._isMounted && self.setState({
-          slides,
-          messages,
-          dynamicMessages: messages,
-          userList: [],
-          loading: false,
-          pagination: {
-            total,
-            pageSize: pagination.pageSize,
-            current: (pagination.current + 1)
-          }
-        });
-      }, error => {
-        self.setState({
-          loading: false
-        });
-        console.log(error);
-      });
-    });
+    self.fetch();
   }
 
   componentWillUnmount() {

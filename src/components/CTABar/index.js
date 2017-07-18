@@ -19,8 +19,6 @@ class CTABar extends Component {
 		super(props);
 		this.state = {
 			showComment: false,
-			comment: '',
-			showBtn: false,
 			liked: false,
 			likeID: null,
 			favorited: false,
@@ -36,7 +34,7 @@ class CTABar extends Component {
 	}
 
 	componentWillMount() {
-		const { post } = this.props;
+		const { post, showComment } = this.props;
 		this.setState({
 			likeCount: post.likeCount,
 			favoriteCount: post.favoriteCount,

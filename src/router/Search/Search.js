@@ -126,9 +126,14 @@ class Search extends Component {
           }
         });
         if(!isRepeate) {
-          addTag(tags.concat(res.data));
+          addTag(tags.concat(res.data.map(cell => {
+            return {
+              _id: cell._id,
+              tag: cell.tag
+            }
+          })));
         }
-        history.goBack();
+        return history.push(`${BASENAME}publish`);
       }
     }, error => {
       console.log(error);
@@ -160,10 +165,13 @@ class Search extends Component {
         }
       });
       if(!isRepeate) {
-        addTag(tags.concat(cell));
+        addTag(tags.concat({
+          _id: cell._id,
+          tag: cell.tag
+        }));
       }
     }
-    history.goBack();
+    return history.push(`${BASENAME}publish`);
   }
 
   render() {
@@ -232,6 +240,7 @@ class Search extends Component {
       this.fetch();
     });
   }
+
   componentWillUnmount() {
     
   }
