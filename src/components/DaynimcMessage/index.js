@@ -74,7 +74,7 @@ export default class DaynimcMessage extends Component {
           transitionEnterTimeout={enterDelay}
           transitionLeaveTimeout={leaveDelay}>
           <div className="message-animate-cell clearfix" key={currentIndex}>
-            <Avator size={"sx"} profile={list[currentIndex].postedBy} affiliates={list[currentIndex].affiliates}/>
+            <Avator size={"sx"} profile={list[currentIndex].postedBy} affiliates={list[currentIndex].affiliates} showFollow={false}/>
             {
               list[currentIndex].postType === 0 ?
                 <Link to={{ pathname: `${BASENAME}message/${list[currentIndex]._id}`, state: { id: list[currentIndex]._id } }} className={`_text`} style={{ width: `${textWidth}px` }}>{`${list[currentIndex].postedBy.displayName}啊刚刚发布了一条动态`}</Link>

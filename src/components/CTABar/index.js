@@ -36,47 +36,12 @@ class CTABar extends Component {
 	}
 
 	componentWillMount() {
-		const { post, userInfo, showComment } = this.props;
-		const userId = userInfo && userInfo.user ? userInfo.user.id : null;
+		const { post } = this.props;
 		this.setState({
 			likeCount: post.likeCount,
 			favoriteCount: post.favoriteCount,
 			commentCount: post.commentCount,
 			showComment
-		});
-		getLikes({
-			type: "POST",
-			targetId: post._id
-		}).then(res => {
-			if (res.code === 200) {
-				res.data.forEach(cell => {
-					if (cell.userId === userId) {
-						this.setState({
-							liked: true,
-							likeID: cell._id
-						})
-					}
-				})
-			}
-		}, error => {
-			console.log(error);
-		});
-		getFavorites({
-			type: "POST",
-			targetId: post._id
-		}).then(res => {
-			if (res.code === 200) {
-				res.data.forEach(cell => {
-					if (cell.userId === userId) {
-						this.setState({
-							favorited: true,
-							favoriteID: cell._id
-						})
-					}
-				})
-			}
-		}, error => {
-			console.log(error);
 		});
 	}
 
@@ -205,6 +170,45 @@ class CTABar extends Component {
 		)
 	}
 	
+  componentDidMount() {
+		const { post, userInfo, showComment } = this.props;
+		const userId = userInfo && userInfo.user ? userInfo.user.id : null;
+		getLikes({
+			type: "POST",
+			targetId: post._id
+		}).then(res => {
+			if (res.code === 200) {
+				res.data.forEach(cell => {
+					if (cell.userId === userId) {
+						this.setState({
+							liked: true,
+							likeID: cell._id
+						})
+					}
+				})
+			}
+		}, error => {
+			console.log(error);
+		});
+		getFavorites({
+			type: "POST",
+			targetId: post._id
+		}).then(res => {
+			if (res.code === 200) {
+				res.data.forEach(cell => {
+					if (cell.userId === userId) {
+						this.setState({
+							favorited: true,
+							favoriteID: cell._id
+						})
+					}
+				})
+			}
+		}, error => {
+			console.log(error);
+		});
+	}
+
 	componentDidUpdate() {
 		const { showComment } = this.props;
 		if(showComment) {

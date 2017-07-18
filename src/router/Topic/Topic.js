@@ -31,7 +31,7 @@ class Topic extends Component {
       },
       actionTags: [],
       tags: [],
-      tab: 'new',
+      tab: 'createdAt',
       completed: false,
     }
     this.handleScroll = this.handleScroll.bind(this);
@@ -59,7 +59,7 @@ class Topic extends Component {
 
   fetch(reset) {
     const self = this;
-    const { pagination, messages } = this.state;
+    const { pagination, messages, tab } = this.state;
     const { loading, loadSuccess, loadFail } = this.props;
 
     if (messages.length === pagination.total) {
@@ -79,7 +79,8 @@ class Topic extends Component {
     }).then(() => {
       getPostList({
         limit: pagination.pageSize,
-        offset
+        offset,
+        sort: `-${tab}`
       }).then(res => {
         if (res.code === 200) {
           const list = [], total = res.count;
@@ -131,7 +132,7 @@ class Topic extends Component {
     const self = this;
     const { pagination } = this.state;
     this.setStateAynsc({
-      tab: key === 0 ? 'new' : 'hottopic',
+      tab: key === 0 ? 'createdAt' : 'likeCount',
       messages: [],
       completed: false,
       pagination: {
@@ -171,7 +172,7 @@ class Topic extends Component {
     const messagesList = messages.map((cell, index) => {
       return (
         <li className="message-cell" key={index}>
-          <Message profile={cell.profile} post={cell} canLink={true} />
+          <Message profile={cell.profile} post={cell} canLink={true} showFollow={true}/>
         </li>
       )
     });
@@ -198,12 +199,12 @@ class Topic extends Component {
           夜生活泛指人类从黄昏到凌晨时段盛行的活动。夜间活动一般被视为相对于日间劳动等正式活动，夜生活一词也常偏向休闲娱乐性质。
         </div>
         <div className={style.topicTab}>
-          <p className={tab === 'new' ? `${style.tab} ${style.active}` : style.tab} onClick={this.tab.bind(this, 0)}>
+          <p className={tab === 'createdAt' ? `${style.tab} ${style.active}` : style.tab} onClick={this.tab.bind(this, 0)}>
             <span>
               最新
             </span>
           </p>
-          <p className={tab !== 'new' ? `${style.tab} ${style.active}` : style.tab} onClick={this.tab.bind(this, 1)}>
+          <p className={tab === 'likeCount' ? `${style.tab} ${style.active}` : style.tab} onClick={this.tab.bind(this, 1)}>
             <span>
               最热
             </span>

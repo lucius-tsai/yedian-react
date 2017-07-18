@@ -150,7 +150,7 @@ export const favoriteMessage = (data) => {
 };
 
 export const delFavoriteMessage = (id) => {
-	return __promiseTask(_instance().get(`${API_ROOT.delFavoriteMessage}${id}`));
+	return __promiseTask(_instance().delete(`${API_ROOT.delFavoriteMessage}${id}`));
 };
 
 export const getFavorites = (data) => {
@@ -158,6 +158,16 @@ export const getFavorites = (data) => {
 		params: data
 	}));
 };
+
+export const getFollwers = (data) => {
+	return __promiseTask(_instance().get(API_ROOT.getFollwers,  {
+		params: data
+	}));
+}
+
+export const creatFollow = (data) => {
+	return __promiseTask(_instance().post(API_ROOT.getFollwers, data));
+}
 
 /***********************************************************************************************************/
 /***********************************************************************************************************/

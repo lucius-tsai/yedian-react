@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import './avator.scss';
 
 import { parseDate } from '../../libs/uitls';
+import { getFollwers, creatFollow } from '../../libs/api';
 
 import defaultAvator from './default.jpg';
 
@@ -20,7 +22,7 @@ import defaultAvator from './default.jpg';
  * @class Avator
  * @extends {Component}
  */
-export default class Avator extends Component {
+class Avator extends Component {
   constructor(props) {
     super(props);
   }
@@ -38,21 +40,35 @@ export default class Avator extends Component {
       model: model ? model : undefined,
       disabledLink: disabledLink ? disabledLink : false,
       affiliates: affiliates ? affiliates : null
-    })
+    });
+    this.handleFollow = this.handleFollow.bind(this);
   }
 
-  componentWillUnmount() {
+  componentWillReceiveProps(nextProps) {
+    const { userInfo } = nextProps;
+    const { profile } = this.state;
+    if (userInfo && userInfo.user && userInfo.user.id && userInfo.user.id === profile._id) {
+      this.setState({
+        showFollow: false
+      })
+    }
+  }
+
+  handleFollow() {
+    const { profile } = this.state;
+    console.log(profile);
+    creatFollow({
+      type: profile.userType === 'User' ? 'USER' : 'VENUES',
+      targetId: profile.userType === 'User' ? profile._id : profile.venuesId
+    }).then(res => {
+
+    });
   }
 
   render() {
     const { profile, size, style, showFollow, model, date, disabledLink, affiliates } = this.state;
     const query = '?fromwhere=community';
-    let venuesId = '';
-    affiliates && affiliates.forEach(cell => {
-      if (cell.type === 'VENUES') {
-        venuesId = cell.targetId;
-      }
-    });
+
     return (
       <div className={`avator-box clearfix ${style} ${size}`}>
         {
@@ -68,18 +84,24 @@ export default class Avator extends Component {
           </Link>
         }
         {
-          !disabledLink && profile.userType !== 'User' &&
-          <a className="avator" href={`${location.origin}/dist/?#!/ktv/${venuesId}${query}`}>
-            <img src={profile.headImgUrl ? profile.headImgUrl : defaultAvator} alt="" />
+          !disabledLink && profile.userType === 'VenuesManager' &&
+          <a className="avator" href={`${location.origin}/dist/?#!/ktv/${profile.venuesId}${query}`}>
+            <img src={profile.venuesImage ? profile.venuesImage : defaultAvator} alt="" />
           </a>
         }
         {
-          model === "default" ?
-            <div className="profile">
-              <strong>{profile.displayName}</strong>
-              <p>{date}</p>
-            </div>
-            : ''
+          model === "default" && profile.userType === 'User' &&
+          <div className="profile">
+            <strong>{profile.displayName}</strong>
+            <p>{date}</p>
+          </div>
+        }
+        {
+          model === "default" && profile.userType === 'VenuesManager' &&
+          <div className="profile">
+            <strong>{profile.venuesName}</strong>
+            <p>{date}</p>
+          </div>
         }
         {
           model === "followCard" ?
@@ -98,7 +120,7 @@ export default class Avator extends Component {
         }
         {
           showFollow ?
-            <div className="follow-box">
+            <div className="follow-box" onClick={this.handleFollow}>
               <button>关注</button>
             </div>
             : ''
@@ -106,4 +128,51 @@ export default class Avator extends Component {
       </div>
     )
   }
+
+  componentDidMount() {
+    const { userInfo } = this.props;
+    const { profile, showFollow } = this.state;
+    console.log(userInfo.user.id);
+    if (userInfo && userInfo.user && userInfo.user.id && userInfo.user.id === profile._id) {
+      this.setState({
+        showFollow: false
+      })
+    } else if (showFollow) {
+      getFollwers({
+        type: profile.userType === 'User' ? 'USER' : 'VENUES'
+      }).then(res => {
+        if (res.code === 200) {
+          res.data.forEach(cell => {
+            if (cell.userId === userInfo.user.id) {
+              this.setState({
+                showFollow: false
+              });
+            }
+          });
+        }
+      }, error => {
+
+      })
+    }
+  }
+
+  componentWillUnmount() {
+  }
+
 }
+
+
+const mapStateToProps = state => {
+  const { router, userInfo } = state;
+  return {
+    router,
+    userInfo
+  }
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Avator);

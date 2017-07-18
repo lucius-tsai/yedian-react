@@ -57,6 +57,8 @@ if (process.env.NODE_ENV === "localhost") {
 		favoriteMessage: commontCoreApiDomain + "/users/favorites",
 		delFavoriteMessage: commontCoreApiDomain + "/users/favorites/",
 
+		getFollwers: commontCoreApiDomain + "/users/follows",
+
 		getTopicById:  commontCoreApiDomain + "/community/topic/",
 
 		commentMessage: commontCoreApiDomain + "/users/comments",
@@ -88,6 +90,8 @@ if (process.env.NODE_ENV === "localhost") {
 		getFavorites: commontCoreApiDomain + "/users/favorites",
 		favoriteMessage: commontCoreApiDomain + "/users/favorites",
 		delFavoriteMessage: commontCoreApiDomain + "/users/favorites/",
+
+		getFollwers: commontCoreApiDomain + "/users/follows",
 
 		getTopicById:  commontCoreApiDomain + "/community/topic/",
 

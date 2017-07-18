@@ -144,7 +144,7 @@ class Community extends Component {
     const messagesList = messages.map((cell, index) => {
       return (
         <li className="message-cell" key={index}>
-          <Message profile={cell.profile} post={cell} canLink={true} />
+          <Message profile={cell.profile} post={cell} canLink={true} showFollow={true}/>
         </li>
       )
     });

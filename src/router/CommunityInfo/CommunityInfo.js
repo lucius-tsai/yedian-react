@@ -40,7 +40,7 @@ class CommunityInfo extends Component {
         <div className="community-info">
           {
             messageInfo ?
-              <Message post={messageInfo} canLink={false}/>
+              <Message post={messageInfo} canLink={false} showFollow={true}/>
               : ""
           }
           {
