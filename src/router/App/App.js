@@ -10,10 +10,10 @@ import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 // routes
 import Community from '../Community/';
 import CommunityInfo from '../CommunityInfo/';
-import Publish from '../Publish/Publish';
-import Search from '../Search/Search';
-import Topic from '../Topic/Topic';
-import UserTimeLine from '../UserTimeLine/UserTimeLine';
+import Publish from '../Publish/';
+import Search from '../Search/';
+import Topic from '../Topic/';
+import UserTimeLine from '../UserTimeLine/';
 import Login from '../Login/Login';
 import NotFound from '../NotFound/NotFound';
 
@@ -93,9 +93,7 @@ class Bootstrap extends Component {
               <Route exact path="/" render={() => (
                 <Redirect to={`${BASENAME}${redirectPath}`} />
               )} />
-              {
-                hideBar ? "" : <TabBar />
-              }
+              <TabBar hidden={hideBar} />
               <CSSTransitionGroup
                 component='div'
                 transitionName={key}

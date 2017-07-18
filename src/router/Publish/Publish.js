@@ -10,7 +10,7 @@ import VenuesCell from '../../components/VenuesCell';
 import Tag from '../../components/Tag';
 
 import { hideBar, showBar, deleteUnmount } from '../../store/actions/appStatus';
-import { addPictures, removeTag, removeVenues, saveDescription } from '../../store/actions/publish';
+import { addPictures, addTag, removeTag, removeVenues, saveDescription } from '../../store/actions/publish';
 
 import { postMessage, uploadFile } from '../../libs/api';
 import { minSizeImage } from '../../libs/uitls';
@@ -35,6 +35,14 @@ class Publish extends Component {
 
   componentWillMount() {
     const { hideBar, publish, appStatus, router } = this.props;
+    // console.log(router);
+    // if(router && router.location && router.location.state && router.location.state.tags) {
+    //   if(publish.tags) {
+    //     addTag(publish.tags.concat(router.location.state.tags));
+    //   } else {
+    //     addTag(router.location.state.tags);
+    //   }
+    // }
     hideBar();
     this.setState({
       tags: publish.tags,
@@ -288,8 +296,10 @@ class Publish extends Component {
   }
 
   componentWillUnmount() {
-    const { showBar, appStatus, deleteUnmount, router } = this.props;
-    if (router.location.pathname !== `${BASENAME}topic` && router.location.pathname !== `${BASENAME}search`) {
+    const { showBar, appStatus, deleteUnmount, router, match } = this.props;
+    const pathname = router.location.pathname;
+    const reg = new RegExp(`^${BASENAME}topic|${BASENAME}search`);
+    if (!reg.test(pathname)) {
       showBar();
     }
   }
@@ -317,6 +327,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     saveDescription: (cell) => {
       dispatch(saveDescription(cell))
+    },
+    addTag: (cell) => {
+      dispatch(addTag(cell));
     },
     removeTag: (cell) => {
       dispatch(removeTag(cell))

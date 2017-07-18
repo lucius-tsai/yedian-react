@@ -28,7 +28,9 @@ class Comment extends Component {
 				pageSize: 2,
 				current: 1
 			},
+			offset: 0,
 			showComment: false,
+			showBtn: false,
 		}
 
 		this.handleScroll = this.handleScroll.bind(this);
@@ -75,16 +77,26 @@ class Comment extends Component {
 		this.setState({ showComment });
 	}
 
+	 shouldComponentUpdate(nextProps, nextState) {
+		const { data } = this.state;
+		const { nextData } = nextState;
+		if(data && nextData && (data.length === nextData.length)) {
+			return false;
+		} else {
+    	return true;
+		}
+  }
+
 	fetch() {
 		const self = this;
-		const { pagination, data } = this.state;
+		const { pagination, data, offset } = this.state;
 		const { target } = this.props;
 
 		if (this.state.completed || this.state.loading) {
 			return false;
 		}
 
-		const offset = (pagination.current - 1) * pagination.pageSize;
+		const skip = (pagination.current - 1) * pagination.pageSize + offset;
 
 		this.setStateAynsc({
 			loading: true
@@ -93,7 +105,7 @@ class Comment extends Component {
 				type: 'POST',
 				targetId: target._id,
 				limit: pagination.pageSize,
-				skip: offset
+				skip
 			}).then(res => {
 				if (res.code === 200) {
 					const list = [], total = res.data.count;
@@ -159,7 +171,7 @@ class Comment extends Component {
 	focus(ref) {
 		if (ref) {
 			ref.focus();
-			document.body.scrollTop = document.body.clientHeight;
+			// document.body.scrollTop = document.body.clientHeight;
 		}
 	}
 
@@ -173,16 +185,34 @@ class Comment extends Component {
 
 
 	comment(e) {
-		const { target, userInfo } = this.props;
+		const { data } = this.state;
+		const { target, userInfo, __hiddenComment } = this.props;
 		commentMessage({
 			type: 'POST',
 			targetId: target._id,
 			isDisplay: true,
 			comment: this.state.comment
 		}).then(res => {
-			this.setState({
-				showComment: false
-			});
+
+			if (res.code === 200) {
+
+				data.unshift({
+					_id: res.data._id,
+					comment: res.data.comment,
+					profile: {
+						_id: userInfo.user.id,
+						displayName: userInfo.user.displayName,
+						headImgUrl: userInfo.user.Wechat.headimgurl,
+						userType: 'User'
+					}
+				});
+
+				this.setState({
+					data,
+					offset: (this.state.offset + 1)
+				});
+				__hiddenComment();
+			}
 		}, error => {
 
 		});
@@ -202,7 +232,6 @@ class Comment extends Component {
 		if (distance < 700 && !this.state.loading && self.pointY < scrollHeight) {
 			self.fetch();
 		}
-
 		setImmediate(() => {
 			self.pointY = scrollHeight;
 		});
@@ -241,10 +270,10 @@ class Comment extends Component {
 				<div className={showComment ? style.commentBox : `${style.commentBox} ${style.barHidden}`} onClick={e => { e.nativeEvent.stopImmediatePropagation(); }}>
 					{
 						showComment ?
-							<textarea className={showBtn ? style.commentTxt : `${style.commentTxt} ${style.barHidden}`} placeholder='我也要留下一评' ref={this.focus} onChange={this.input}></textarea>
+							<textarea className={showBtn ? style.commentTxt : `${style.commentTxt} ${style.btnHidden}`} placeholder='我也要留下一评' ref={this.focus} onChange={this.input}></textarea>
 							: ''
 					}
-					<button className={showBtn ? style.commentBtn : `${style.commentBtn} ${style.barHidden}`} onClick={this.comment}>提交</button>
+					<button className={showBtn ? style.commentBtn : `${style.commentBtn} ${style.btnHidden}`} onClick={this.comment}>提交</button>
 				</div>
 			</div>
 		)

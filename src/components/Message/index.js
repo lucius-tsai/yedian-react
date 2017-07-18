@@ -56,26 +56,58 @@ class Message extends Component {
   }
 
   lazyLoadPictures(e) {
+
+    const cellWidth = window.innerWidth > 414 ? (414 - 20) : (window.innerWidth - 20);
     const currentScrollY = window.scrollY + window.innerHeight - 40;
     for (const i in this.refs) {
       const cell = this.refs[i];
       if (cell.offsetTop < currentScrollY) {
         const originSrc = cell.getAttribute("data-src");
-        cell.style.backgroundImage = `url(${originSrc})`;
+        let image = new Image();
+        image.src = originSrc;
+        image.onload = function () {
+          cell.style.backgroundImage = `url(${originSrc})`;
+          cell.style.backgroundColor = 'transparent';
+          if (cell.getAttribute('class') === 'single') {
+            cell.style.height = `${cellWidth * image.height / image.width}px`;
+          }
+        }
         delete this.refs[i];
       }
     }
-    e && e.target && e.target.removeEventListener(e.type, this.lazyLoadPictures);
   }
 
   render() {
-    const { post, canLink, showFollow, disabledLink, __showComment} = this.state;
-    const {__parentOpenComment} = this.props;
-    const message = post.message;
+    const { post, canLink, showFollow, disabledLink, __showComment } = this.state;
+    const { __parentOpenComment } = this.props;
+    let message = null;
     const affiliates = post.affiliates;
+
+    if (post && post.postType === 0) {
+      message = post.message;
+    } else if (post && post.postType === 1) {
+      message = {};
+
+      post.defaultComponents && post.defaultComponents.forEach(cell => {
+        switch (cell.name) {
+          case 'component-banner':
+            message.images = [cell.content[0].url];
+            break;
+          default:
+            break;
+        }
+      });
+
+      post.customizedComponents && post.customizedComponents.forEach(cell => {
+        if (cell.name === 'component-paragraph') {
+          message.description = cell.content;
+        }
+      });
+    }
+
     const tags = post.tags;
     const query = '?fromwhere=community';
-    
+
     if (!message) {
       return (<div></div>)
     }
@@ -86,7 +118,8 @@ class Message extends Component {
     }
     if (message.images && message.images.length === 1) {
       picturesList = (
-        <img src={message.images[0]} alt="" data-src={message.images[0]} />
+        <div className='single' style={{ height: `${cellWidth * 12 / 7}px`, backgroundColor: `rgb(${random()}, ${random()}, ${random()})` }} ref={`lazyImages-${new Date().getTime()}`} data-src={message.images[0]}>
+        </div>
       );
     } else if (message.images && message.images.length > 1) {
       picturesList = message.images.map((cell, index) => {
@@ -99,7 +132,7 @@ class Message extends Component {
     return (
       <div className="card-message">
         <div className="card-message-top">
-          <Avator profile={post.postedBy} showFollow={showFollow} model={"default"} disabledLink={disabledLink} affiliates={affiliates}/>
+          <Avator profile={post.postedBy} showFollow={showFollow} model={"default"} disabledLink={disabledLink} affiliates={affiliates} />
         </div>
         {
           !canLink && <div className="card-message-content">
@@ -110,9 +143,9 @@ class Message extends Component {
                   {picturesList}
                 </div>
                 :
-                <p className="img-single">
+                <div className="img-single">
                   {picturesList}
-                </p>
+                </div>
             }
             <div className="topics">
               {
@@ -133,9 +166,9 @@ class Message extends Component {
                   {picturesList}
                 </div>
                 :
-                <p className="img-single">
+                <div className="img-single">
                   {picturesList}
-                </p>
+                </div>
             }
           </Link>
         }
@@ -148,18 +181,17 @@ class Message extends Component {
                   {picturesList}
                 </div>
                 :
-                <p className="img-single">
+                <div className="img-single">
                   {picturesList}
-                </p>
+                </div>
             }
           </a>
         }
         {
           <div className={"card-message-bottom"}>
-            <CTABar fix={canLink} post={post} __showComment={__showComment}/>
+            <CTABar fix={canLink} post={post} __showComment={__showComment} />
           </div>
         }
-
       </div>
     )
   }
@@ -167,16 +199,11 @@ class Message extends Component {
   componentDidMount() {
     const { post } = this.state;
     window.addEventListener("scroll", this.lazyLoadPictures);
-    if (post && post.message && post.message.images) {
-      this.lazyLoadPictures();
-    }
+    this.lazyLoadPictures();
   }
 
   componentDidUpdate() {
     const { post } = this.state;
-    if (post && post.message && post.message.images) {
-      this.lazyLoadPictures();
-    }
   }
 
   componentWillUnmount() {

@@ -8,7 +8,7 @@ const _instance = () => {
 	let js_session = cookie("js_session");
 
 	if (process.env.NODE_ENV === "localhost") {
-		js_session = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDAzNDMwNzAsImlzcyI6IjM0MjQ3MzkwLTY1ZjAtMTFlNy05YjRhLWRkNDViMTgxNWUyZSIsImlhdCI6MTUwMDI1NjY3MH0.fRFXSM47Cq6YIl2Z1aMPrwrNcXp94P8kbCWOjqY2oOA";
+		js_session = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDA0MzEzMzksImlzcyI6IjM0MjQ3MzkwLTY1ZjAtMTFlNy05YjRhLWRkNDViMTgxNWUyZSIsImlhdCI6MTUwMDM0NDkzOX0.rdRFhZPEk1Y4Kf6U-ZIKIhhSR8IpfCUBWfyv5rlidhg";
 	} else {
 		// js_session = cookie("js_session");
 	}
@@ -84,6 +84,10 @@ export const getWeChatSDKSign = () => {
 };
 
 /**
+ * 社区首页
+ */
+
+/**
  * 获取HOME页面 Banner列表
  */
 export const getCommunityBanner = () => {
@@ -115,6 +119,15 @@ export const getSearch = () => {
 	return __promiseTask(_instance().get(API_ROOT.getSearch));
 };
 
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+/**
+ * POST like 收藏
+ * @param {*} data 
+ */
 
 export const likeMessage = (data) => {
 	return __promiseTask(_instance().post(API_ROOT.likeMessage, data));
@@ -146,6 +159,16 @@ export const getFavorites = (data) => {
 	}));
 };
 
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+
+
+/**
+ * 评论
+ */
 export const commentMessage = (data) => {
 	return __promiseTask(_instance().post(API_ROOT.commentMessage, data));
 };
@@ -158,6 +181,8 @@ export const getComments= (data) => {
 
 
 
+
+
 export const getTags = (query) => {
 	return __promiseTask(_instance().get(API_ROOT.getTags + query));
 };
@@ -165,6 +190,9 @@ export const getTags = (query) => {
 export const creatTag = (data) => {
 	return __promiseTask(_instance().post(API_ROOT.createTag, data));
 };
+
+
+
 
 export const getPostList = (data) => {
 	return __promiseTask(_instance().get(API_ROOT.getMessage, {
@@ -180,9 +208,17 @@ export const postMessage = (data) => {
 	return __promiseTask(_instance().post(API_ROOT.postMessage, data));
 }
 
+
+
 export const uploadFile = (data) => {
 	return __promiseTask(_instance().post(API_ROOT.uploadFile, data));
 }
+
+
+export const getTopicById = (id) => {
+	return __promiseTask(_instance().get(`${API_ROOT.getTopicById}${id}`))
+}
+
 
 /**
  * 通用

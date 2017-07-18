@@ -16,6 +16,11 @@
     img {
       width: 100%;
     }
+    .single {
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+    }
   }
   .imgs {
     display: -webkit-box;

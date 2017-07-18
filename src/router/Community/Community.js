@@ -41,6 +41,8 @@ class Community extends Component {
   }
 
   componentWillMount() {
+    const { delAll } = this.props;
+    delAll();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -73,35 +75,11 @@ class Community extends Component {
         offset
       }).then(res => {
         if (res.code === 200) {
+
           const list = [], total = res.count;
-          res.data.forEach(cell => {
-            if (cell.postType === 0) {
-              list.push(cell);
-            } else if (cell.postType === 1) {
-              let images = [], description = '';
-              cell.defaultComponents && cell.defaultComponents.forEach(item => {
-                switch (cell.name) {
-                  case 'component-banner':
-                    images = cell.content;
-                    break;
-                  default:
-                    break;
-                }
-              });
-              cell.customizedComponents && cell.customizedComponents.forEach(item => {
-                switch (cell.name) {
-                  case 'component-paragraph':
-                    description = cell.content;
-                    break;
-                  default:
-                    break;
-                }
-              });
-              cell.message = { description, images };
-              list.push(cell);
-            }
-          });
-          const merge = messages.concat(list);
+
+          const merge = messages.concat(res.data);
+
           if (merge.length === total) {
             document.removeEventListener("touchstart", this.handleTouch);
             window.removeEventListener("scroll", this.handleScroll);
@@ -117,7 +95,7 @@ class Community extends Component {
               completed: true
             });
           }
-          // console.log(res)
+          
           self._isMounted && self.setState({
             messages: merge,
             loading: false,
@@ -127,6 +105,7 @@ class Community extends Component {
               current: (pagination.current + 1)
             }
           });
+          
         } else {
           self.setState({
             loading: false
@@ -230,14 +209,13 @@ class Community extends Component {
 
     document.title = "Night+--社区";
     const { messages, pagination } = this.state;
-    const { loading, loadSuccess, loadFail, dispatch, delAll } = this.props;
+    const { loading, loadSuccess, loadFail } = this.props;
 
     document.removeEventListener("touchstart", this.handleTouch);
     window.removeEventListener("scroll", this.handleScroll);
     document.addEventListener("touchstart", this.handleTouch);
     window.addEventListener("scroll", this.handleScroll);
 
-    delAll();
     self.setState({
       loading: true
     }, () => {

@@ -113,7 +113,8 @@ class CommunityInfo extends Component {
     const { showBar, router } = this.props;
     this._isMounted = false;
     const pathname = router.location.pathname;
-    if (pathname !== `${BASENAME}topic`) {
+    const reg = new RegExp(`^${BASENAME}topic`);
+    if (!reg.test(pathname)) {
       showBar();
     }
   }

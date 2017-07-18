@@ -20,10 +20,24 @@ switch (process.env.NODE_ENV) {
 }
 
 class TabBar extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      hide: this.props.hidden
+    }
+  }
+  componentWillReceiveProps(nextProps) {
+    const { hidden } = nextProps;
+    this.setState({
+      hide: hidden
+    });
+  }
+  
   render() {
+    const { hide } = this.state;
     const cellWidth = window.innerWidth > 414 ? 414 : window.innerWidth;
     return (
-      <div className="tab-bar" style={{width: cellWidth, marginLeft: `-${cellWidth / 2}px`}}>
+      <div className={hide ? 'tab-bar hidden' : 'tab-bar'} style={{width: cellWidth, marginLeft: `-${cellWidth / 2}px`}}>
         <div className="item-index">
           <a href={`${domain}${query}`}>
             <div className="icon ion-index"></div>
