@@ -6,6 +6,8 @@ import './avator.scss';
 import { parseDate } from '../../libs/uitls';
 import { getFollwers, creatFollow } from '../../libs/api';
 
+import { setUserFollowers, setVenuesFollowers } from '../../store/actions/followers';
+
 import defaultAvator from './default.jpg';
 
 /**
@@ -45,23 +47,63 @@ class Avator extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { userInfo } = nextProps;
+    const { userInfo, followers } = nextProps;
     const { profile } = this.state;
     if (userInfo && userInfo.user && userInfo.user.id && userInfo.user.id === profile._id) {
       this.setState({
         showFollow: false
       })
     }
+    if (profile.userType.toLocaleLowerCase() === 'user') {
+      followers.userFollowers && followers.userFollowers.forEach(cell => {
+        if (cell.targetId === profile._id) {
+          this.setState({
+            showFollow: false
+          });
+        }
+      });
+    } else if (profile.userType.toLocaleLowerCase() === 'venuesmanager') {
+      followers.venuesFollowers && followers.venuesFollowers.forEach(cell => {
+        if (cell.targetId === profile.venuesId) {
+          this.setState({
+            showFollow: false
+          });
+        }
+      });
+    }
   }
 
   handleFollow() {
     const { profile } = this.state;
-    console.log(profile);
+    const { setUserFollowers, setVenuesFollowers } = this.props;
+
     creatFollow({
       type: profile.userType === 'User' ? 'USER' : 'VENUES',
       targetId: profile.userType === 'User' ? profile._id : profile.venuesId
     }).then(res => {
+      if (res.code === 200) {
+        this.setState({
+          showFollow: false
+        });
 
+        if (profile.userType === 'User') {
+          getFollwers({
+            type: 'USER'
+          }).then(res => {
+            if (res.code === 200) {
+              setUserFollowers(res.data);
+            }
+          });
+        } else {
+          getFollwers({
+            type: 'VENUES'
+          }).then(res => {
+            if (res.code === 200) {
+              setVenuesFollowers(res.data);
+            }
+          })
+        }
+      }
     });
   }
 
@@ -130,29 +172,31 @@ class Avator extends Component {
   }
 
   componentDidMount() {
-    const { userInfo } = this.props;
+    const { userInfo, followers } = this.props;
     const { profile, showFollow } = this.state;
-    console.log(userInfo.user.id);
+
     if (userInfo && userInfo.user && userInfo.user.id && userInfo.user.id === profile._id) {
       this.setState({
         showFollow: false
       })
     } else if (showFollow) {
-      getFollwers({
-        type: profile.userType === 'User' ? 'USER' : 'VENUES'
-      }).then(res => {
-        if (res.code === 200) {
-          res.data.forEach(cell => {
-            if (cell.userId === userInfo.user.id) {
-              this.setState({
-                showFollow: false
-              });
-            }
-          });
-        }
-      }, error => {
-
-      })
+      if (profile.userType.toLocaleLowerCase() === 'user') {
+        followers.userFollowers && followers.userFollowers.forEach(cell => {
+          if (cell.targetId === profile._id) {
+            this.setState({
+              showFollow: false
+            });
+          }
+        });
+      } else if (profile.userType.toLocaleLowerCase() === 'venuesmanager') {
+        followers.venuesFollowers && followers.venuesFollowers.forEach(cell => {
+          if (cell.targetId === profile.venuesId) {
+            this.setState({
+              showFollow: false
+            });
+          }
+        });
+      }
     }
   }
 
@@ -163,15 +207,22 @@ class Avator extends Component {
 
 
 const mapStateToProps = state => {
-  const { router, userInfo } = state;
+  const { router, userInfo, followers } = state;
   return {
     router,
-    userInfo
+    userInfo,
+    followers
   }
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    setUserFollowers: (cell) => {
+      dispatch(setUserFollowers(cell));
+    },
+    setVenuesFollowers: (cell) => {
+      dispatch(setVenuesFollowers(cell));
+    }
   }
 };
 

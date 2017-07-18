@@ -23,12 +23,13 @@ import Loading from '../../components/Loading';
 import './app.scss';
 
 // apis
-import { getUserInfo } from '../../libs/api';
+import { getUserInfo, getFollwers } from '../../libs/api';
 import { cookie, getLocation } from "../../libs/uitls";
 
 // redux-actions
 
 import { setLocation } from '../../store/actions/appStatus';
+import { setUserFollowers, setVenuesFollowers } from '../../store/actions/followers';
 import { getUserInfoLoading, getUserInfoSuccess, getUserInfoFail } from '../../store/actions/userInfo';
 
 
@@ -122,7 +123,16 @@ class Bootstrap extends Component {
   }
 
   componentDidMount() {
-    const { loading, userInfo, getUserInfoLoading, getUserInfoSuccess, getUserInfoFail, setLocation } = this.props;
+    const {
+      loading,
+      userInfo,
+      getUserInfoLoading,
+      getUserInfoSuccess,
+      getUserInfoFail,
+      setLocation,
+      setUserFollowers,
+      setVenuesFollowers
+    } = this.props;
     const token = cookie('js_session');
     if (!token && process.env.NODE_ENV !== "localhost") {
       this.setState({
@@ -152,6 +162,22 @@ class Bootstrap extends Component {
           console.log(error)
         });
       }
+
+      getFollwers({
+        type: 'USER'
+      }).then(res => {
+        if(res.code === 200) {
+          setUserFollowers(res.data);
+        }
+      });
+
+      getFollwers({
+        type: 'VENUES'
+      }).then(res => {
+        if(res.code === 200) {
+          setVenuesFollowers(res.data);
+        }
+      })
     }
   }
 }
@@ -179,6 +205,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     setLocation: (cell) => {
       dispatch(setLocation(cell));
+    },
+    setUserFollowers: (cell) => {
+      dispatch(setUserFollowers(cell));
+    },
+    setVenuesFollowers: (cell) => {
+      dispatch(setVenuesFollowers(cell));
     }
   }
 };
