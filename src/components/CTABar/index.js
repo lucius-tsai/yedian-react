@@ -11,6 +11,7 @@ import {
 	favoriteMessage,
 	delFavoriteMessage
 } from '../../libs/api';
+import { os } from '../../libs/uitls';
 
 import { showComment, hiddenComment } from '../../store/actions/appStatus';
 
@@ -115,15 +116,19 @@ class CTABar extends Component {
 
 	openComment() {
 		const { __showComment } = this.props;
-		document.body.className = 'no-scroll';
-		document.body.style.height = '100vh';
+		if(os.isPhone) {
+			document.body.className = 'no-scroll';
+			document.body.style.height = '100vh';
+		}
 		__showComment();
 	}
 
 	__hidden(e) {
 		const { __hiddenComment } = this.props;
-		document.body.className = '';
-		document.body.style.height = 'auto';
+		if(os.isPhone) {
+			document.body.className = '';
+			document.body.style.height = 'auto';
+		}
 		__hiddenComment();
 	}
 

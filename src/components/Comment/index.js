@@ -174,8 +174,10 @@ class Comment extends Component {
 
 	focus(ref) {
 		if (ref) {
-			document.body.className = 'no-scroll';
-			document.body.style.height = '100vh';
+			if(os.isPhone) {
+				document.body.className = 'no-scroll';
+				document.body.style.height = '100vh';
+			}
 			ref.focus();
 			// document.body.scrollTop = document.body.clientHeight;
 		}
