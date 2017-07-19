@@ -209,6 +209,9 @@ if (process.env.NODE_ENV === 'staging') {
   ]);
   fs.ensureDirSync(path.resolve(__dirname, './app/mockData'));
   fs.copySync(path.resolve(__dirname, './mockData'), path.resolve(__dirname, './app/mockData'))
+
+  fs.ensureDirSync(path.resolve(__dirname, './app/static'));
+  fs.copySync(path.resolve(__dirname, './static'), path.resolve(__dirname, './app/static'))
 }
 
 if (process.env.NODE_ENV === 'production') {
@@ -243,7 +246,13 @@ if (process.env.NODE_ENV === 'production') {
         production: true
       }
     })
-  ])
+  ]);
+  
+  fs.ensureDirSync(path.resolve(__dirname, './app/mockData'));
+  fs.copySync(path.resolve(__dirname, './mockData'), path.resolve(__dirname, './app/mockData'))
+
+  fs.ensureDirSync(path.resolve(__dirname, './app/static'));
+  fs.copySync(path.resolve(__dirname, './static'), path.resolve(__dirname, './app/static'))
 }
 
 module.exports = webpackConfig;

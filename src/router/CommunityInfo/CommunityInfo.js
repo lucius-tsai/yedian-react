@@ -5,21 +5,38 @@ import { Link } from 'react-router-dom';
 import Message from '../../components/Message';
 import VenuesCell from '../../components/VenuesCell';
 import Comment from '../../components/Comment';
-import './communityInfo.scss';
+
 import { getMessageInfo, getVenues } from '../../libs/api';
+import { setShare } from '../../libs/wechat';
+import { trackPageView, trackPageLeave, track } from '../../libs/track';
 
 import { loading, loadSuccess, loadFail, hideBar, showBar } from '../../store/actions/appStatus';
+
+import './communityInfo.scss';
 
 class CommunityInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      track: {
+        pageName: 'community_info',
+        startTime: null,
+      },
       messageInfo: null,
       venuesInfo: null,
     }
   }
 
   componentWillMount() {
+    trackPageView({
+      pageName: this.state.track.pageName
+    });
+    this.setState({
+      track: {
+        pageName: this.state.track.pageName,
+        startTime: new Date(),
+      }
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -67,8 +84,9 @@ class CommunityInfo extends Component {
     document.title = "Night+--呃呃呃～算是吧～";
     document.body.scrollTop = 0;
 
-    const { loading, loadSuccess, loadFail, hideBar, location, match } = this.props;
+    const { loading, loadSuccess, loadFail, hideBar, location, match, userInfo } = this.props;
     const id = match && match.params && match.params.id ? match.params.id : '';
+    const userId = userInfo && userInfo.user && userInfo.user.id ? userInfo.user.id : '';
 
     hideBar();
     loading();
@@ -78,7 +96,19 @@ class CommunityInfo extends Component {
       if (res.code === 200 && res.data && res.data.length) {
         self._isMounted && self.setState({
           messageInfo: res.data[0]
+        }, () => {
+          setShare({
+            imgUrl: self.state.messageInfo.message.images[0],
+            link: `${window.location.origin}${BASENAME}/message/${id}?utm_medium=SHARING&utm_campaign=POST&utm_source=${id}&utm_content=${userId}`,
+            success: () => {
+              track('wechat_share', {
+                type: 'COMMUNITY',
+                userId
+              })
+            }
+          });
         });
+        
         res.data[0].affiliates && res.data[0].affiliates.forEach(cell => {
           if (cell.type === 'venues') {
             const query = `query=query
@@ -117,13 +147,18 @@ class CommunityInfo extends Component {
     if (!reg.test(pathname)) {
       showBar();
     }
+    trackPageLeave({
+      pageName: this.state.track.pageName,
+      pageStayTime: ((new Date().getTime() - this.state.track.startTime.getTime()) / 1000)
+    });
   }
 }
 
 const mapStateToProps = state => {
-  const { router, appStatus } = state;
+  const { router, appStatus, userInfo } = state;
   return {
-    router
+    router,
+    userInfo
   }
 };
 

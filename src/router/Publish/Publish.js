@@ -14,12 +14,18 @@ import { addPictures, addTag, removeTag, removeVenues, saveDescription } from '.
 
 import { postMessage, uploadFile } from '../../libs/api';
 import { minSizeImage } from '../../libs/uitls';
+import { reSetShare } from '../../libs/wechat';
+import { trackPageView, trackPageLeave } from '../../libs/track';
 
 class Publish extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
+      track: {
+        pageName: 'community_publish',
+        startTime: null,
+      },
       show: true,
       description: '',
       tags: [],
@@ -50,6 +56,16 @@ class Publish extends Component {
       description: publish.publish,
       venues: publish.venues,
       tmpImages: publish.pictures ? publish.pictures : []
+    });
+
+    trackPageView({
+      pageName: this.state.track.pageName
+    });
+    this.setState({
+      track: {
+        pageName: this.state.track.pageName,
+        startTime: new Date(),
+      }
     });
   }
 
@@ -286,9 +302,13 @@ class Publish extends Component {
     )
   }
 
+  componentDidMount() {
+    reSetShare();
+  }
+
   componentDidUpdate() {
     if (this.refs && this.refs.removeVenue && this.refs.removeVenue.addEventListener) {
-      console.log(this.refs.removeVenue);
+      // console.log(this.refs.removeVenue);
       this.refs.removeVenue.removeEventListener("click", this.removeVenue);
       this.refs.removeVenue.addEventListener("click", this.removeVenue);
     }
@@ -302,6 +322,10 @@ class Publish extends Component {
     if (!reg.test(pathname)) {
       showBar();
     }
+    trackPageLeave({
+      pageName: this.state.track.pageName,
+      pageStayTime: ((new Date().getTime() - this.state.track.startTime.getTime()) / 1000)
+    });
   }
 }
 

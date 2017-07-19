@@ -46,6 +46,20 @@ export const cookie = (name, value, options) => {
 };
 
 /**
+ * 清空所有cookie
+ */
+export const deleteAllCookies =  () => {
+    var cookies = document.cookie.split(";");
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i];
+        var eqPos = cookie.indexOf("=");
+        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+    }
+}
+
+/**
  * 获取 url search
  * @param {String} name 
  */
@@ -81,39 +95,6 @@ export const parseDate = (format, date) => {
 		}
 	}
 	return format;
-}
-
-/**
- * 安装微信SDK
- * @param {*} data 
- */
-export const weChatSDKInstall = (data) => {
-	if (data && data.appId) {
-		wx.config({
-			debug: false,
-			appId: data.appId,
-			timestamp: Number(data.timestamp),
-			nonceStr: data.nonceStr,
-			signature: data.signature,
-			jsApiList: ["onMenuShareTimeline", "onMenuShareAppMessage", "onMenuShareQQ", "onMenuShareWeibo", "onMenuShareQZone", "getLocation", "openLocation", "closeWindow", "chooseWXPay"]
-		});
-
-		wx.ready(function () {
-			window.isWXReady = true;
-
-			wx.onMenuShareTimeline(window.shareDataTL);
-			wx.onMenuShareAppMessage(window.shareData);
-			wx.onMenuShareQQ(window.shareData);
-			wx.onMenuShareQZone(window.shareData);
-		});
-
-		wx.error(function (res) {
-			window.isWXReady = false;
-			window.wxErrorMsg = res.errMsg;
-		});
-	} else {
-		alert(data.msg);
-	}
 }
 
 /**

@@ -8,7 +8,7 @@ const _instance = () => {
 	let js_session = cookie("js_session");
 
 	if (process.env.NODE_ENV === "localhost") {
-		js_session = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDA0MzEzMzksImlzcyI6IjM0MjQ3MzkwLTY1ZjAtMTFlNy05YjRhLWRkNDViMTgxNWUyZSIsImlhdCI6MTUwMDM0NDkzOX0.rdRFhZPEk1Y4Kf6U-ZIKIhhSR8IpfCUBWfyv5rlidhg";
+		js_session = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDA1MzQyNDgsImlzcyI6IjM0MjQ3MzkwLTY1ZjAtMTFlNy05YjRhLWRkNDViMTgxNWUyZSIsImlhdCI6MTUwMDQ0Nzg0OH0.U3BHayIZF9uGlBNrK58WPkW-OIJEqZbZM_0oOrV20Y8";
 	} else {
 		// js_session = cookie("js_session");
 	}
@@ -60,6 +60,11 @@ const __promiseTask = (task) => {
 	});
 };
 
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+/***********************************************************************************************************/
 /**
  * 用户登陆&&信息等
  */
@@ -83,6 +88,22 @@ export const getWeChatSDKSign = () => {
 	}));
 };
 
+export const smsLogin = (data) => {
+	return __promiseTask(_instance().post(API_ROOT.smsLogin, data));
+}
+
+export const sendSMS = (data) => {
+	return __promiseTask(_instance().post(API_ROOT.sendSMS, data));
+}
+
+
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+
+
 /**
  * 社区首页
  */
@@ -93,6 +114,11 @@ export const getWeChatSDKSign = () => {
 export const getCommunityBanner = () => {
 	return __promiseTask(_instance().get(API_ROOT.getCommunityBanner));
 };
+
+
+export const getBannerById = (id) => {
+	return __promiseTask(_instance().get(`${API_ROOT.getBannerById}/${id}`));
+}
 
 /**
  * 获取HOME页面 消息列表

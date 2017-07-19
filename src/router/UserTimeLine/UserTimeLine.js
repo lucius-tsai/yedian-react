@@ -9,12 +9,19 @@ import Message from '../../components/Message';
 import LoadMore from '../../components/LoadMore';
 
 import { getPostList, getUserInfoById } from '../../libs/api';
+import { setShare } from '../../libs/wechat';
+import { trackPageView, trackPageLeave } from '../../libs/track';
+
 import { loading, loadSuccess, loadFail } from '../../store/actions/appStatus';
 
 class UserTimeLine extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      track: {
+        pageName: 'community_user_info',
+        startTime: null,
+      },
       messages: [],
       loading: false,
       pagination: {
@@ -24,7 +31,7 @@ class UserTimeLine extends Component {
       user: null,
       completed: false
     }
-    
+
     this.handleScroll = this.handleScroll.bind(this);
     this.fetch = this.fetch.bind(this);
     this.pointY = null;
@@ -37,7 +44,15 @@ class UserTimeLine extends Component {
   }
 
   componentWillMount() {
-
+    trackPageView({
+      pageName: this.state.track.pageName
+    });
+    this.setState({
+      track: {
+        pageName: this.state.track.pageName,
+        startTime: new Date(),
+      }
+    });
   }
 
   fetch() {
@@ -142,10 +157,8 @@ class UserTimeLine extends Component {
       <div className="user-time-line">
         <div className="_top">
           {
-            user ?
-              <Avator style={"vertical"} profile={user}
-                size={"small"} model={"userTimeLine"} showFollow={true} disabledLink={true} />
-              : ''
+            user && <Avator style={"vertical"} profile={user}
+              size={"small"} model={"userTimeLine"} showFollow={true} disabledLink={true} />
           }
         </div>
         <div className="_messages">
@@ -154,7 +167,7 @@ class UserTimeLine extends Component {
           </ul>
         </div>
         {
-          loading ? <LoadMore /> : ""
+          loading && <LoadMore />
         }
       </div>
     )
@@ -172,12 +185,20 @@ class UserTimeLine extends Component {
     document.addEventListener("touchstart", this.handleTouch);
     window.addEventListener("scroll", this.handleScroll);
 
-    const { loading, loadSuccess, loadFail, location, match } = this.props;
+    const { loading, loadSuccess, loadFail, location, match, userInfo } = this.props;
+    const userId = userInfo && userInfo.user && userInfo.user.id ? userInfo.user.id : '';
     // loading();
     if (location.state) {
       this.setStateAynsc({
         user: location.state
       }).then(() => {
+        setShare({
+          imgUrl: self.state.user.headImgUrl,
+          link: `${window.location.origin}${BASENAME}/user/times/${self.state.user._id}?utm_medium=SHARING&utm_campaign=USER&utm_source=${self.state.user._id}&utm_content=${userId}`,
+          success: () => {
+            console.log(123);
+          }
+        });
         this.fetch();
       });
     } else {
@@ -192,7 +213,14 @@ class UserTimeLine extends Component {
                 headImgUrl: res.data.Wechat.headimgurl
               }
             }).then(() => {
-              this.fetch();
+              setShare({
+                imgUrl: self.state.user.headImgUrl,
+                link: `${window.location.origin}${BASENAME}/user/times/${self.state.user._id}?utm_medium=SHARING&utm_campaign=USER&utm_source=${self.state.user._id}&utm_content=${userId}`,
+                success: () => {
+                  console.log(123);
+                }
+              });
+              self.fetch();
             });
           }
         }, error => {
@@ -206,13 +234,18 @@ class UserTimeLine extends Component {
     this._isMounted = false;
     document.removeEventListener("touchstart", this.handleTouch);
     window.removeEventListener("scroll", this.handleScroll);
+    trackPageLeave({
+      pageName: this.state.track.pageName,
+      pageStayTime: ((new Date().getTime() - this.state.track.startTime.getTime()) / 1000)
+    })
   }
 }
 
 const mapStateToProps = state => {
-  const { appStatus, router } = state;
+  const { appStatus, router, userInfo } = state;
   return {
-    router
+    router,
+    userInfo
   }
 };
 

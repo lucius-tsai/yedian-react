@@ -2,16 +2,46 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './main';
 
-import { cookie, getQueryString, weChatSDKInstall, getLocation } from './libs/uitls';
+import { cookie, getQueryString, getLocation } from './libs/uitls';
+import { weChatSDKInstall} from './libs/wechat';
 import { weChatAuth, getWeChatSDKSign, getScripts } from './libs/api';
+
+/**
+ * sensorsdata[神策监测代码]
+ */
+if(process.env.NODE_ENV !== 'localhost') {
+  const __API = process.env.NODE_ENV === 'production' ? 'http://yd-data.chinacloudapp.cn:8006/sa?project=production': 'http://yd-data.chinacloudapp.cn:8006/sa';
+  (function(para) {
+    var p = para.sdk_url, n = para.name, w = window, d = document, s = 'script',x = null,y = null;
+    w['sensorsDataAnalytic201505'] = n;
+    w[n] = w[n] || function(a) {return function() {(w[n]._q = w[n]._q || []).push([a, arguments]);}};
+    var ifs = ['track','quick','register','registerPage','registerOnce','clearAllRegister','trackSignup', 'trackAbtest', 'setProfile','setOnceProfile','appendProfile', 'incrementProfile', 'deleteProfile', 'unsetProfile', 'identify','login','logout'];
+    for (var i = 0; i < ifs.length; i++) {
+      w[n][ifs[i]] = w[n].call(null, ifs[i]);
+    }
+    if (!w[n]._t) {
+      x = d.createElement(s), y = d.getElementsByTagName(s)[0];
+      x.async = 1;
+      x.src = p;
+      y.parentNode.insertBefore(x, y);
+      w[n].para = para;
+    }
+  })({
+    sdk_url: `${location.origin}/${BASENAME}/static/sensorsdata.min.js`,
+    name: 'sa',
+    server_url: __API
+  });
+}
+
+
 
 const MOUNT_NODE = document.getElementById('app');
 const isWechat = !!(/micromessenger|webbrowser/i).test(navigator.userAgent);
 
 let render = () => {
-  const routes = require('./router/index').default();
+  // const routes = require('./router/index').default();
   ReactDOM.render(
-    <App routes={routes} />,
+    <App />,
     MOUNT_NODE
   )
 };
@@ -32,7 +62,7 @@ const sdk = () => {
 // })
 
 if (isWechat) {
-  if (typeof wx !== "undefined") {
+  if (typeof wx !== 'undefined') {
     sdk()
   } else {
     const body = document.getElementsByTagName('body')[0];
@@ -45,7 +75,7 @@ if (isWechat) {
   }
 }
 
-if (process.env.NODE_ENV === "localhost") {
+if (process.env.NODE_ENV === 'localhost') {
   render();
 } else {
   /**
@@ -53,21 +83,22 @@ if (process.env.NODE_ENV === "localhost") {
    */
   const token = cookie('js_session');
   if (!token) {
-    const queryToken = getQueryString("token");
-    let authCount = !cookie("auth_count") ? 0 : cookie("auth_count");
+    const queryToken = getQueryString('token');
+    let authCount = !cookie('auth_count') ? 0 : cookie('auth_count');
     if (!isWechat) {
       render();
-    }
-    if (!queryToken && authCount < 1) {
-      cookie("auth_count", authCount * 1 + 1, { path: '/', expires: 7 });
-      weChatAuth()
-    } else if (queryToken) {
-      cookie("js_session", queryToken, { path: '/', expires: 7 });
-      render();
-      // location.replace((location.hash.indexOf("?") > 0 ? "&" : "?") + location.search.substring(1));
     } else {
-      render();
-      cookie("auth_count", null);
+      if (!queryToken && authCount < 1) {
+        cookie('auth_count', authCount * 1 + 1, { path: '/', expires: 7 });
+        weChatAuth()
+      } else if (queryToken) {
+        cookie('js_session', queryToken, { path: '/', expires: 7 });
+        render();
+        // location.replace((location.hash.indexOf("?") > 0 ? "&" : "?") + location.search.substring(1));
+      } else {
+        render();
+        cookie('auth_count', null);
+      }
     }
   } else {
     render();

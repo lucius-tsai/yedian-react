@@ -4,16 +4,24 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import './search.scss';
+
 import { getVenues, getTags, creatTag } from '../../libs/api';
+import { reSetShare } from '../../libs/wechat';
+import { trackPageView, trackPageLeave } from '../../libs/track';
 
 import { loading, loadSuccess, loadFail, hideBar, showBar } from '../../store/actions/appStatus';
 import { addTag, addVenues } from '../../store/actions/publish';
+
+import './search.scss';
 
 class Search extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      track: {
+        pageName: 'community_search',
+        startTime: null,
+      },
       input: false,
       pageIndex: 0,
       limit: 20,
@@ -33,6 +41,15 @@ class Search extends Component {
   }
 
   componentWillMount() {
+    trackPageView({
+      pageName: this.state.track.pageName
+    });
+    this.setState({
+      track: {
+        pageName: this.state.track.pageName,
+        startTime: new Date(),
+      }
+    });
   }
   componentWillReceiveProps(nextProps) {
     const { gps } = nextProps;
@@ -239,10 +256,15 @@ class Search extends Component {
     }, () => {
       this.fetch();
     });
+
+    reSetShare();
   }
 
   componentWillUnmount() {
-    
+    trackPageLeave({
+      pageName: this.state.track.pageName,
+      pageStayTime: ((new Date().getTime() - this.state.track.startTime.getTime()) / 1000)
+    });
   }
 }
 

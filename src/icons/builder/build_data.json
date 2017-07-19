@@ -1,5 +1,5 @@
 {
-  "build_hash": "07f64aac2ad87a9641508e61ec73d773",
+  "build_hash": "52d163704f4ca175268886213bfe8863",
   "prefix": "ion-",
   "version": "2.0.1",
   "name": "Ionicons",
@@ -47,6 +47,14 @@
     {
       "code": "0xf152",
       "name": "loading"
+    },
+    {
+      "code": "0xf158",
+      "name": "login-captcha"
+    },
+    {
+      "code": "0xf159",
+      "name": "login-user"
     },
     {
       "code": "0xf156",

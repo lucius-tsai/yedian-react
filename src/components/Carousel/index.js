@@ -83,13 +83,25 @@ export default class Carousel extends Component {
         self.refs.swiperDom.style.display = 'block';
         self.refs.swiperDom.innerHTML = `
           <div class="${style.slide}">
-            <div class="${style.pic}" style="background-image: url('${slides[prev].topicBannerPic}');"></div>
+            <div class="${style.pic}" style="background-image: url('${slides[prev].cover}');">
+              <p class="${style.word}">
+                <span>#${slides[prev].topic.topic}#</span>
+              </p>
+            </div>
           </div>
           <div class="${style.slide}">
-            <div class="${style.pic}" style="background-image: url('${slides[this.state.currentIndex].topicBannerPic}');"></div>
+            <div class="${style.pic}" style="background-image: url('${slides[this.state.currentIndex].cover}');">
+              <p class="${style.word}">
+                <span>#${slides[this.state.currentIndex].topic.topic}#</span>
+              </p>
+            </div>
           </div>
           <div class="${style.slide}">
-            <div class="${style.pic}" style="background-image: url('${slides[next].topicBannerPic}');"></div>
+            <div class="${style.pic}" style="background-image: url('${slides[next].cover}');">
+              <p class="${style.word}">
+                <span>#${slides[next].topic.topic}#</span>
+              </p>
+            </div>
           </div>
         `;
       });
@@ -193,7 +205,11 @@ export default class Carousel extends Component {
           transitionLeaveTimeout={leaveDelay}>
           <div className={style.slide}
             key={currentIndex}>
-            <div className={style.pic} style={{ backgroundImage: `url(${slides[currentIndex].topicBannerPic})` }}></div>
+            <div className={style.pic} style={{ backgroundImage: `url(${slides[currentIndex].cover})` }}>
+              <p className={style.word}>
+                <span>#{slides[currentIndex].topic.topic}#</span>
+              </p>
+            </div>
           </div>
         </CSSTransitionGroup>
       )
@@ -227,7 +243,7 @@ export default class Carousel extends Component {
   }
 
   componentDidMount() {
-    this.autoRun();
+    // this.autoRun();
     const { slides } = this.props;
     let carousel = this.refs.carousel;
     if (!carousel) return false;

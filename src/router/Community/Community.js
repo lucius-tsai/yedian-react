@@ -12,6 +12,8 @@ import './community.scss';
 import style from './community.css';
 
 import { getCommunityBanner, getPostList, getIndexUserList } from '../../libs/api';
+import { trackPageView, trackPageLeave } from '../../libs/track';
+import { reSetShare } from '../../libs/wechat';
 
 import { loading, loadSuccess, loadFail } from '../../store/actions/appStatus';
 import { delAll } from '../../store/actions/publish';
@@ -23,6 +25,10 @@ class Community extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      track: {
+        pageName: 'community_index',
+        startTime: null,
+      },
       slides: [],
       dynamicMessages: [],
       messages: [],
@@ -34,7 +40,7 @@ class Community extends Component {
       },
       completed: false,
     };
-    
+
     this.handleScroll = this.handleScroll.bind(this);
     this.fetch = this.fetch.bind(this);
     this.pointY = null;
@@ -43,6 +49,15 @@ class Community extends Component {
   componentWillMount() {
     const { delAll } = this.props;
     delAll();
+    trackPageView({
+      pageName: this.state.track.pageName
+    });
+    this.setState({
+      track: {
+        pageName: this.state.track.pageName,
+        startTime: new Date(),
+      }
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -61,7 +76,7 @@ class Community extends Component {
     if (this.state.completed || this.state.loading) {
       return false;
     }
-    
+
     const offset = (pagination.current - 1) * pagination.pageSize;
 
     this.setState({
@@ -92,7 +107,7 @@ class Community extends Component {
               completed: true
             });
           }
-          
+
           self._isMounted && self.setState({
             messages: merge,
             loading: false,
@@ -102,7 +117,7 @@ class Community extends Component {
               current: (pagination.current + 1)
             }
           });
-          
+
         } else {
           self.setState({
             loading: false
@@ -139,7 +154,7 @@ class Community extends Component {
     const messagesList = messages.map((cell, index) => {
       return (
         <li className="message-cell" key={index}>
-          <Message profile={cell.profile} post={cell} canLink={true} showFollow={true}/>
+          <Message profile={cell.profile} post={cell} canLink={true} showFollow={true} />
         </li>
       )
     });
@@ -211,6 +226,32 @@ class Community extends Component {
     document.addEventListener("touchstart", this.handleTouch);
     window.addEventListener("scroll", this.handleScroll);
 
+    reSetShare();
+
+    // 拉取banner
+    getCommunityBanner().then(res => {
+      if (res.code === 200) {
+        self.setState({
+          slides: res.data
+        });
+      }
+    }, error => {
+    });
+
+    // 拉取最新发布
+    getPostList({
+      limit: 10,
+      offset: 0
+    }).then(res => {
+      if(res.code === 200) {
+        self.setState({
+          dynamicMessages: res.data
+        });
+      }
+    }, error => {
+
+    });
+
     self.fetch();
   }
 
@@ -218,6 +259,11 @@ class Community extends Component {
     this._isMounted = false;
     document.removeEventListener("touchstart", this.handleTouch);
     window.removeEventListener("scroll", this.handleScroll);
+
+    trackPageLeave({
+      pageName: this.state.track.pageName,
+      pageStayTime: ((new Date().getTime() - this.state.track.startTime.getTime()) / 1000)
+    });
   }
 }
 

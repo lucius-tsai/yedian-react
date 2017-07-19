@@ -6,7 +6,7 @@ import './avator.scss';
 import { parseDate } from '../../libs/uitls';
 import { getFollwers, creatFollow } from '../../libs/api';
 
-import { setUserFollowers, setVenuesFollowers } from '../../store/actions/followers';
+import { getVenuesFollowers, getVenuesFollowersFail, getUserFollowers, getUserFollowersFail, setUserFollowers, setVenuesFollowers } from '../../store/actions/followers';
 
 import defaultAvator from './default.jpg';
 
@@ -75,7 +75,14 @@ class Avator extends Component {
 
   handleFollow() {
     const { profile } = this.state;
-    const { setUserFollowers, setVenuesFollowers } = this.props;
+    const { 
+      setVenuesFollowers,
+      getVenuesFollowers,
+      getVenuesFollowersFail,
+      setUserFollowers,
+      getUserFollowers,
+      getUserFollowersFail,
+    } = this.props;
 
     creatFollow({
       type: profile.userType === 'User' ? 'USER' : 'VENUES',
@@ -87,21 +94,31 @@ class Avator extends Component {
         });
 
         if (profile.userType === 'User') {
+          getUserFollowers();
           getFollwers({
             type: 'USER'
           }).then(res => {
             if (res.code === 200) {
               setUserFollowers(res.data);
+            } else {
+              getUserFollowersFail();
             }
+          }, error => {
+            getUserFollowersFail();
           });
         } else {
+          getVenuesFollowers();
           getFollwers({
             type: 'VENUES'
           }).then(res => {
             if (res.code === 200) {
               setVenuesFollowers(res.data);
+            } else {
+              getVenuesFollowersFail();
             }
-          })
+          }, error => {
+            getVenuesFollowersFail();
+          });
         }
       }
     });
@@ -217,8 +234,20 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    getUserFollowers: (cell) => {
+      dispatch(getUserFollowers(cell));
+    },
+    getUserFollowersFail: (cell) => {
+      dispatch(getUserFollowersFail(cell));
+    },
     setUserFollowers: (cell) => {
       dispatch(setUserFollowers(cell));
+    },
+    getVenuesFollowers: (cell) => {
+      dispatch(getVenuesFollowers(cell));
+    },
+    getVenuesFollowersFail: (cell) => {
+      dispatch(getVenuesFollowersFail(cell));
     },
     setVenuesFollowers: (cell) => {
       dispatch(setVenuesFollowers(cell));

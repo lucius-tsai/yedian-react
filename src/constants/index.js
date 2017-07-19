@@ -20,85 +20,52 @@ if (process.env.NODE_ENV === "development") {
 	venuesCoreApiDomain = "http://venuescore.staging.ye-dian.com";
 }
 
-let __API_ROOT = null;
+let __API_ROOT = {
+	// user
+	sendSMS: userApiDomain + "/auth/sms?_type=register",
+	smsLogin: userApiDomain + "/auth/user/mobile/smslogin",
+	weChatAuth: userApiDomain + "/auth/wechat?",
+	getUserInfo: userApiDomain + "/internal/userInfo?_type=User",
+	getUserInfoById: userApiDomain + "/internal/users/",
+	getWeChatSDKSign: userApiDomain + "/auth/wechat/signature",
 
+	getCommunityBanner: commontCoreApiDomain + "/community/banners",
+	getBannerById: commontCoreApiDomain + "/community/banner",
+
+	getIndexUserList: "/api/userlist",
+
+	getTags: commontCoreApiDomain + "/community/tags",
+	createTag: commontCoreApiDomain + "/community/tag",
+
+	getVenues: venuesCoreApiDomain + "/public/graphql?",
+
+	getMessage: commontCoreApiDomain + "/community/posts",
+	getMessageInfo: commontCoreApiDomain + "/community/post",
+
+	postMessage: commontCoreApiDomain + "/community/post",
+
+	// uploadFile: "http://10.85.108.33:3007/public/file/upload",
+	uploadFile: venuesCoreApiDomain + "/public/file/upload",
+
+	getLikes: commontCoreApiDomain + "/users/likes",
+	likeMessage: commontCoreApiDomain + "/users/likes",
+	delLikeMessage: commontCoreApiDomain + "/users/likes/",
+
+	getFavorites: commontCoreApiDomain + "/users/favorites",
+	favoriteMessage: commontCoreApiDomain + "/users/favorites",
+	delFavoriteMessage: commontCoreApiDomain + "/users/favorites/",
+
+	getFollwers: commontCoreApiDomain + "/users/follows",
+
+	getTopicById: commontCoreApiDomain + "/community/topic/",
+
+	commentMessage: commontCoreApiDomain + "/users/comments",
+	getComments: commontCoreApiDomain + "/users/comments/byTargetId"
+}
 if (process.env.NODE_ENV === "localhost") {
 	// localhost
-	__API_ROOT = {
-		weChatAuth: userApiDomain + "/auth/wechat?",
-		getUserInfo: userApiDomain + "/internal/userInfo?_type=User",
-		getUserInfoById: userApiDomain + "/internal/users/",
-		getWeChatSDKSign: userApiDomain + "/auth/wechat/signature",
-
-		getCommunityBanner: commontCoreApiDomain + "/community/banners",
-		getIndexMessage: "/api/community",
-		getIndexUserList: "/api/userlist",
-		getMessageInfo: "/api/message",
-		getSearch: "/api/search",
-
-		getTags: commontCoreApiDomain + "/community/tags",
-		createTag: commontCoreApiDomain + "/community/tag",
-
-		getVenues: venuesCoreApiDomain + "/public/graphql?",
-
-		getMessage: commontCoreApiDomain + "/community/posts",
-		getMessageInfo: commontCoreApiDomain + "/community/post",
-
-		postMessage: commontCoreApiDomain + "/community/post",
-		
-		// uploadFile: "http://10.85.108.33:3007/public/file/upload",
-		uploadFile: venuesCoreApiDomain + "/public/file/upload",
-
-		getLikes: commontCoreApiDomain + "/users/likes",
-		likeMessage: commontCoreApiDomain + "/users/likes",
-		delLikeMessage: commontCoreApiDomain + "/users/likes/",
-
-		getFavorites: commontCoreApiDomain + "/users/favorites",
-		favoriteMessage: commontCoreApiDomain + "/users/favorites",
-		delFavoriteMessage: commontCoreApiDomain + "/users/favorites/",
-
-		getFollwers: commontCoreApiDomain + "/users/follows",
-
-		getTopicById:  commontCoreApiDomain + "/community/topic/",
-
-		commentMessage: commontCoreApiDomain + "/users/comments",
-		getComments: commontCoreApiDomain + "/users/comments/byTargetId"
-	}
-} else {
-	__API_ROOT = {
-		weChatAuth: userApiDomain + "/auth/wechat?",
-		getUserInfo: userApiDomain + "/internal/userInfo?_type=User",
-		getUserInfoById: userApiDomain + "/internal/users/",
-		getWeChatSDKSign: userApiDomain + "/auth/wechat/signature",
-		getCommunityBanner: "/app/mockData/banner.json",
-		getIndexMessage: "/app/mockData/community.json",
-		getIndexUserList: "/app/mockData/userlist.json",
-		getMessageInfo: "/app/mockData/message.json",
-		getSearch: "/app/mockData/search.json",
-		getTags: commontCoreApiDomain + "/community/tags",
-		createTag: commontCoreApiDomain + "/community/tag",
-		getVenues: venuesCoreApiDomain + "/public/graphql?",
-		getMessage: commontCoreApiDomain + "/community/posts",
-		getMessageInfo: commontCoreApiDomain + "/community/post",
-		postMessage: commontCoreApiDomain + "/community/post",
-		uploadFile: venuesCoreApiDomain + "/public/file/upload",
-
-		getLikes: commontCoreApiDomain + "/users/likes",
-		likeMessage: commontCoreApiDomain + "/users/likes",
-		delLikeMessage: commontCoreApiDomain + "/users/likes/",
-		
-		getFavorites: commontCoreApiDomain + "/users/favorites",
-		favoriteMessage: commontCoreApiDomain + "/users/favorites",
-		delFavoriteMessage: commontCoreApiDomain + "/users/favorites/",
-
-		getFollwers: commontCoreApiDomain + "/users/follows",
-
-		getTopicById:  commontCoreApiDomain + "/community/topic/",
-
-		commentMessage: commontCoreApiDomain + "/users/comments",
-		getComments: commontCoreApiDomain + "/users/comments/byTargetId"
-	}
 }
+
 export const API_ROOT = __API_ROOT;
 export const enums = {
 	1: "test"

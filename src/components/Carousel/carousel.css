@@ -26,9 +26,31 @@
 
 .carouselBox .slide .pic {
 	height: 100%;
+	position: relative;
 	background-repeat: no-repeat;
 	background-position: 50% 50%;
 	background-size: cover;
+}
+
+.carouselBox .slide .pic::before {
+	content: "";
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	background-color: rgba(0, 0, 0, 0.3);
+}
+
+.carouselBox .slide .word {
+	width: 100%;
+	line-height: 32px;
+	position: absolute;
+	left: 0;
+	top: 50%;
+	transform: translateY(-50%);
+	text-align: center;
+	color: #ffffff;
 }
 
 .carouselBox .swiper {

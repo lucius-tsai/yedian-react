@@ -1,11 +1,11 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
 <!--
-2017-6-23: Created with FontForge (http://fontforge.org)
+2017-7-19: Created with FontForge (http://fontforge.org)
 -->
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
 <metadata>
-Created by FontForge 20170104 at Fri Jun 23 15:24:36 2017
+Created by FontForge 20170104 at Wed Jul 19 14:04:12 2017
  By harry
 Copyright (c) 2017, harry
 </metadata>
@@ -62,6 +62,12 @@ c-3 -5 -10 -10 -16 -10c-3 0 -7 2 -9 3l-83 48c-4 3 -6 9 -6 14c0 10 8 19 18 19c2 0
 c0 -4 -1 -9 -4 -12v0zM202 60l-47 -83c-3 -4 -10 -6 -15 -6c-10 0 -18 9 -18 19c0 2 0 4 1 6l47 83c3 4 10 6 15 6c10 0 19 -8 19 -18c0 -2 -1 -5 -2 -7v0v0zM195 298c-2 -1 -6 -2 -9 -2c-6 0 -13 4 -16 9l-48 83c-1 2 -1 5 -1 7c0 10 9 19 19 19c5 0 11 -3 14 -7l48 -83
 c1 -2 3 -6 3 -9c0 -6 -5 -13 -10 -16v0v-1zM385 -30c-2 -1 -6 -2 -9 -2c-6 0 -13 4 -16 9l-49 83c-3 3 -4 8 -4 12c0 10 9 19 19 19c7 0 14 -5 17 -12l48 -83c1 -2 3 -6 3 -9c0 -6 -5 -13 -10 -16v0zM472 294l-83 -48c-2 -1 -5 -1 -7 -1c-10 0 -18 9 -18 19c0 5 2 12 6 15
 l83 48c2 1 4 1 6 1c10 0 19 -9 19 -19c0 -5 -2 -11 -6 -14v0v-1zM144 105l-83 -48c-2 -1 -5 -1 -7 -1c-10 0 -19 9 -19 19c0 5 3 11 7 14l83 49c3 3 8 4 12 4c10 0 19 -9 19 -19c0 -7 -5 -15 -12 -18v0v0z" />
+    <glyph glyph-name="ion-login-captcha" unicode="&#xf158;" horiz-adv-x="380" 
+d="M317 257h-32v69c0 50 -43 90 -95 90s-95 -40 -95 -90v-69h-32v69c0 67 57 121 127 121s127 -54 127 -121v-69zM190 -60c-105 0 -190 85 -190 190v96h380v-96c0 -105 -85 -190 -190 -190zM32 194v-64c0 -87 71 -158 158 -158s159 71 159 158v64h-317v0zM190 19
+c-26 0 -47 22 -47 48v32c0 26 21 47 47 47s48 -21 48 -47v-32c0 -26 -22 -48 -48 -48zM190 115c-9 0 -16 -7 -16 -16v-32c0 -9 7 -16 16 -16s16 7 16 16v32c0 9 -7 16 -16 16v0z" />
+    <glyph glyph-name="ion-login-user" unicode="&#xf159;" horiz-adv-x="512" 
+d="M510 -41c1 -2 2 -4 2 -7c0 -9 -8 -16 -17 -16s-16 7 -16 16h-1c-22 101 -113 176 -222 176s-201 -75 -223 -176v0c0 -9 -8 -16 -17 -16s-16 7 -16 16c0 3 1 5 2 7c20 90 88 162 176 189c-50 27 -85 80 -85 140c0 88 73 160 163 160s163 -72 163 -160
+c0 -60 -35 -113 -85 -140c88 -27 156 -99 176 -189zM386 288c0 71 -58 128 -130 128s-131 -57 -131 -128s59 -128 131 -128s130 57 130 128v0z" />
     <glyph glyph-name="ion-pencil" unicode="&#xf156;" horiz-adv-x="494" 
 d="M0 49v-104h104l302 305l-104 104zM486 368l-63 63c-11 11 -27 11 -38 0l-50 -50l104 -104l47 53c11 11 11 27 0 38z" />
     <glyph glyph-name="ion-search-square" unicode="&#xf157;" 

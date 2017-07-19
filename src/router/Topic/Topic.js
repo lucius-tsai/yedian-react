@@ -9,7 +9,9 @@ import Message from '../../components/Message';
 import ActionBar from '../../components/ActionBar';
 import LoadMore from '../../components/LoadMore';
 
-import { getTopicById, getCommunityBanner, getPostList } from '../../libs/api';
+import { getTopicById, getBannerById, getPostList } from '../../libs/api';
+import { trackPageView, trackPageLeave } from '../../libs/track';
+
 import { loading, loadSuccess, loadFail, hideBar, showBar, deleteUnmount } from '../../store/actions/appStatus';
 import { delAll } from '../../store/actions/publish';
 
@@ -21,6 +23,10 @@ class Topic extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      track: {
+        pageName: 'community_topic',
+        startTime: null,
+      },
       slides: [],
       messages: [],
       userList: [],
@@ -41,6 +47,16 @@ class Topic extends Component {
   componentWillMount() {
     const { delAll } = this.props;
     delAll();
+
+    trackPageView({
+      pageName: this.state.track.pageName
+    });
+    this.setState({
+      track: {
+        pageName: this.state.track.pageName,
+        startTime: new Date(),
+      }
+    });
   }
 
   setStateAynsc(state) {
@@ -68,8 +84,6 @@ class Topic extends Component {
     if (this.state.completed || this.state.loading) {
       return false;
     }
-
-
     // reset && loading();
 
     const offset = (pagination.current - 1) * pagination.pageSize;
@@ -238,6 +252,13 @@ class Topic extends Component {
 
     hideBar();
     // loading();
+    getBannerById(id).then(res => {
+      if(res.code === 200) {
+        
+      }
+    }, error => {
+
+    });
 
     getTopicById(id).then(res => {
       if (res.code === 200 && res.data.length) {
@@ -274,6 +295,10 @@ class Topic extends Component {
     if (!reg.test(pathname)) {
       showBar();
     }
+    trackPageLeave({
+      pageName: this.state.track.pageName,
+      pageStayTime: ((new Date().getTime() - this.state.track.startTime.getTime()) / 1000)
+    });
   }
 }
 
