@@ -15,6 +15,7 @@ body {
   margin: 0;
   &.no-scroll {
     overflow: hidden;
+    position: fixed;
   }
   transition: all 0.3s ease-in-out;
 }
