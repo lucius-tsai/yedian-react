@@ -28,9 +28,14 @@
 }
 
 .app-left-to-right-enter {
+	width: 100%;
+	height: 100vh;
 	position: absolute;
+	left: 0;
+	top: 0;
+	overflow: hidden;
 	transform: translate3d(100%, 0, 0);
-	transition: transform 0.3s;
+	transition: transform 0.3s ease-in;
 	z-index: 1;
 }
 
@@ -39,9 +44,14 @@
 }
 
 .app-left-to-right-leave {
+	width: 100%;
+	height: 100vh;
 	position: absolute;
+	left: 0;
+	top: 0;
+	overflow: hidden;
 	transform: translate3d(0, 0, 0);
-	transition: transform 0.3s;
+	transition: transform 0.3s ease-in;
 }
 
 .app-left-to-right-leave.app-left-to-right-leave-active {
@@ -50,9 +60,14 @@
 
 
 .app-right-to-left-enter {
+	width: 100%;
+	height: 100vh;
 	position: absolute;
+	left: 0;
+	top: 0;
+	overflow: hidden;
 	transform: translate3d(-100%, 0, 0);
-	transition: transform 0.3s;
+	transition: transform 0.3s ease-in;
 	z-index: 1;
 }
 
@@ -61,9 +76,14 @@
 }
 
 .app-right-to-left-leave {
+	width: 100%;
+	height: 100vh;
 	position: absolute;
+	left: 0;
+	top: 0;
+	overflow: hidden;
 	transform: translate3d(0, 0, 0);
-	transition: transform 0.3s;
+	transition: transform 0.3s ease-in;
 }
 
 .app-right-to-left-leave.app-right-to-left-leave-active {

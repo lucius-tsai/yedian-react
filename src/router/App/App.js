@@ -29,7 +29,10 @@ import { cookie, getLocation, deleteAllCookies } from "../../libs/uitls";
 import { trackLogin, trackSetProfile, trackSetOnceProfile } from '../../libs/track';
 
 // redux-actions
-import { setLocation } from '../../store/actions/appStatus';
+import {
+  setLocation,
+  showScrollLoading
+} from '../../store/actions/appStatus';
 import {
   getVenuesFollowers,
   getVenuesFollowersFail,
@@ -44,6 +47,7 @@ import { getUserInfoLoading, getUserInfoSuccess, getUserInfoFail } from '../../s
 class Bootstrap extends Component {
   constructor(props) {
     super(props);
+
     const token = cookie('js_session');
 
     this.state = {
@@ -53,16 +57,20 @@ class Bootstrap extends Component {
       router: null,
       lastRouter: null
     }
+
+    this.pointY = null;
+    this.handleScroll = this.handleScroll.bind(this);
+
   }
 
   componentWillMount() {
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    // const { userInfo, } = this.props;
-    // console.log(this.props);
-    return true;
-  }
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   // const { userInfo, } = this.props;
+  //   // console.log(this.props);
+  //   // return true;
+  // }
 
   componentWillReceiveProps(nextProps) {
     const { router } = this.state;
@@ -73,6 +81,23 @@ class Bootstrap extends Component {
       lastRouter: router,
       userInfo: nextProps.userInfo
     });
+  }
+
+  handleScroll(e) {
+    const self = this;
+    const { showScrollLoading } = this.props;
+    const documentHeight = document.body.clientHeight;
+    const scrollHeight = window.scrollY;
+    const distance = documentHeight - scrollHeight;
+    if (distance < 700 && !this.props.scrollLoading && self.pointY < scrollHeight) {
+      showScrollLoading();
+    }
+    setImmediate(() => {
+      self.pointY = scrollHeight;
+    });
+  }
+  handleTouch(e) {
+    self.pointY = window.scrollY;
   }
 
   getUserInfo() {
@@ -246,7 +271,6 @@ class Bootstrap extends Component {
       setVenuesFollowers,
       history
     } = this.props;
-
     const token = cookie('js_session');
     if (token) {
       if (!userInfo.user) {
@@ -260,6 +284,11 @@ class Bootstrap extends Component {
         redirectUri: window.location.pathname
       });
     }
+
+    // 全局处理SPA下拉滚动加载数据
+    document.addEventListener("touchstart", this.handleTouch);
+    window.addEventListener("scroll", this.handleScroll);
+
   }
   componentDidUpdate() {
     /**
@@ -268,7 +297,7 @@ class Bootstrap extends Component {
     const { userInfo, followers, gps } = this.props;
     const token = cookie('js_session');
     if (token) {
-     if (!(userInfo && userInfo.user && userInfo.user.id) && !userInfo.loading) {
+      if (!(userInfo && userInfo.user && userInfo.user.id) && !userInfo.loading) {
         this.getUserInfo();
       }
       if (!(followers && followers.userFollowers) && !followers.loadingUserFollowers) {
@@ -289,6 +318,7 @@ const mapStateToProps = state => {
   return {
     loading: appStatus.loading || false,
     hideBar: appStatus.hideBar || false,
+    scrollLoading: appStatus.scrollLoading || false,
     gps: appStatus.gps || null,
     userInfo,
     router,
@@ -327,6 +357,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     setVenuesFollowers: (cell) => {
       dispatch(setVenuesFollowers(cell));
+    },
+    showScrollLoading: (cell) => {
+      dispatch(showScrollLoading(cell));
     }
   }
 };

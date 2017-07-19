@@ -150,7 +150,8 @@ class Search extends Component {
             }
           })));
         }
-        return history.push(`${BASENAME}publish`);
+        // return history.push(`${BASENAME}publish`);
+        history.goBack();
       }
     }, error => {
       console.log(error);
@@ -188,7 +189,8 @@ class Search extends Component {
         }));
       }
     }
-    return history.push(`${BASENAME}publish`);
+    // return history.push(`${BASENAME}publish`);
+    history.goBack();
   }
 
   render() {
@@ -233,6 +235,7 @@ class Search extends Component {
     )
   }
   componentDidMount() {
+    const self = this;
     const { showBar, router, location, hideBar, gps } = this.props;
     const pathname = router.location.pathname;
     hideBar();
@@ -254,7 +257,9 @@ class Search extends Component {
       type: type,
       gps
     }, () => {
-      this.fetch();
+      setTimeout(() => {
+        self.fetch();
+      }, 500);
     });
 
     reSetShare();

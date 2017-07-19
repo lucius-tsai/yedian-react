@@ -7,7 +7,9 @@ import {
     APP_UNMOUNT_DELETE,
     APP_SET_GPS,
     APP_SHOW_COMMENT,
-    APP_HIDE_COMMENT
+    APP_HIDE_COMMENT,
+    APP_HANDLE_SCROLL_LOADING,
+    APP_HANDLE_SCROLL_DOWN
 } from '../actions/appStatus';
 
 const appStatus = (state = { loading: false }, action) => {
@@ -48,6 +50,14 @@ const appStatus = (state = { loading: false }, action) => {
         case APP_HIDE_COMMENT:
             return {
                 ...state, showComment: false
+            }
+        case APP_HANDLE_SCROLL_LOADING:
+            return {
+                ...state, scrollLoading: true
+            }
+        case APP_HANDLE_SCROLL_DOWN:
+            return {
+                ...state, scrollLoading: false
             }
         default:
             return state

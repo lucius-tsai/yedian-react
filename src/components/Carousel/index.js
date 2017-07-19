@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 import style from './carousel.css';
 import './carousel.scss';
 
-export default class Carousel extends Component {
+class Carousel extends Component {
   constructor(props) {
     super(props);
     this.autoRun = this.autoRun.bind(this);
@@ -57,12 +57,11 @@ export default class Carousel extends Component {
         })
       }, speed);
     }
-
   }
 
   hanldeSwiper(dom) {
     const cellWidth = window.innerWidth > 414 ? 414 : window.innerWidth;
-    const { slides } = this.props;
+    const { slides, history } = this.props;
     const self = this, len = slides.length;
     let startX, startY, X, Y, prev, next, firstPointTime;
     if (dom && dom.addEventListener) {
@@ -83,21 +82,21 @@ export default class Carousel extends Component {
         self.refs.swiperDom.style.display = 'block';
         self.refs.swiperDom.innerHTML = `
           <div class="${style.slide}">
-            <div class="${style.pic}" style="background-image: url('${slides[prev].cover}');">
+            <div class="${style.pic}" style="background-image: url('${slides[prev].image}');">
               <p class="${style.word}">
                 <span>#${slides[prev].topic.topic}#</span>
               </p>
             </div>
           </div>
           <div class="${style.slide}">
-            <div class="${style.pic}" style="background-image: url('${slides[this.state.currentIndex].cover}');">
+            <div class="${style.pic}" style="background-image: url('${slides[this.state.currentIndex].image}');">
               <p class="${style.word}">
                 <span>#${slides[this.state.currentIndex].topic.topic}#</span>
               </p>
             </div>
           </div>
           <div class="${style.slide}">
-            <div class="${style.pic}" style="background-image: url('${slides[next].cover}');">
+            <div class="${style.pic}" style="background-image: url('${slides[next].image}');">
               <p class="${style.word}">
                 <span>#${slides[next].topic.topic}#</span>
               </p>
@@ -122,9 +121,12 @@ export default class Carousel extends Component {
         e.preventDefault();
         const staySeconds = (new Date().getTime() - firstPointTime);
         if (staySeconds < 400 && Math.abs(X) < 10) {
-          location.href = slides[this.state.currentIndex].link;
-          // console.log(slides[this.state.currentIndex])
-          return false;
+          if (slides[this.state.currentIndex].action && slides[this.state.currentIndex].action.path) {
+            history.push(slides[this.state.currentIndex].action.path);
+          } else {
+            location.href = slides[this.state.currentIndex].link;
+            return false;
+          }
         }
         let timer = null, step = 4;
         if (X > cellWidth / 2) {
@@ -205,7 +207,7 @@ export default class Carousel extends Component {
           transitionLeaveTimeout={leaveDelay}>
           <div className={style.slide}
             key={currentIndex}>
-            <div className={style.pic} style={{ backgroundImage: `url(${slides[currentIndex].cover})` }}>
+            <div className={style.pic} style={{ backgroundImage: `url(${slides[currentIndex].image})` }}>
               <p className={style.word}>
                 <span>#{slides[currentIndex].topic.topic}#</span>
               </p>
@@ -226,7 +228,11 @@ export default class Carousel extends Component {
             single ?
               <div className={style.sliderCarousel}>
                 <a className={style.slide}>
-                  <div className={style.pic} style={{ backgroundImage: `url(${slides[0].topicBannerPic})` }}></div>
+                  <div className={style.pic} style={{ backgroundImage: `url(${slides[0].image})` }}>
+                    <p className={style.word}>
+                      <span>#{slides[0].topic.topic}#</span>
+                    </p>
+                  </div>
                 </a>
               </div>
               :
@@ -259,3 +265,5 @@ export default class Carousel extends Component {
     this.clearBinds();
   }
 }
+
+export default withRouter(Carousel);

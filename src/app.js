@@ -107,3 +107,7 @@ if (process.env.NODE_ENV === 'localhost') {
 
 require('./assets/js/fastclick');
 FastClick.attach(document.body);
+
+window.addEventListener('resize', () => {
+  window.location.reload();
+}, false);

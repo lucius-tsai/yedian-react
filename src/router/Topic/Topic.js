@@ -9,10 +9,24 @@ import Message from '../../components/Message';
 import ActionBar from '../../components/ActionBar';
 import LoadMore from '../../components/LoadMore';
 
-import { getTopicById, getBannerById, getPostList } from '../../libs/api';
+import {
+  getTopicById,
+  getBannerById,
+  getPostList
+} from '../../libs/api';
+import { setShare } from '../../libs/wechat';
 import { trackPageView, trackPageLeave } from '../../libs/track';
 
-import { loading, loadSuccess, loadFail, hideBar, showBar, deleteUnmount } from '../../store/actions/appStatus';
+import {
+  loading,
+  loadSuccess,
+  loadFail,
+  hideBar,
+  showBar,
+  deleteUnmount,
+  hiddenScrollLoading,
+  showScrollLoading
+} from '../../store/actions/appStatus';
 import { delAll } from '../../store/actions/publish';
 
 import style from './topic.css';
@@ -28,20 +42,19 @@ class Topic extends Component {
         startTime: null,
       },
       slides: [],
+      description: '',
       messages: [],
       userList: [],
-      loading: false,
       pagination: {
-        pageSize: 5,
+        pageSize: 2,
         current: 1
       },
       actionTags: [],
       tags: [],
       tab: 'createdAt',
+      loading: false,
       completed: false,
     }
-    this.handleScroll = this.handleScroll.bind(this);
-    this.pointY = null;
   }
 
   componentWillMount() {
@@ -67,6 +80,9 @@ class Topic extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.scrollLoading && !this.state.completed) {
+      this.fetch();
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -76,18 +92,13 @@ class Topic extends Component {
   fetch(reset) {
     const self = this;
     const { pagination, messages, tab } = this.state;
-    const { loading, loadSuccess, loadFail } = this.props;
-
-    if (messages.length === pagination.total) {
-    }
+    const { hiddenScrollLoading } = this.props;
 
     if (this.state.completed || this.state.loading) {
       return false;
     }
-    // reset && loading();
 
     const offset = (pagination.current - 1) * pagination.pageSize;
-
     this.setStateAynsc({
       loading: true
     }).then(() => {
@@ -98,22 +109,18 @@ class Topic extends Component {
         sort: `-${tab}`
       }).then(res => {
         if (res.code === 200) {
-          const list = [], total = res.count;
+          const total = res.count;
           const merge = reset ? res.data : messages.concat(res.data);
 
           if (merge.length === total) {
-            document.removeEventListener("touchstart", this.handleTouch);
-            window.removeEventListener("scroll", this.handleScroll);
-            self.setState({
+            self._isMounted && self.setState({
               completed: true,
               loading: false
             });
           }
 
           if (!res.data.length) {
-            document.removeEventListener("touchstart", this.handleTouch);
-            window.removeEventListener("scroll", this.handleScroll);
-            self.setState({
+            self._isMounted && self.setState({
               completed: true,
               loading: false
             });
@@ -129,16 +136,16 @@ class Topic extends Component {
             }
           });
         } else {
-          self.setState({
+          self._isMounted && self.setState({
             loading: false
           })
         }
-        // reset && loadSuccess();
+        hiddenScrollLoading();
       }, error => {
-        self.setState({
-          // loading: false
+        self._isMounted && self.setState({
+          loading: false
         });
-        // reset && loadFail();
+        hiddenScrollLoading();
       });
     });
   }
@@ -146,6 +153,7 @@ class Topic extends Component {
   tab(key) {
     const self = this;
     const { pagination } = this.state;
+    const { showScrollLoading } = this.props;
     this.setStateAynsc({
       tab: key === 0 ? 'createdAt' : 'likeCount',
       messages: [],
@@ -155,39 +163,18 @@ class Topic extends Component {
         current: 1
       }
     }).then(() => {
+      showScrollLoading();
       self.fetch(true);
-      document.removeEventListener("touchstart", this.handleTouch);
-      window.removeEventListener("scroll", this.handleScroll);
-      document.addEventListener("touchstart", this.handleTouch);
-      window.addEventListener("scroll", this.handleScroll);
     });
-  }
-
-  handleScroll(e) {
-    const self = this;
-    const documentHeight = document.body.clientHeight;
-    const scrollHeight = window.scrollY;
-    const distance = documentHeight - scrollHeight;
-
-    if (distance < 700 && !this.state.loading && self.pointY < scrollHeight) {
-      self.fetch();
-    }
-
-    setImmediate(() => {
-      self.pointY = scrollHeight;
-    });
-  }
-  handleTouch(e) {
-    self.pointY = window.scrollY;
   }
 
   render() {
-    const { slides, messages, userList, tab, actionTags, loading } = this.state;
+    const { slides, messages, userList, tab, actionTags, description, loading, completed } = this.state;
 
     const messagesList = messages.map((cell, index) => {
       return (
         <li className="message-cell" key={index}>
-          <Message profile={cell.profile} post={cell} canLink={true} showFollow={true}/>
+          <Message profile={cell.profile} post={cell} canLink={true} showFollow={true} />
         </li>
       )
     });
@@ -204,14 +191,11 @@ class Topic extends Component {
       <div className="community">
         <div className="banner">
           {
-            slides.length ?
-              <Carousel slides={slides} element={"div"} enterDelay={1000} leaveDelay={1000} speed={3000} />
-              :
-              ""
+            slides.length && <Carousel slides={slides} element={"div"} enterDelay={1000} leaveDelay={1000} speed={3000} />
           }
         </div>
         <div className="topic-info">
-          夜生活泛指人类从黄昏到凌晨时段盛行的活动。夜间活动一般被视为相对于日间劳动等正式活动，夜生活一词也常偏向休闲娱乐性质。
+          {description}
         </div>
         <div className={style.topicTab}>
           <p className={tab === 'createdAt' ? `${style.tab} ${style.active}` : style.tab} onClick={this.tab.bind(this, 0)}>
@@ -231,7 +215,10 @@ class Topic extends Component {
           </ul>
         </div>
         {
-          loading ? <LoadMore /> : ""
+          loading && <LoadMore />
+        }
+        {
+          completed && <p style={{ textAlign: 'center' }}>没有更多数据了</p>
         }
         <ActionBar position={"bottom"} tags={actionTags} />
       </div>
@@ -242,49 +229,61 @@ class Topic extends Component {
     document.title = "Night+--社区";
     this._isMounted = true;
     const self = this;
-    const { loading, loadSuccess, loadFail, dispatch, hideBar, match } = this.props;
+    const { showScrollLoading, dispatch, hideBar, match, userInfo } = this.props;
     const id = match && match.params && match.params.id ? match.params.id : '';
-    // alert(2);
-    document.removeEventListener("touchstart", this.handleTouch);
-    window.removeEventListener("scroll", this.handleScroll);
-    document.addEventListener("touchstart", this.handleTouch);
-    window.addEventListener("scroll", this.handleScroll);
+    const userId = userInfo && userInfo.user && userInfo.user.id ? userInfo.user.id : '';
 
     hideBar();
-    // loading();
     getBannerById(id).then(res => {
-      if(res.code === 200) {
-        
+      if (res.code === 200 && res.data.length) {
+        const banner = res.data[0];
+        setShare({
+          imgUrl: banner.cover,
+          link: `${window.location.origin}${BASENAME}topic/${id}?utm_medium=SHARING&utm_campaign=COMMUNITY_TOPIC&utm_source=${id}&utm_content=${userId}`,
+          success: (shareType) => {
+            track('wechat_share', Object.assign({
+              $url: window.location.href,
+              type: 'COMMUNITY_TOPIC',
+              shareMethod: shareType,
+              action_time: new Date()
+            }, {}));
+          }
+        });
+
+        if (banner.topic && banner.topic.id) {
+          getTopicById(banner.topic.id).then(res => {
+            if (res.code === 200 && res.data.length) {
+              self.setStateAynsc({
+                slides: [{
+                  image: banner.cover,
+                  topic: banner.topic,
+                  tags: res.data[0].tags
+                }],
+                actionTags: res.data[0].tags,
+                tags: res.data[0].tags.map(cell => {
+                  return cell.tag
+                })
+              }).then(() => {
+                showScrollLoading();
+                self.fetch();
+              });
+            }
+          }).catch(error => {
+          });
+        } else {
+          self.setState({
+            slides: [{
+              image: banner.cover,
+              topic: banner.topic,
+              // link: banner.link
+            }]
+          })
+        }
       }
     }, error => {
 
     });
 
-    getTopicById(id).then(res => {
-      if (res.code === 200 && res.data.length) {
-        self.setStateAynsc({
-          actionTags: res.data[0].tags,
-          tags: res.data[0].tags.map(cell => {
-            return cell.tag
-          })
-        }).then(() => {
-          self.fetch();
-        });
-      }
-    }).catch(error => {
-
-    });
-
-    // Promise.all([getCommunityBanner(), getPostList()]).then(data => {
-    //   loadSuccess();
-    //   self._isMounted && self.setState({
-    //     slides: data[0].data,
-    //     messages: data[1].data
-    //   });
-    // }, error => {
-    //   loadFail();
-    //   console.log(error);
-    // });
   }
 
   componentWillUnmount() {
@@ -303,10 +302,11 @@ class Topic extends Component {
 }
 
 const mapStateToProps = state => {
-  const { router, appStatus } = state;
+  const { router, appStatus, userInfo } = state;
   return {
     router,
-    appStatus
+    userInfo,
+    scrollLoading: appStatus.scrollLoading || false
   }
 };
 
@@ -326,6 +326,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     loadFail: () => {
       dispatch(loadFail());
+    },
+    showScrollLoading: (cell) => {
+      dispatch(showScrollLoading(cell));
+    },
+    hiddenScrollLoading: () => {
+      dispatch(hiddenScrollLoading())
     },
     delAll: () => {
       dispatch(delAll());

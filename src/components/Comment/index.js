@@ -10,35 +10,37 @@ import LoadMore from '../LoadMore';
 import { getComments, commentMessage } from '../../libs/api';
 import { os } from '../../libs/uitls';
 
-import { showComment, hiddenComment } from '../../store/actions/appStatus';
+import {
+	showComment,
+	hiddenComment,
+	hiddenScrollLoading,
+	showScrollLoading
+} from '../../store/actions/appStatus';
 
 import './comment.scss';
 import style from './comment.css';
 
 class Comment extends Component {
-
 	constructor(props) {
 		super(props);
 		this.state = {
 			profile: null,
 			target: null,
-			loading: false,
-			completed: false,
 			data: [],
+			showComment: false,
+			showBtn: false,
 			pagination: {
 				pageSize: 2,
 				current: 1
 			},
 			offset: 0,
-			showComment: false,
-			showBtn: false,
+			loading: false,
+			completed: false,
 		}
 
-		this.handleScroll = this.handleScroll.bind(this);
 		this.__openComment = this.__openComment.bind(this);
 		this.comment = this.comment.bind(this);
 		this.input = this.input.bind(this);
-		this.pointY = null;
 	}
 
 	setStateAynsc(state) {
@@ -74,27 +76,31 @@ class Comment extends Component {
 				}
 			})
 		}
-		if(!showComment) {
+		if (!showComment) {
 			this.setState({ showComment, showBtn: false });
 		} else {
 			this.setState({ showComment });
 		}
+
+		if (nextProps.scrollLoading && !this.state.completed) {
+			this.fetch();
+		}
 	}
 
-	 shouldComponentUpdate(nextProps, nextState) {
+	shouldComponentUpdate(nextProps, nextState) {
 		const { data } = this.state;
 		const { nextData } = nextState;
-		if(data && nextData && (data.length === nextData.length)) {
+		if (data && nextData && (data.length === nextData.length)) {
 			return false;
 		} else {
-    	return true;
+			return true;
 		}
-  }
+	}
 
 	fetch() {
 		const self = this;
 		const { pagination, data, offset } = this.state;
-		const { target } = this.props;
+		const { target, hiddenScrollLoading } = this.props;
 
 		if (this.state.completed || this.state.loading) {
 			return false;
@@ -128,8 +134,6 @@ class Comment extends Component {
 
 					const merge = data.concat(list);
 					if (merge.length === total) {
-						document.removeEventListener("touchstart", this.handleTouch);
-						window.removeEventListener("scroll", this.handleScroll);
 						self.setState({
 							completed: true,
 							loading: false,
@@ -142,8 +146,6 @@ class Comment extends Component {
 					}
 
 					if (!res.data.commentList.length) {
-						document.removeEventListener("touchstart", this.handleTouch);
-						window.removeEventListener("scroll", this.handleScroll);
 						self.setState({
 							completed: true,
 							loading: false
@@ -164,22 +166,23 @@ class Comment extends Component {
 						loading: false
 					});
 				}
+				hiddenScrollLoading();
 			}, error => {
 				self.setState({
 					loading: false
 				});
+				hiddenScrollLoading();
 			});
 		});
 	}
 
 	focus(ref) {
 		if (ref) {
-			if(os.isPhone) {
+			if (os.isPhone) {
 				document.body.className = 'no-scroll';
 				document.body.style.height = '100vh';
 			}
 			ref.focus();
-			// document.body.scrollTop = document.body.clientHeight;
 		}
 	}
 
@@ -232,25 +235,8 @@ class Comment extends Component {
 		__showComment();
 	}
 
-	handleScroll(e) {
-		const self = this;
-		const documentHeight = document.body.clientHeight;
-		const scrollHeight = window.scrollY;
-		const distance = documentHeight - scrollHeight;
-		if (distance < 700 && !this.state.loading && self.pointY < scrollHeight) {
-			self.fetch();
-		}
-		setImmediate(() => {
-			self.pointY = scrollHeight;
-		});
-	}
-
-	handleTouch(e) {
-		self.pointY = window.scrollY;
-	}
-
 	render() {
-		const { profile, data, loading, showComment, showBtn } = this.state;
+		const { profile, data, loading, completed, showComment, showBtn } = this.state;
 		return (
 			<div className="comment">
 				<div className="_title">夜猫子们评论</div>
@@ -275,6 +261,9 @@ class Comment extends Component {
 				{
 					loading ? <LoadMore /> : ""
 				}
+				{
+					completed && <p style={{ textAlign: 'center' }}>没有更多数据了</p>
+				}
 				<div className={showComment ? style.commentBox : `${style.commentBox} ${style.barHidden}`} onClick={e => { e.nativeEvent.stopImmediatePropagation(); }}>
 					{
 						showComment ?
@@ -287,18 +276,11 @@ class Comment extends Component {
 		)
 	}
 	componentDidMount() {
-
-		document.removeEventListener("touchstart", this.handleTouch);
-		window.removeEventListener("scroll", this.handleScroll);
-		document.addEventListener("touchstart", this.handleTouch);
-		window.addEventListener("scroll", this.handleScroll);
-
+		this.props.showScrollLoading();
 		this.fetch();
 	}
 
 	componentWillUnmount() {
-		document.removeEventListener("touchstart", this.handleTouch);
-		window.removeEventListener("scroll", this.handleScroll);
 	}
 }
 
@@ -307,6 +289,7 @@ const mapStateToProps = state => {
 	const { router, userInfo, appStatus } = state;
 	return {
 		router,
+		scrollLoading: appStatus.scrollLoading || false,
 		userInfo,
 		showComment: appStatus.showComment || false
 	}
@@ -319,7 +302,13 @@ const mapDispatchToProps = (dispatch) => {
 		},
 		__hiddenComment: (cell) => {
 			dispatch(hiddenComment(cell));
-		}
+		},
+		showScrollLoading: (cell) => {
+			dispatch(showScrollLoading(cell));
+		},
+		hiddenScrollLoading: () => {
+			dispatch(hiddenScrollLoading())
+		},
 	}
 };
 

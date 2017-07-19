@@ -12,7 +12,13 @@ import { getPostList, getUserInfoById } from '../../libs/api';
 import { setShare } from '../../libs/wechat';
 import { trackPageView, trackPageLeave, track } from '../../libs/track';
 
-import { loading, loadSuccess, loadFail } from '../../store/actions/appStatus';
+import {
+  loading,
+  loadSuccess,
+  loadFail,
+  hiddenScrollLoading,
+  showScrollLoading
+} from '../../store/actions/appStatus';
 
 class UserTimeLine extends Component {
   constructor(props) {
@@ -23,18 +29,16 @@ class UserTimeLine extends Component {
         startTime: null,
       },
       messages: [],
-      loading: false,
       pagination: {
         pageSize: 3,
         current: 1
       },
       user: null,
-      completed: false
+      completed: false,
+      loading: false,
     }
 
-    this.handleScroll = this.handleScroll.bind(this);
     this.fetch = this.fetch.bind(this);
-    this.pointY = null;
   }
 
   setStateAynsc(state) {
@@ -55,14 +59,16 @@ class UserTimeLine extends Component {
     });
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.scrollLoading && !this.state.completed) {
+      this.fetch();
+    }
+  }
+
   fetch() {
     const self = this;
     const { pagination, messages, user } = this.state;
-    const { loading, loadSuccess, loadFail } = this.props;
-
-    if (messages.length === pagination.total) {
-
-    }
+    const { hiddenScrollLoading } = this.props;
 
     if (this.state.completed || this.state.loading) {
       return false;
@@ -87,17 +93,12 @@ class UserTimeLine extends Component {
             });
             const merge = messages.concat(list);
             if (merge.length === total) {
-              document.removeEventListener("touchstart", this.handleTouch);
-              window.removeEventListener("scroll", this.handleScroll);
               self.setState({
                 completed: true,
                 loading: false
               });
             }
-
             if (!res.data.length) {
-              document.removeEventListener("touchstart", this.handleTouch);
-              window.removeEventListener("scroll", this.handleScroll);
               self.setState({
                 completed: true,
                 loading: false
@@ -118,34 +119,19 @@ class UserTimeLine extends Component {
               loading: false
             });
           }
+          hiddenScrollLoading();
         }, error => {
           self._isMounted && self.setState({
             loading: false
           });
+          hiddenScrollLoading();
         });
       });
     }
   }
 
-  handleScroll(e) {
-    const self = this;
-    const documentHeight = document.body.clientHeight;
-    const scrollHeight = window.scrollY;
-    const distance = documentHeight - scrollHeight;
-    if (distance < 700 && !this.state.loading && self.pointY < scrollHeight) {
-      self.fetch();
-    }
-    setImmediate(() => {
-      self.pointY = scrollHeight;
-    });
-  }
-
-  handleTouch(e) {
-    self.pointY = window.scrollY;
-  }
-
   render() {
-    const { messages, user, loading } = this.state;
+    const { messages, user, loading, completed } = this.state;
     const messagesList = messages.map((cell, index) => {
       return (
         <li className="message-cell" key={index}>
@@ -169,6 +155,9 @@ class UserTimeLine extends Component {
         {
           loading && <LoadMore />
         }
+        {
+          completed && <p style={{ textAlign: 'center', paddingBottom: '10px' }}>没有更多数据了</p>
+        }
       </div>
     )
   }
@@ -180,12 +169,7 @@ class UserTimeLine extends Component {
     document.title = "Night+--社区";
     document.body.scrollTop = 0;
 
-    document.removeEventListener("touchstart", this.handleTouch);
-    window.removeEventListener("scroll", this.handleScroll);
-    document.addEventListener("touchstart", this.handleTouch);
-    window.addEventListener("scroll", this.handleScroll);
-
-    const { loading, loadSuccess, loadFail, location, match, userInfo } = this.props;
+    const { showScrollLoading, location, match, userInfo } = this.props;
     const userId = userInfo && userInfo.user && userInfo.user.id ? userInfo.user.id : '';
     // loading();
     if (location.state) {
@@ -204,6 +188,7 @@ class UserTimeLine extends Component {
             }, {}));
           }
         });
+        showScrollLoading();
         this.fetch();
       });
     } else {
@@ -230,6 +215,7 @@ class UserTimeLine extends Component {
                   }, {}));
                 }
               });
+              showScrollLoading();
               self.fetch();
             });
           }
@@ -242,8 +228,6 @@ class UserTimeLine extends Component {
 
   componentWillUnmount() {
     this._isMounted = false;
-    document.removeEventListener("touchstart", this.handleTouch);
-    window.removeEventListener("scroll", this.handleScroll);
     trackPageLeave({
       pageName: this.state.track.pageName,
       pageStayTime: ((new Date().getTime() - this.state.track.startTime.getTime()) / 1000)
@@ -255,7 +239,8 @@ const mapStateToProps = state => {
   const { appStatus, router, userInfo } = state;
   return {
     router,
-    userInfo
+    userInfo,
+    scrollLoading: appStatus.scrollLoading || false
   }
 };
 
@@ -269,6 +254,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     loadFail: () => {
       dispatch(loadFail())
+    },
+    showScrollLoading: (cell) => {
+      dispatch(showScrollLoading(cell));
+    },
+    hiddenScrollLoading: () => {
+      dispatch(hiddenScrollLoading())
     }
   }
 };

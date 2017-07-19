@@ -15,7 +15,7 @@ import { getCommunityBanner, getPostList, getIndexUserList, getTopicById } from 
 import { trackPageView, trackPageLeave } from '../../libs/track';
 import { reSetShare } from '../../libs/wechat';
 
-import { loading, loadSuccess, loadFail } from '../../store/actions/appStatus';
+import { loading, loadSuccess, loadFail, hiddenScrollLoading, showScrollLoading } from '../../store/actions/appStatus';
 import { delAll } from '../../store/actions/publish';
 
 
@@ -33,17 +33,15 @@ class Community extends Component {
       dynamicMessages: [],
       messages: [],
       userList: [],
-      loading: false,
       pagination: {
-        pageSize: 5,
+        pageSize: 10,
         current: 1
       },
       completed: false,
+      loading: false,
     };
 
-    this.handleScroll = this.handleScroll.bind(this);
     this.fetch = this.fetch.bind(this);
-    this.pointY = null;
   }
 
   componentWillMount() {
@@ -61,7 +59,9 @@ class Community extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-
+    if (nextProps.scrollLoading && !this.state.completed) {
+      this.fetch();
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -71,7 +71,7 @@ class Community extends Component {
   fetch() {
     const self = this;
     const { pagination, messages } = this.state;
-    const { loading, loadSuccess, loadFail } = this.props;
+    const { hiddenScrollLoading } = this.props;
 
     if (this.state.completed || this.state.loading) {
       return false;
@@ -87,27 +87,18 @@ class Community extends Component {
         offset
       }).then(res => {
         if (res.code === 200) {
-
-          const list = [], total = res.count;
-
+          const total = res.count;
           const merge = messages.concat(res.data);
-
           if (merge.length === total) {
-            document.removeEventListener("touchstart", this.handleTouch);
-            window.removeEventListener("scroll", this.handleScroll);
             self.setState({
               completed: true
             });
           }
-
           if (!res.data.length) {
-            document.removeEventListener("touchstart", this.handleTouch);
-            window.removeEventListener("scroll", this.handleScroll);
             self.setState({
               completed: true
             });
           }
-
           self._isMounted && self.setState({
             messages: merge,
             loading: false,
@@ -117,39 +108,24 @@ class Community extends Component {
               current: (pagination.current + 1)
             }
           });
-
         } else {
           self.setState({
             loading: false
           })
         }
+        hiddenScrollLoading();
       }, error => {
         self.setState({
           loading: false
-        })
+        });
+        hiddenScrollLoading();
       });
     });
 
   }
 
-  handleScroll(e) {
-    const self = this;
-    const documentHeight = document.body.clientHeight;
-    const scrollHeight = window.scrollY;
-    const distance = documentHeight - scrollHeight;
-    if (distance < 700 && !this.state.loading && self.pointY < scrollHeight) {
-      self.fetch();
-    }
-    setImmediate(() => {
-      self.pointY = scrollHeight;
-    });
-  }
-  handleTouch(e) {
-    self.pointY = window.scrollY;
-  }
-
   render() {
-    const { slides, messages, userList, loading, dynamicMessages } = this.state;
+    const { slides, messages, userList, loading, dynamicMessages, completed } = this.state;
 
     const messagesList = messages.map((cell, index) => {
       return (
@@ -206,7 +182,10 @@ class Community extends Component {
           </ul>
         </div>
         {
-          loading ? <LoadMore /> : ""
+          loading && <LoadMore />
+        }
+        {
+          completed && <p style={{ textAlign: 'center' }}>没有更多数据了</p>
         }
         <ActionBar />
       </div>
@@ -219,12 +198,7 @@ class Community extends Component {
 
     document.title = "Night+--社区";
     const { messages, pagination } = this.state;
-    const { loading, loadSuccess, loadFail } = this.props;
-
-    document.removeEventListener("touchstart", this.handleTouch);
-    window.removeEventListener("scroll", this.handleScroll);
-    document.addEventListener("touchstart", this.handleTouch);
-    window.addEventListener("scroll", this.handleScroll);
+    const { loading, loadSuccess, loadFail, showScrollLoading } = this.props;
 
     reSetShare();
 
@@ -232,22 +206,28 @@ class Community extends Component {
     getCommunityBanner().then(res => {
       if (res.code === 200) {
         const loadTopic = [];
-        
         res.data.forEach(cell => {
           loadTopic.push(getTopicById(cell.topic.id));
         });
-
         Promise.all(loadTopic).then(data => {
-          let slides = res.data;
-          slides.map((cell, index) => {
-            return {
-              cell
-            }
+          const slides = [];
+          res.data.forEach((cell, index) => {
+            const tags = data[index].code === 200 && data[index].data.length ? data[index].data[0] : null;
+            slides.push({
+              image: cell.cover,
+              topic: cell.topic,
+              link: cell.link,
+              tags: tags && tags.tags,
+              action: {
+                path: `${BASENAME}topic/${cell._id}`
+              }
+            });
           });
           self.setState({
             slides
           });
         }, error => {
+          alert(1);
           self.setState({
             slides: res.data
           });
@@ -262,7 +242,7 @@ class Community extends Component {
       limit: 10,
       offset: 0
     }).then(res => {
-      if(res.code === 200) {
+      if (res.code === 200) {
         self.setState({
           dynamicMessages: res.data
         });
@@ -270,15 +250,12 @@ class Community extends Component {
     }, error => {
 
     });
-
+    showScrollLoading();
     self.fetch();
   }
 
   componentWillUnmount() {
     this._isMounted = false;
-    document.removeEventListener("touchstart", this.handleTouch);
-    window.removeEventListener("scroll", this.handleScroll);
-
     trackPageLeave({
       pageName: this.state.track.pageName,
       pageStayTime: ((new Date().getTime() - this.state.track.startTime.getTime()) / 1000)
@@ -290,6 +267,7 @@ const mapStateToProps = state => {
   const { appStatus, router } = state;
   return {
     router,
+    scrollLoading: appStatus.scrollLoading || false,
     loading: appStatus.loading || false
   }
 };
@@ -304,6 +282,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     loadFail: () => {
       dispatch(loadFail())
+    },
+    showScrollLoading: (cell) => {
+      dispatch(showScrollLoading(cell));
+    },
+    hiddenScrollLoading: () => {
+      dispatch(hiddenScrollLoading())
     },
     delAll: () => {
       dispatch(delAll())
