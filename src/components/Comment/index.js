@@ -8,11 +8,12 @@ import Avator from '../Avator';
 import LoadMore from '../LoadMore';
 
 import { getComments, commentMessage } from '../../libs/api';
+import { os } from '../../libs/uitls';
+
 import { showComment, hiddenComment } from '../../store/actions/appStatus';
 
 import './comment.scss';
 import style from './comment.css';
-
 
 class Comment extends Component {
 
@@ -73,8 +74,11 @@ class Comment extends Component {
 				}
 			})
 		}
-
-		this.setState({ showComment });
+		if(!showComment) {
+			this.setState({ showComment, showBtn: false });
+		} else {
+			this.setState({ showComment });
+		}
 	}
 
 	 shouldComponentUpdate(nextProps, nextState) {
@@ -170,6 +174,8 @@ class Comment extends Component {
 
 	focus(ref) {
 		if (ref) {
+			document.body.className = 'no-scroll';
+			document.body.style.height = '100vh';
 			ref.focus();
 			// document.body.scrollTop = document.body.clientHeight;
 		}
@@ -267,15 +273,13 @@ class Comment extends Component {
 				{
 					loading ? <LoadMore /> : ""
 				}
-				<div className={showComment ? style.commentWrap : `${style.commentWrap} ${style.hidden}`}>
-					<div className={showComment ? style.commentBox : `${style.commentBox} ${style.barHidden}`} onClick={e => { e.nativeEvent.stopImmediatePropagation(); }}>
-						{
-							showComment ?
-								<textarea className={showBtn ? style.commentTxt : `${style.commentTxt} ${style.btnHidden}`} placeholder='我也要留下一评' ref={this.focus} onChange={this.input}></textarea>
-								: ''
-						}
-						<button className={showBtn ? style.commentBtn : `${style.commentBtn} ${style.btnHidden}`} onClick={this.comment}>提交</button>
-					</div>
+				<div className={showComment ? style.commentBox : `${style.commentBox} ${style.barHidden}`} onClick={e => { e.nativeEvent.stopImmediatePropagation(); }}>
+					{
+						showComment ?
+							<textarea className={showBtn ? style.commentTxt : `${style.commentTxt} ${style.btnHidden}`} placeholder='我也要留下一评' ref={this.focus} onChange={this.input}></textarea>
+							: ''
+					}
+					<button className={showBtn ? style.commentBtn : `${style.commentBtn} ${style.btnHidden}`} onClick={this.comment}>提交</button>
 				</div>
 			</div>
 		)

@@ -115,11 +115,15 @@ class CTABar extends Component {
 
 	openComment() {
 		const { __showComment } = this.props;
+		document.body.className = 'no-scroll';
+		document.body.style.height = '100vh';
 		__showComment();
 	}
 
 	__hidden(e) {
 		const { __hiddenComment } = this.props;
+		document.body.className = '';
+		document.body.style.height = 'auto';
 		__hiddenComment();
 	}
 
