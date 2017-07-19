@@ -11,7 +11,7 @@ import LoadMore from '../../components/LoadMore';
 import './community.scss';
 import style from './community.css';
 
-import { getCommunityBanner, getPostList, getIndexUserList } from '../../libs/api';
+import { getCommunityBanner, getPostList, getIndexUserList, getTopicById } from '../../libs/api';
 import { trackPageView, trackPageLeave } from '../../libs/track';
 import { reSetShare } from '../../libs/wechat';
 
@@ -231,9 +231,28 @@ class Community extends Component {
     // 拉取banner
     getCommunityBanner().then(res => {
       if (res.code === 200) {
-        self.setState({
-          slides: res.data
+        const loadTopic = [];
+        
+        res.data.forEach(cell => {
+          loadTopic.push(getTopicById(cell.topic.id));
         });
+
+        Promise.all(loadTopic).then(data => {
+          let slides = res.data;
+          slides.map((cell, index) => {
+            return {
+              cell
+            }
+          });
+          self.setState({
+            slides
+          });
+        }, error => {
+          self.setState({
+            slides: res.data
+          });
+        });
+
       }
     }, error => {
     });

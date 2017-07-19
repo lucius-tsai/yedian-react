@@ -267,13 +267,15 @@ class Comment extends Component {
 				{
 					loading ? <LoadMore /> : ""
 				}
-				<div className={showComment ? style.commentBox : `${style.commentBox} ${style.barHidden}`} onClick={e => { e.nativeEvent.stopImmediatePropagation(); }}>
-					{
-						showComment ?
-							<textarea className={showBtn ? style.commentTxt : `${style.commentTxt} ${style.btnHidden}`} placeholder='我也要留下一评' ref={this.focus} onChange={this.input}></textarea>
-							: ''
-					}
-					<button className={showBtn ? style.commentBtn : `${style.commentBtn} ${style.btnHidden}`} onClick={this.comment}>提交</button>
+				<div className={showComment ? style.commentWrap : `${style.commentWrap} ${style.hidden}`}>
+					<div className={showComment ? style.commentBox : `${style.commentBox} ${style.barHidden}`} onClick={e => { e.nativeEvent.stopImmediatePropagation(); }}>
+						{
+							showComment ?
+								<textarea className={showBtn ? style.commentTxt : `${style.commentTxt} ${style.btnHidden}`} placeholder='我也要留下一评' ref={this.focus} onChange={this.input}></textarea>
+								: ''
+						}
+						<button className={showBtn ? style.commentBtn : `${style.commentBtn} ${style.btnHidden}`} onClick={this.comment}>提交</button>
+					</div>
 				</div>
 			</div>
 		)

@@ -149,6 +149,7 @@ table {
   background: #F5F5F5;
   color: $textGray;
   overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
   overflow-x: hidden;
   position: relative;
 }

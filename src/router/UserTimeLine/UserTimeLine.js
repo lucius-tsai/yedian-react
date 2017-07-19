@@ -10,7 +10,7 @@ import LoadMore from '../../components/LoadMore';
 
 import { getPostList, getUserInfoById } from '../../libs/api';
 import { setShare } from '../../libs/wechat';
-import { trackPageView, trackPageLeave } from '../../libs/track';
+import { trackPageView, trackPageLeave, track } from '../../libs/track';
 
 import { loading, loadSuccess, loadFail } from '../../store/actions/appStatus';
 
@@ -194,9 +194,14 @@ class UserTimeLine extends Component {
       }).then(() => {
         setShare({
           imgUrl: self.state.user.headImgUrl,
-          link: `${window.location.origin}${BASENAME}/user/times/${self.state.user._id}?utm_medium=SHARING&utm_campaign=USER&utm_source=${self.state.user._id}&utm_content=${userId}`,
-          success: () => {
-            console.log(123);
+          link: `${window.location.origin}${BASENAME}user/times/${self.state.user._id}?utm_medium=SHARING&utm_campaign=USER&utm_source=${self.state.user._id}&utm_content=${userId}`,
+          success: (shareType) => {
+            track('wechat_share', Object.assign({
+              $url: window.location.href,
+              type: 'COMMUNITY_USER',
+              shareMethod: shareType,
+              action_time: new Date()
+            }, {}));
           }
         });
         this.fetch();
@@ -215,9 +220,14 @@ class UserTimeLine extends Component {
             }).then(() => {
               setShare({
                 imgUrl: self.state.user.headImgUrl,
-                link: `${window.location.origin}${BASENAME}/user/times/${self.state.user._id}?utm_medium=SHARING&utm_campaign=USER&utm_source=${self.state.user._id}&utm_content=${userId}`,
-                success: () => {
-                  console.log(123);
+                link: `${window.location.origin}${BASENAME}user/times/${self.state.user._id}?utm_medium=SHARING&utm_campaign=USER&utm_source=${self.state.user._id}&utm_content=${userId}`,
+                success: (shareType) => {
+                  track('wechat_share', Object.assign({
+                    $url: window.location.href,
+                    type: 'COMMUNITY_USER',
+                    shareMethod: shareType,
+                    action_time: new Date()
+                  }, {}));
                 }
               });
               self.fetch();

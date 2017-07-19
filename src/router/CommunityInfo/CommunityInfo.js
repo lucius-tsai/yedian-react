@@ -99,12 +99,14 @@ class CommunityInfo extends Component {
         }, () => {
           setShare({
             imgUrl: self.state.messageInfo.message.images[0],
-            link: `${window.location.origin}${BASENAME}/message/${id}?utm_medium=SHARING&utm_campaign=POST&utm_source=${id}&utm_content=${userId}`,
-            success: () => {
-              track('wechat_share', {
-                type: 'COMMUNITY',
-                userId
-              })
+            link: `${window.location.origin}${BASENAME}message/${id}?utm_medium=SHARING&utm_campaign=POST&utm_source=${id}&utm_content=${userId}`,
+            success: (shareType) => {
+              track('wechat_share', Object.assign({
+                $url: window.location.href,
+                type: 'COMMUNITY_POST',
+                shareMethod: shareType,
+                action_time: new Date()
+              }, {}));
             }
           });
         });
