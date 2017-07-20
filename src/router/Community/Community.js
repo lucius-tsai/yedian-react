@@ -19,8 +19,6 @@ import { loading, loadSuccess, loadFail, hiddenScrollLoading, showScrollLoading 
 import { delAll } from '../../store/actions/publish';
 
 
-let pointY = null;
-
 class Community extends Component {
   constructor(props) {
     super(props);
@@ -363,7 +361,7 @@ class Community extends Component {
   componentWillUnmount() {
     this._isMounted = false;
     clearInterval(this.pollingPostTimer);
-    clearInterval(this.pollingPostTimer);
+    clearInterval(this.pollingDynamicMessagesTimer);
     trackPageLeave({
       pageName: this.state.track.pageName,
       pageStayTime: ((new Date().getTime() - this.state.track.startTime.getTime()) / 1000)
