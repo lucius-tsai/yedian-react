@@ -14,6 +14,7 @@ class Carousel extends Component {
     };
     this.timer = null;
     this.hanldeSwiper = this.hanldeSwiper.bind(this);
+    this.hanldeSingleClick = this.hanldeSingleClick.bind(this);
   }
 
   componentWillMount() {
@@ -84,21 +85,21 @@ class Carousel extends Component {
           <div class="${style.slide}">
             <div class="${style.pic}" style="background-image: url('${slides[prev].image}');">
               <p class="${style.word}">
-                <span>#${slides[prev].topic.topic}#</span>
+                <span>${slides[prev].tags.map((cell, i) => { return i === 0 ? `#${cell.tag}# ` : ` #${cell.tag}#`})}</span>
               </p>
             </div>
           </div>
           <div class="${style.slide}">
             <div class="${style.pic}" style="background-image: url('${slides[this.state.currentIndex].image}');">
               <p class="${style.word}">
-                <span>#${slides[this.state.currentIndex].topic.topic}#</span>
+                <span>${slides[this.state.currentIndex].tags.map((cell, i) => { return i === 0 ? `#${cell.tag}# ` : ` #${cell.tag}#`})}</span>
               </p>
             </div>
           </div>
           <div class="${style.slide}">
             <div class="${style.pic}" style="background-image: url('${slides[next].image}');">
               <p class="${style.word}">
-                <span>#${slides[next].topic.topic}#</span>
+                <span>${slides[next].tags.map((cell, i) => { return i === 0 ? `#${cell.tag}# ` : ` #${cell.tag}#`})}</span>
               </p>
             </div>
           </div>
@@ -123,7 +124,7 @@ class Carousel extends Component {
         if (staySeconds < 400 && Math.abs(X) < 10) {
           if (slides[this.state.currentIndex].action && slides[this.state.currentIndex].action.path) {
             history.push(slides[this.state.currentIndex].action.path);
-          } else {
+          } else if (slides[this.state.currentIndex].link) {
             location.href = slides[this.state.currentIndex].link;
             return false;
           }
@@ -186,6 +187,16 @@ class Carousel extends Component {
     }
   }
 
+  hanldeSingleClick() {
+    const { slides, history } = this.props;
+    if (slides[0].action && slides[0].action.path) {
+      history.push(slides[0].action.path);
+    } else if (slides[0].link) {
+      location.href = slides[0].link;
+      return false;
+    }
+  }
+
   render() {
     const slide = (slides) => {
       const { currentIndex, touchs } = this.state;
@@ -209,7 +220,7 @@ class Carousel extends Component {
             key={currentIndex}>
             <div className={style.pic} style={{ backgroundImage: `url(${slides[currentIndex].image})` }}>
               <p className={style.word}>
-                <span>#{slides[currentIndex].topic.topic}#</span>
+                <span>{slides[currentIndex].tags.map((cell, index) => { return index === 0 ? `#${cell.tag}# ` : `, #${cell.tag}#`;})}</span>
               </p>
             </div>
           </div>
@@ -228,9 +239,9 @@ class Carousel extends Component {
             single ?
               <div className={style.sliderCarousel}>
                 <a className={style.slide}>
-                  <div className={style.pic} style={{ backgroundImage: `url(${slides[0].image})` }}>
+                  <div className={style.pic} style={{ backgroundImage: `url(${slides[0].image})` }} onClick={this.hanldeSingleClick}>
                     <p className={style.word}>
-                      <span>#{slides[0].topic.topic}#</span>
+                      <span>{slides[0].tags.map((cell, index) => { return index === 0 ? `#${cell.tag}# ` : `, #${cell.tag}#`;})}</span>
                     </p>
                   </div>
                 </a>

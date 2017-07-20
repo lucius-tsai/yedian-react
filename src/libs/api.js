@@ -111,13 +111,13 @@ export const sendSMS = (data) => {
 /**
  * 获取HOME页面 Banner列表
  */
-export const getCommunityBanner = () => {
-	return __promiseTask(_instance().get(API_ROOT.getCommunityBanner));
+export const getCommunityBanner = (query) => {
+	return __promiseTask(_instance().get(`${API_ROOT.getCommunityBanner}${query}`));
 };
 
 
-export const getBannerById = (id) => {
-	return __promiseTask(_instance().get(`${API_ROOT.getBannerById}/${id}`));
+export const getBannerById = (query) => {
+	return __promiseTask(_instance().get(`${API_ROOT.getBannerById}${query}`));
 }
 
 /**

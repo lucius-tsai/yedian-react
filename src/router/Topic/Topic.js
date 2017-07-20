@@ -191,7 +191,7 @@ class Topic extends Component {
       <div className="community">
         <div className="banner">
           {
-            slides.length && <Carousel slides={slides} element={"div"} enterDelay={1000} leaveDelay={1000} speed={3000} />
+            !!slides.length && <Carousel slides={slides} element={"div"} enterDelay={1000} leaveDelay={1000} speed={3000} />
           }
         </div>
         <div className="topic-info">
@@ -234,11 +234,33 @@ class Topic extends Component {
     const userId = userInfo && userInfo.user && userInfo.user.id ? userInfo.user.id : '';
 
     hideBar();
-    getBannerById(id).then(res => {
-      if (res.code === 200 && res.data.length) {
-        const banner = res.data[0];
+    // banner
+    const query = `query=query
+    {
+      view(isDisplayed: true, _id: "${id}"){
+        count,
+        rows {
+          _id,
+          title,
+          viewType,
+          url,
+          image,
+          articleId,
+          subTitle,
+          topic {
+            id,
+            topicName
+          }
+        }
+      }
+    }`;
+
+    getBannerById(query).then(res => {
+      if (res.code === 200 && res.data.view.rows.length) {
+        const banner = res.data.view.rows[0];
+        console.log(banner);
         setShare({
-          imgUrl: banner.cover,
+          imgUrl: banner.image,
           link: `${window.location.origin}${BASENAME}topic/${id}?utm_medium=SHARING&utm_campaign=COMMUNITY_TOPIC&utm_source=${id}&utm_content=${userId}`,
           success: (shareType) => {
             track('wechat_share', Object.assign({
@@ -255,10 +277,11 @@ class Topic extends Component {
             if (res.code === 200 && res.data.length) {
               self.setStateAynsc({
                 slides: [{
-                  image: banner.cover,
+                  image: banner.image,
                   topic: banner.topic,
                   tags: res.data[0].tags
                 }],
+                description: banner.title,
                 actionTags: res.data[0].tags,
                 tags: res.data[0].tags.map(cell => {
                   return cell.tag
@@ -273,10 +296,10 @@ class Topic extends Component {
         } else {
           self.setState({
             slides: [{
-              image: banner.cover,
-              topic: banner.topic,
-              // link: banner.link
-            }]
+              image: banner.image,
+              topic: banner.topic
+            }],
+            description: banner.title
           })
         }
       }

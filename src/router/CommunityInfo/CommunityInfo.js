@@ -56,22 +56,18 @@ class CommunityInfo extends Component {
       <div className="community-info-box">
         <div className="community-info">
           {
-            messageInfo ?
-              <Message post={messageInfo} canLink={false} showFollow={true}/>
-              : ""
+            messageInfo && <Message post={messageInfo} canLink={false} showFollow={true} />
           }
           {
-            venuesInfo ?
-              <a href={`http://staging-app.ye-dian.com/dist/?#!/ktv/${venuesInfo._id}`}>
-                <VenuesCell venuesInfo={venuesInfo} />
-              </a>
-              : ""
+            venuesInfo &&
+            <a href={`http://staging-app.ye-dian.com/dist/?#!/ktv/${venuesInfo._id}`}>
+              <VenuesCell venuesInfo={venuesInfo} />
+            </a>
           }
         </div>
         {
-          messageInfo ?
-            <Comment target={messageInfo}/>
-            : ''
+          messageInfo &&
+          <Comment target={messageInfo} />
         }
       </div>
     )
@@ -90,7 +86,7 @@ class CommunityInfo extends Component {
 
     hideBar();
     loading();
-    
+
     getMessageInfo(id).then(res => {
       loadSuccess();
       if (res.code === 200 && res.data && res.data.length) {
@@ -110,7 +106,7 @@ class CommunityInfo extends Component {
             }
           });
         });
-        
+
         res.data[0].affiliates && res.data[0].affiliates.forEach(cell => {
           if (cell.type === 'venues') {
             const query = `query=query

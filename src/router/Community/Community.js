@@ -285,20 +285,41 @@ class Community extends Component {
     reSetShare();
 
     // 拉取banner
-    getCommunityBanner().then(res => {
+    const query = `query=query
+    {
+      view(isDisplayed: true, sectionType: "community-banner"){
+        count,
+        rows {
+          _id,
+          title,
+          viewType,
+          url,
+          image,
+          articleId,
+          subTitle,
+          topic {
+            id,
+            topicName
+          }
+        }
+      }
+    }`;
+
+    getCommunityBanner(query).then(res => {
       if (res.code === 200) {
+        const bannerList = res.data.view.rows;
         const loadTopic = [];
-        res.data.forEach(cell => {
+        bannerList.forEach(cell => {
           loadTopic.push(getTopicById(cell.topic.id));
         });
         Promise.all(loadTopic).then(data => {
           const slides = [];
-          res.data.forEach((cell, index) => {
+          bannerList.forEach((cell, index) => {
             const tags = data[index].code === 200 && data[index].data.length ? data[index].data[0] : null;
             slides.push({
-              image: cell.cover,
+              image: cell.image,
               topic: cell.topic,
-              link: cell.link,
+              link: cell.url,
               tags: tags && tags.tags,
               action: {
                 path: `${BASENAME}topic/${cell._id}`
