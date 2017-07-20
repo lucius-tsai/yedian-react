@@ -21,7 +21,7 @@ export default class Tag extends Component {
         const { word, remove } = this.props;
         return (
             <div className="tag">
-                <i className="icon" onClick={remove}>+</i>
+                <i className="icon" onClick={remove}>×</i>
                 <span>{word}</span>
             </div>
         )

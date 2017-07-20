@@ -123,8 +123,8 @@ class Comment extends Component {
 						list.push({
 							profile: {
 								_id: cell.userId,
-								displayName: cell.userInfo.displayName,
-								headImgUrl: cell.userInfo.Wechat.headimgurl,
+								displayName: cell.userInfo.displayName || (cell.userInfo.mobile && `${cell.userInfo.mobile.substring(0, 3)}****${`${cell.userInfo.mobile} `.slice(-5, -1)}`),
+								headImgUrl: cell.userInfo.Wechat && cell.userInfo.Wechat.headimgurl,
 								userType: 'User'
 							},
 							comment: cell.comment,
@@ -213,7 +213,7 @@ class Comment extends Component {
 					profile: {
 						_id: userInfo.user.id,
 						displayName: userInfo.user.displayName,
-						headImgUrl: userInfo.user.Wechat.headimgurl,
+						headImgUrl: userInfo.user.Wechat && userInfo.user.Wechat.headimgurl,
 						userType: 'User'
 					}
 				});

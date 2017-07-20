@@ -33,6 +33,7 @@
 			display: -webkit-box;
 			display: -ms-flexbox;
 			display: flex;
+			// flex-direction: row;
 			&.captchaBox {
 				margin-top: 20px;
 				padding-right: 0;
@@ -45,15 +46,14 @@
 			border-radius: 3px;
 			padding-left: 10px;
 			padding-right: 10px;
-			height: 34px;
-			-webkit-box-flex: 1;
-			-ms-flex: 1;
 			flex: 1;
+			height: 34px;
 			color: #333;
 			outline: none;
 		}
 		.icon {
 			width: 22px;
+			display: inline-block;
 			font-size: 18px;
 			text-align: center;
 			line-height: 34px;
@@ -62,7 +62,7 @@
 	}
 	.captchaBox {
 		.btn {
-			// width: 90px;
+			width: 90px;
 			align-self: center;
 			outline: none;
 			font-size: 12px;

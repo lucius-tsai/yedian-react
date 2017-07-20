@@ -42,6 +42,8 @@ class Community extends Component {
     };
 
     this.fetch = this.fetch.bind(this);
+    this.pollingPostTimer = null;
+    this.pollingDynamicMessagesTimer = null;
   }
 
   componentWillMount() {
@@ -83,6 +85,7 @@ class Community extends Component {
       loading: true,
     }, () => {
       getPostList({
+        isFollow: true,
         limit: pagination.pageSize,
         offset
       }).then(res => {
@@ -90,12 +93,12 @@ class Community extends Component {
           const total = res.count;
           const merge = messages.concat(res.data);
           if (merge.length === total) {
-            self.setState({
+            self._isMounted && self.setState({
               completed: true
             });
           }
           if (!res.data.length) {
-            self.setState({
+            self._isMounted && self.setState({
               completed: true
             });
           }
@@ -108,20 +111,57 @@ class Community extends Component {
               current: (pagination.current + 1)
             }
           });
+          self.pollingPost();
         } else {
-          self.setState({
+          self._isMounted && self.setState({
             loading: false
           })
         }
         hiddenScrollLoading();
       }, error => {
-        self.setState({
+        self._isMounted && self.setState({
           loading: false
         });
         hiddenScrollLoading();
       });
     });
+  }
 
+  pollingPost () {
+    const { dynamicMessages } = this.state;
+    clearInterval(this.pollingPostTimer);
+    this.pollingPostTimer = setInterval(() => {
+      getPostList({
+        isFollow: true,
+        limit: 0,
+        offset: 10
+      }).then(res => {
+        if(res.code === 200 && res.data.length) {
+        }
+      });
+    }, 20e3);
+  }
+
+  pollingDynamicMessages() {
+    const { dynamicMessages } = this.state;
+    const self = this;
+    clearInterval(this.pollingDynamicMessagesTimer);
+    this.pollingDynamicMessagesTimer = setInterval(() => {
+      getPostList({
+        limit: 0,
+        offset: 10
+      }).then(res => {
+        if (res.code === 200 && res.data.length) {
+          if (!dynamicMessages.length) {
+            self._isMounted && self.setState({
+              dynamicMessages: res.data
+            });
+          } else if(dynamicMessages[0]._id !== res.data[0]._id) {
+            console.log(res.data)
+          }
+        }
+      });
+    }, 20e3);
   }
 
   render() {
@@ -147,10 +187,7 @@ class Community extends Component {
       <div className="community" ref={this.handleLoad}>
         <div className="banner">
           {
-            slides.length ?
-              <Carousel slides={slides} element={"div"} enterDelay={1000} leaveDelay={1000} speed={3000} />
-              :
-              ""
+            !!slides.length && <Carousel slides={slides} element={"div"} enterDelay={1000} leaveDelay={1000} speed={3000} />
           }
         </div>
         <div className={style.newsTimeLine}>
@@ -160,22 +197,16 @@ class Community extends Component {
           <div className={style.message}>
             <div className="message-cell clearfix">
               {
-                dynamicMessages.length ?
-
-                  <DaynimcMessage list={dynamicMessages} enterDelay={1000} leaveDelay={1000} speed={3000} />
-                  : ""
+                !!dynamicMessages.length && <DaynimcMessage list={dynamicMessages} enterDelay={1000} leaveDelay={1000} speed={3000} />
               }
             </div>
           </div>
-
         </div>
-
         <div className="section section-follow">
           <ul className="follow-list clearfix" style={{ width: `${userList.length * 137 - 7}px` }}>
             {userListStr}
           </ul>
         </div>
-
         <div className="section">
           <ul>
             {messagesList}
@@ -243,9 +274,10 @@ class Community extends Component {
       offset: 0
     }).then(res => {
       if (res.code === 200) {
-        self.setState({
+        self._isMounted && self.setState({
           dynamicMessages: res.data
         });
+        self.pollingDynamicMessages();
       }
     }, error => {
 
@@ -256,6 +288,8 @@ class Community extends Component {
 
   componentWillUnmount() {
     this._isMounted = false;
+    clearInterval(this.pollingPostTimer);
+    clearInterval(this.pollingPostTimer);
     trackPageLeave({
       pageName: this.state.track.pageName,
       pageStayTime: ((new Date().getTime() - this.state.track.startTime.getTime()) / 1000)

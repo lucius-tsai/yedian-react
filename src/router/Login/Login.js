@@ -125,9 +125,6 @@ class Login extends Component {
 				// 登录成功
 				cookie('js_session', res.data, { path: '/', expires: 7 });
 				loadSuccess();
-				setImmediate(() => {
-					history.push(redirectUri);
-				});
 			} else {
 				loadFail();
 			}
@@ -176,15 +173,15 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-    loading: () => {
-      dispatch(loading())
-    },
-    loadSuccess: () => {
-      dispatch(loadSuccess())
-    },
-    loadFail: () => {
-      dispatch(loadFail())
-    },
+		loading: () => {
+			dispatch(loading())
+		},
+		loadSuccess: () => {
+			dispatch(loadSuccess())
+		},
+		loadFail: () => {
+			dispatch(loadFail())
+		},
 		hideBar: () => {
 			dispatch(hideBar())
 		},

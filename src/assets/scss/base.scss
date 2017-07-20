@@ -13,6 +13,7 @@ body {
   -webkit-tap-highlight-color: transparent;
   -webkit-font-smoothing: antialiased;
   margin: 0;
+  -webkit-overflow-scrolling: touch;
   &.no-scroll {
     overflow: hidden;
     position: fixed;
@@ -150,7 +151,6 @@ table {
   background: #F5F5F5;
   color: $textGray;
   overflow-y: scroll;
-  // -webkit-overflow-scrolling: touch;
   overflow-x: hidden;
   position: relative;
 }

@@ -116,15 +116,14 @@ class Bootstrap extends Component {
          */
         let profile = {
           userId: res.data.id,
-          $province: res.data.Wechat.province,
-          $city: res.data.Wechat.city,
+          $province: res.data.Wechat && res.data.Wechat.province,
+          $city: res.data.Wechat && res.data.Wechat.city,
           $name: res.data.displayName,
           mobile: res.data.mobile
         };
         trackLogin(res.data.id);
         trackSetProfile(profile, res.data.level);
         trackSetOnceProfile({});
-
         localStorage.setItem('react_user', JSON.stringify(res.data));
       } else {
         getUserInfoFail()
@@ -298,6 +297,7 @@ class Bootstrap extends Component {
     const token = cookie('js_session');
     if (token) {
       if (!(userInfo && userInfo.user && userInfo.user.id) && !userInfo.loading) {
+        // alert(1);
         this.getUserInfo();
       }
       if (!(followers && followers.userFollowers) && !followers.loadingUserFollowers) {
