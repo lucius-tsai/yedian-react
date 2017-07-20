@@ -279,6 +279,8 @@ class Topic extends Component {
                 slides: [{
                   image: banner.image,
                   topic: banner.topic,
+                  postCount: res.data[0].postCount,
+                  userCount: res.data[0].userCount,
                   tags: res.data[0].tags
                 }],
                 description: banner.title,

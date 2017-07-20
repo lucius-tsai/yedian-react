@@ -53,6 +53,15 @@
 	color: #ffffff;
 }
 
+.carouselBox .slide .word span {
+	font-size: 18px;
+	font-weight: normal;
+}
+.carouselBox .slide .word strong {
+	font-size: 14px;
+	font-weight: normal;
+}
+
 .carouselBox .swiper {
 	width: 300%;
 	position: absolute;

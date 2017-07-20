@@ -321,6 +321,8 @@ class Community extends Component {
               topic: cell.topic,
               link: cell.url,
               tags: tags && tags.tags,
+              postCount: data[index].data[0].postCount,
+              userCount: data[index].data[0].userCount,
               action: {
                 path: `${BASENAME}topic/${cell._id}`
               }
@@ -330,7 +332,6 @@ class Community extends Component {
             slides
           });
         }, error => {
-          alert(1);
           self.setState({
             slides: res.data
           });
