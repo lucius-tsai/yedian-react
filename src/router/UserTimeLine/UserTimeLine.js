@@ -85,7 +85,7 @@ class UserTimeLine extends Component {
           offset: offset
         }).then(res => {
           if (res.code === 200) {
-            const list = [], total = res.count;;
+            const list = [], total = res.count;
             res.data.forEach(cell => {
               if (cell.postType === 0) {
                 list.push(cell);

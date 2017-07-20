@@ -29,7 +29,7 @@ class List extends Component {
 
     refresh() {
         // const {refresh, account} = this.props.authData;
-        console.log(account)
+        // console.log(account)
     }
 
     render() {

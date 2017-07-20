@@ -22,7 +22,7 @@ window.shareDataTL = Object.assign({}, window.defaultShareData, { title: window.
  */
 export const weChatSDKInstall = (data) => {
   if (data && data.appId) {
-    wx.config({
+    window.wx.config({
       debug: false,
       appId: data.appId,
       timestamp: Number(data.timestamp),
@@ -31,16 +31,16 @@ export const weChatSDKInstall = (data) => {
       jsApiList: ["onMenuShareTimeline", "onMenuShareAppMessage", "onMenuShareQQ", "onMenuShareWeibo", "onMenuShareQZone", "getLocation", "openLocation", "closeWindow", "chooseWXPay"]
     });
 
-    wx.ready(function () {
+    window.wx.ready(function () {
       window.isWXReady = true;
 
-      wx.onMenuShareTimeline(window.shareDataTL);
-      wx.onMenuShareAppMessage(window.shareData);
-      wx.onMenuShareQQ(window.shareData);
-      wx.onMenuShareQZone(window.shareData);
+      window.wx.onMenuShareTimeline(window.shareDataTL);
+      window.wx.onMenuShareAppMessage(window.shareData);
+      window.wx.onMenuShareQQ(window.shareData);
+      window.wx.onMenuShareQZone(window.shareData);
     });
 
-    wx.error(function (res) {
+    window.wx.error(function (res) {
       window.isWXReady = false;
       window.wxErrorMsg = res.errMsg;
     });

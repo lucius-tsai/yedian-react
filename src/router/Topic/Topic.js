@@ -15,7 +15,7 @@ import {
   getPostList
 } from '../../libs/api';
 import { setShare } from '../../libs/wechat';
-import { trackPageView, trackPageLeave } from '../../libs/track';
+import { trackPageView, trackPageLeave, track } from '../../libs/track';
 
 import {
   loading,

@@ -107,9 +107,9 @@ export const getLocation = () => {
 	return new Promise((resolve, reject) => {
 		if (cachedData) {
 			resolve(cachedData, 'cache')
-		} else if (typeof wx !== 'undefined' && window.isWXReady) {
-			wx.ready(function () {
-				wx.getLocation({
+		} else if (typeof window.wx !== 'undefined' && window.isWXReady) {
+			window.wx.ready(function () {
+				window.wx.getLocation({
 					type: 'gcj02',
 					success: function (res) {
 						resolve({
