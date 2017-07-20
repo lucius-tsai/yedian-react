@@ -92,7 +92,7 @@ class UserTimeLine extends Component {
               }
             });
             const merge = messages.concat(list);
-            if (merge.length === total) {
+            if (merge.length === total || !(total > this.state.pagination.pageSize)) {
               self.setState({
                 completed: true,
                 loading: false

@@ -86,22 +86,26 @@ class Community extends Component {
     }, () => {
       getPostList({
         isFollow: true,
+        sort: '-createdAt',
         limit: pagination.pageSize,
         offset
       }).then(res => {
         if (res.code === 200) {
           const total = res.count;
           const merge = messages.concat(res.data);
-          if (merge.length === total) {
+
+          if (merge.length === total || !(total > this.state.pagination.pageSize)) {
             self._isMounted && self.setState({
               completed: true
             });
           }
+
           if (!res.data.length) {
             self._isMounted && self.setState({
               completed: true
             });
           }
+
           self._isMounted && self.setState({
             messages: merge,
             loading: false,
@@ -128,36 +132,83 @@ class Community extends Component {
   }
 
   pollingPost () {
-    const { dynamicMessages } = this.state;
+    const self = this;
     clearInterval(this.pollingPostTimer);
     this.pollingPostTimer = setInterval(() => {
       getPostList({
         isFollow: true,
-        limit: 0,
-        offset: 10
+        limit: 10,
+        offset: 0,
+        sort: '-createdAt'
       }).then(res => {
         if(res.code === 200 && res.data.length) {
+          if (!this.state.messages.length) {
+            self._isMounted && self.setState({
+              messages: res.data
+            });
+          } else if(this.state.messages[0]._id !== res.data[0]._id) {
+            const newMsg = [];
+            res.data.every(cell => {
+              newMsg.push(cell);
+              if (cell._id === this.state.messages[0]._id) {
+                return false;
+              }
+            });
+
+            const { messages } = this.state;
+            const len = messages.length;
+            newMsg.reverse().forEach(cell => {
+              messages.unshift(cell);
+            });
+            if (this.state.completed) {
+              self._isMounted && self.setState({
+                messages
+              });
+            } else {
+              messages.splice(len);
+              self._isMounted && self.setState({
+                messages
+              });
+            }
+          }
         }
       });
     }, 20e3);
   }
 
   pollingDynamicMessages() {
-    const { dynamicMessages } = this.state;
     const self = this;
     clearInterval(this.pollingDynamicMessagesTimer);
     this.pollingDynamicMessagesTimer = setInterval(() => {
       getPostList({
-        limit: 0,
-        offset: 10
+        limit: 10,
+        offset: 0,
+        sort: '-createdAt'
       }).then(res => {
         if (res.code === 200 && res.data.length) {
-          if (!dynamicMessages.length) {
+          if (!this.state.dynamicMessages.length) {
             self._isMounted && self.setState({
               dynamicMessages: res.data
             });
-          } else if(dynamicMessages[0]._id !== res.data[0]._id) {
-            console.log(res.data)
+          } else if (this.state.dynamicMessages[0]._id !== res.data[0]._id) {
+            const newMsg = [];
+            res.data.every(cell => {
+              newMsg.push(cell);
+              if (cell._id === this.state.dynamicMessages[0]._id) {
+                return false;
+              }
+            });
+            const { dynamicMessages } = this.state;
+            newMsg.reverse().forEach(cell => {
+              dynamicMessages.unshift(cell);
+            });
+
+            if (dynamicMessages.length > 10) {
+              dynamicMessages.splice(10);
+            }
+            self._isMounted && self.setState({
+              dynamicMessages
+            });
           }
         }
       });
@@ -216,7 +267,7 @@ class Community extends Component {
           loading && <LoadMore />
         }
         {
-          completed && <p style={{ textAlign: 'center' }}>没有更多数据了</p>
+          completed && <p style={{ textAlign: 'center', marginTop: '10px' }}>没有更多数据了</p>
         }
         <ActionBar />
       </div>
@@ -271,7 +322,8 @@ class Community extends Component {
     // 拉取最新发布
     getPostList({
       limit: 10,
-      offset: 0
+      offset: 0,
+      sort: '-createdAt'
     }).then(res => {
       if (res.code === 200) {
         self._isMounted && self.setState({

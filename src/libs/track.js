@@ -89,7 +89,7 @@ export const trackSetProfile = (profile, level) => {
 				$first_referrer: document.referrer,
 				$first_referrer_host: __getHostName("hostname", document.referrer)
 			}));
-			Vue.track("new_user", profile);
+			track("new_user", profile);
 		} else {
 			__setProfile(profile);
 		}

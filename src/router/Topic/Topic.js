@@ -112,7 +112,7 @@ class Topic extends Component {
           const total = res.count;
           const merge = reset ? res.data : messages.concat(res.data);
 
-          if (merge.length === total) {
+          if (merge.length === total || !(total > this.state.pagination.pageSize)) {
             self._isMounted && self.setState({
               completed: true,
               loading: false

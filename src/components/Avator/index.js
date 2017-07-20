@@ -75,7 +75,7 @@ class Avator extends Component {
 
   handleFollow() {
     const { profile } = this.state;
-    const { 
+    const {
       setVenuesFollowers,
       getVenuesFollowers,
       getVenuesFollowersFail,
@@ -163,26 +163,23 @@ class Avator extends Component {
           </div>
         }
         {
-          model === "followCard" ?
+          model === "followCard" && 
             <div className="profile">
-              <strong>{profile.username}</strong>
+              <strong>{profile.displayName}</strong>
               <p>{`${profile.city}-${profile.area}`}</p>
             </div>
-            : ''
         }
         {
-          model === "userTimeLine" ?
-            <div className="profile user-time-line">
-              <strong>{profile.username}</strong>
-            </div>
-            : ''
+          model === "userTimeLine" &&
+          <div className="profile user-time-line">
+            <strong>{profile.displayName}</strong>
+          </div>
         }
         {
-          showFollow ?
-            <div className="follow-box" onClick={this.handleFollow}>
-              <button>关注</button>
-            </div>
-            : ''
+          showFollow &&
+          <div className="follow-box" onClick={this.handleFollow}>
+            <button>关注</button>
+          </div>
         }
       </div>
     )

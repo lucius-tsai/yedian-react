@@ -13,7 +13,7 @@ body {
   -webkit-tap-highlight-color: transparent;
   -webkit-font-smoothing: antialiased;
   margin: 0;
-  -webkit-overflow-scrolling: touch;
+  // -webkit-overflow-scrolling: touch;
   &.no-scroll {
     overflow: hidden;
     position: fixed;

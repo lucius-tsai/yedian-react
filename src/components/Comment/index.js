@@ -133,7 +133,7 @@ class Comment extends Component {
 					});
 
 					const merge = data.concat(list);
-					if (merge.length === total) {
+					if (merge.length === total || !(total > this.state.pagination.pageSize)) {
 						self.setState({
 							completed: true,
 							loading: false,
@@ -212,7 +212,7 @@ class Comment extends Component {
 					comment: res.data.comment,
 					profile: {
 						_id: userInfo.user.id,
-						displayName: userInfo.user.displayName,
+						displayName: userInfo.user.displayName || (userInfo.user.mobile && `${userInfo.user.mobile.substring(0, 3)}****${`${userInfo.user.mobile} `.slice(-5, -1)}`),
 						headImgUrl: userInfo.user.Wechat && userInfo.user.Wechat.headimgurl,
 						userType: 'User'
 					}
@@ -259,16 +259,14 @@ class Comment extends Component {
 					}
 				</ul>
 				{
-					loading ? <LoadMore /> : ""
+					loading && <LoadMore />
 				}
 				{
 					completed && <p style={{ textAlign: 'center' }}>没有更多数据了</p>
 				}
 				<div className={showComment ? style.commentBox : `${style.commentBox} ${style.barHidden}`} onClick={e => { e.nativeEvent.stopImmediatePropagation(); }}>
 					{
-						showComment ?
-							<textarea className={showBtn ? style.commentTxt : `${style.commentTxt} ${style.btnHidden}`} placeholder='我也要留下一评' ref={this.focus} onChange={this.input}></textarea>
-							: ''
+						showComment && <textarea className={showBtn ? style.commentTxt : `${style.commentTxt} ${style.btnHidden}`} placeholder='我也要留下一评' ref={this.focus} onChange={this.input}></textarea>
 					}
 					<button className={showBtn ? style.commentBtn : `${style.commentBtn} ${style.btnHidden}`} onClick={this.comment}>提交</button>
 				</div>
