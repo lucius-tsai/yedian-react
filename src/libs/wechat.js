@@ -2,9 +2,9 @@
  * 默认分享信息
  */
 window.defaultShareData = {
-  title: "生活不止于白天，用NIGHT+，点亮你的精彩夜生活。",
-  desc: "一键关注，让最新、最潮、最有style的夜晚好去处变得触手可及。",
-  titleTL: "生活不止于白天，用NIGHT+，点亮你的精彩夜生活。",
+  title: "NIGHT+ 夜间动物园，开启夜晚无限可能",
+  desc: "分享你的夜晚生活，让有趣的灵魂相遇，做夜晚生活达人",
+  titleTL: "NIGHT+ 夜间动物园，开启夜晚无限可能",
   link: location.href.replace("?fromTabBar=1", ""),
   imgUrl: `${window.location.origin}${require('../assets/images/logo.png')}`,
   success: function (res) {
@@ -58,10 +58,21 @@ export const setShare = (data) => {
   // console.log(data);
   Object.assign(window.shareData, data, { successCallback });
   Object.assign(window.shareDataTL, data, { title: data.titleTL || data.title });
-  
+  if (window.wx) {
+    window.wx.onMenuShareTimeline(window.shareDataTL);
+    window.wx.onMenuShareAppMessage(window.shareData);
+    window.wx.onMenuShareQQ(window.shareData);
+    window.wx.onMenuShareQZone(window.shareData);
+  }
 }
 
 export const reSetShare = () => {
   Object.assign(window.shareData, window.defaultShareData, { successCallback: null });
   Object.assign(window.shareDataTL, window.defaultShareData, { title: window.defaultShareData.titleTL });
+  if (window.wx) {
+    window.wx.onMenuShareTimeline(window.shareDataTL);
+    window.wx.onMenuShareAppMessage(window.shareData);
+    window.wx.onMenuShareQQ(window.shareData);
+    window.wx.onMenuShareQZone(window.shareData);
+  }
 }

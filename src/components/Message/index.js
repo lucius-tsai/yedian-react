@@ -153,7 +153,7 @@ class Message extends Component {
                   return (<a key={cell._id}>{`#${cell.tag}#`}</a>)
                 })
               }
-              <span className="city">上海</span>
+              {/* <span className="city">上海</span> */}
             </div>
           </div>
         }

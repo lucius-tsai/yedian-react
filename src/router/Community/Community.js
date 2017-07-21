@@ -276,7 +276,7 @@ class Community extends Component {
     const self = this;
     this._isMounted = true;
 
-    document.title = "Night+--社区";
+    // document.title = "Night+--社区";
     const { messages, pagination } = this.state;
     const { loading, loadSuccess, loadFail, showScrollLoading } = this.props;
 

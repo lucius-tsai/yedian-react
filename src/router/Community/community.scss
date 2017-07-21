@@ -30,6 +30,8 @@
   }
 }
 
+$max : 100;
+
 .section {
   margin-top: 10px;
   h3 {
@@ -41,6 +43,13 @@
     padding: 15px 10px;
     margin: 10px 0;
     background-color: #ffffff;
+    -webkit-animation: messageShowUp 800ms linear both;
+    animation: messageShowUp 800ms linear both;
+    @for $i from 1 to $max { 
+      &:nth-child(#{$i}) {
+        animation-delay: #{($i - 1)*50}ms;
+      }
+    }
   }
 }
 

@@ -173,7 +173,7 @@ class Topic extends Component {
 
     const messagesList = messages.map((cell, index) => {
       return (
-        <li className="message-cell" key={index}>
+        <li className='messageCell' key={index}>
           <Message profile={cell.profile} post={cell} canLink={true} showFollow={true} />
         </li>
       )
@@ -188,13 +188,13 @@ class Topic extends Component {
     });
 
     return (
-      <div className="community">
-        <div className="banner">
+      <div className='community'>
+        <div className='banner'>
           {
-            !!slides.length && <Carousel slides={slides} element={"div"} enterDelay={1000} leaveDelay={1000} speed={3000} />
+            !!slides.length && <Carousel slides={slides} element={'div'} enterDelay={1000} leaveDelay={1000} speed={3000} />
           }
         </div>
-        <div className="topic-info">
+        <div className='topic-info'>
           {description}
         </div>
         <div className={style.topicTab}>
@@ -209,7 +209,7 @@ class Topic extends Component {
             </span>
           </p>
         </div>
-        <div className="topicSetion">
+        <div className='topicSetion'>
           <ul>
             {messagesList}
           </ul>
@@ -218,15 +218,15 @@ class Topic extends Component {
           loading && <LoadMore />
         }
         {
-          completed && <p style={{ textAlign: 'center' }}>没有更多数据了</p>
+          completed && <p style={{ textAlign: 'center', margin: '15px auto' }}>没有更多数据了</p>
         }
-        <ActionBar position={"bottom"} tags={actionTags} />
+        <ActionBar position={'bottom'} tags={actionTags} />
       </div>
     )
   }
 
   componentDidMount() {
-    document.title = "Night+--社区";
+    // document.title = "Night+--社区";
     this._isMounted = true;
     const self = this;
     const { showScrollLoading, dispatch, hideBar, match, userInfo } = this.props;
@@ -255,23 +255,32 @@ class Topic extends Component {
       }
     }`;
 
+    /**
+     * 设置Topic 分享
+     */
+    const setShareLocal = (id, userId, image, topicTitle, topicDes) => {
+      setShare({
+        title: topicTitle || "NIGHT+ 夜间动物园，开启夜晚无限可能",
+        desc: topicDes || "分享你的夜晚生活，让有趣的灵魂相遇，做夜晚生活达人",
+        imgUrl: image,
+        link: `${window.location.origin}${BASENAME}topic/${id}?utm_medium=SHARING&utm_campaign=COMMUNITY_TOPIC&utm_source=${id}&utm_content=${userId}`,
+        success: (shareType) => {
+          track('wechat_share', Object.assign({
+            $url: window.location.href,
+            type: 'COMMUNITY_TOPIC',
+            shareMethod: shareType,
+            action_time: new Date()
+          }, {}));
+        }
+      });
+    }
+
     getBannerById(query).then(res => {
       if (res.code === 200 && res.data.view.rows.length) {
         const banner = res.data.view.rows[0];
-        console.log(banner);
-        setShare({
-          imgUrl: banner.image,
-          link: `${window.location.origin}${BASENAME}topic/${id}?utm_medium=SHARING&utm_campaign=COMMUNITY_TOPIC&utm_source=${id}&utm_content=${userId}`,
-          success: (shareType) => {
-            track('wechat_share', Object.assign({
-              $url: window.location.href,
-              type: 'COMMUNITY_TOPIC',
-              shareMethod: shareType,
-              action_time: new Date()
-            }, {}));
-          }
-        });
-
+        // console.log(banner);
+        
+        document.title = `${banner.title}`;
         if (banner.topic && banner.topic.id) {
           getTopicById(banner.topic.id).then(res => {
             if (res.code === 200 && res.data.length) {
@@ -289,6 +298,7 @@ class Topic extends Component {
                   return cell.tag
                 })
               }).then(() => {
+                setShareLocal(id, userId, banner.image, res.data[0].title, banner.title);
                 showScrollLoading();
                 self.fetch();
               });
@@ -296,6 +306,7 @@ class Topic extends Component {
           }).catch(error => {
           });
         } else {
+          setShareLocal(id, userId, banner.image, undefined, banner.title);
           self.setState({
             slides: [{
               image: banner.image,

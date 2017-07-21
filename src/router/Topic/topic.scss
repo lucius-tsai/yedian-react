@@ -64,19 +64,6 @@
     text-align: left;
   }
 }
-
-.topicSetion {
-  h3 {
-    line-height: 1.5em;
-    padding: 0 18px;
-    font-size: 16px;
-  }
-  .message-cell {
-    padding: 15px 10px;
-    margin-bottom: 10px;
-    background-color: #ffffff;
-  }
-}
 .section-follow {
   overflow-x: scroll;
   overflow-y: hidden;
@@ -92,6 +79,28 @@
     }
     li:last-child {
       margin-right: 0;
+    }
+  }
+}
+
+$max : 100;
+
+.topicSetion {
+  h3 {
+    line-height: 1.5em;
+    padding: 0 18px;
+    font-size: 16px;
+  }
+  .messageCell {
+    padding: 15px 10px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    -webkit-animation: messageShowUp 800ms linear both;
+    animation: messageShowUp 800ms linear both;
+    @for $i from 1 to $max { 
+      &:nth-child(#{$i}) {
+        animation-delay: #{($i - 1)*50}ms;
+      }
     }
   }
 }

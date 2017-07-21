@@ -143,15 +143,12 @@ class Search extends Component {
           }
         });
         if(!isRepeate) {
-          addTag(tags.concat(res.data.map(cell => {
-            return {
-              _id: cell._id,
-              tag: cell.tag
-            }
-          })));
+          addTag(tags.concat({
+            _id: res.data._id,
+            tag: res.data.tag
+          }));
         }
-        // return history.push(`${BASENAME}publish`);
-        history.goBack();
+        return history.goBack();
       }
     }, error => {
       console.log(error);

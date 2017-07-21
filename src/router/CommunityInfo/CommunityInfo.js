@@ -60,7 +60,7 @@ class CommunityInfo extends Component {
           }
           {
             venuesInfo &&
-            <a href={`http://staging-app.ye-dian.com/dist/?#!/ktv/${venuesInfo._id}`}>
+            <a href={`${window.location.origin}/dist/?#!/ktv/${venuesInfo._id}`}>
               <VenuesCell venuesInfo={venuesInfo} />
             </a>
           }
@@ -77,12 +77,12 @@ class CommunityInfo extends Component {
     this._isMounted = true;
     const self = this;
 
-    document.title = "Night+--呃呃呃～算是吧～";
     document.body.scrollTop = 0;
 
     const { loading, loadSuccess, loadFail, hideBar, location, match, userInfo } = this.props;
     const id = match && match.params && match.params.id ? match.params.id : '';
     const userId = userInfo && userInfo.user && userInfo.user.id ? userInfo.user.id : '';
+    const userName = userInfo && userInfo.user && userInfo.user.displayName ? userInfo.user.displayName : '';
 
     hideBar();
     loading();
@@ -90,10 +90,13 @@ class CommunityInfo extends Component {
     getMessageInfo(id).then(res => {
       loadSuccess();
       if (res.code === 200 && res.data && res.data.length) {
+        document.title = res.data[0].message.description;
         self._isMounted && self.setState({
           messageInfo: res.data[0]
         }, () => {
           setShare({
+            title: `${userName}在NIIGHT+ 晒的夜晚生活好新潮，快来看！`,
+            desc: `${self.state.messageInfo.message.description}`,
             imgUrl: self.state.messageInfo.message.images[0],
             link: `${window.location.origin}${BASENAME}message/${id}?utm_medium=SHARING&utm_campaign=POST&utm_source=${id}&utm_content=${userId}`,
             success: (shareType) => {

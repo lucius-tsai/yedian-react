@@ -218,6 +218,11 @@ class Comment extends Component {
 					}
 				});
 
+				if (os.isPhone) {
+					document.body.className = '';
+					document.body.style.height = 'auto';
+				}
+
 				this.setState({
 					data,
 					offset: (this.state.offset + 1)
