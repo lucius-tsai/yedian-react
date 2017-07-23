@@ -1,11 +1,11 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
 <!--
-2017-7-19: Created with FontForge (http://fontforge.org)
+2017-7-23: Created with FontForge (http://fontforge.org)
 -->
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
 <metadata>
-Created by FontForge 20170104 at Wed Jul 19 14:04:12 2017
+Created by FontForge 20170104 at Sun Jul 23 11:42:49 2017
  By harry
 Copyright (c) 2017, harry
 </metadata>
@@ -42,6 +42,8 @@ d="M440 183c30 0 54 24 54 54s-24 54 -54 54s-54 -24 -54 -54s24 -54 54 -54zM281 18
 c0 -39 -31 -71 -70 -71h-1h-138l-73 -89l-73 89h-139v0c-39 0 -70 32 -70 71v282c0 39 31 70 70 70v0h424z" />
     <glyph glyph-name="ion-cta-like" unicode="&#xf151;" horiz-adv-x="575" 
 d="M533 191c56 59 56 154 0 213c-29 30 -67 45 -105 44c-53 -1 -140 -74 -140 -74s-90 74 -144 74c-37 0 -74 -15 -102 -44c-56 -59 -56 -154 0 -213l245 -255l246 255z" />
+    <glyph glyph-name="ion-flickr" unicode="&#xf15a;" horiz-adv-x="512" 
+d="M0 176c0 62 50 112 112 112s112 -50 112 -112s-50 -112 -112 -112s-112 50 -112 112zM288 176c0 62 50 112 112 112s112 -50 112 -112s-50 -112 -112 -112s-112 50 -112 112z" />
     <glyph glyph-name="ion-index-active" unicode="&#xf13c;" horiz-adv-x="442" 
 d="M221 356l-68 -138l-153 -22l111 -108l-27 -152l137 72l136 -72l-26 152l111 108l-153 22zM41 266h53v182h-53v-182zM355 266h53v182h-53v-182zM194 380h53v68h-53v-68z" />
     <glyph glyph-name="ion-index" unicode="&#xf145;" horiz-adv-x="442" 

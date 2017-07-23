@@ -1,5 +1,5 @@
 {
-  "build_hash": "52d163704f4ca175268886213bfe8863",
+  "build_hash": "25007cac918dfd6fbd2e5aeafa154b9b",
   "prefix": "ion-",
   "version": "2.0.1",
   "name": "Ionicons",
@@ -27,6 +27,10 @@
     {
       "code": "0xf151",
       "name": "cta-like"
+    },
+    {
+      "code": "0xf15a",
+      "name": "flickr"
     },
     {
       "code": "0xf145",

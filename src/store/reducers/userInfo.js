@@ -4,7 +4,7 @@ import {
 	GET_USER_INFO_FAIL
 } from '../actions/userInfo';
 
-const publish = (state = {}, action) => {
+const userInfo = (state = {}, action) => {
 	// console.log(action);
 	switch (action.type) {
 		case GET_USER_INFO_REQUEST:
@@ -24,4 +24,4 @@ const publish = (state = {}, action) => {
 	}
 }
 
-export default publish;
+export default userInfo;

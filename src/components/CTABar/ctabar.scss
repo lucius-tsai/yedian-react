@@ -10,6 +10,14 @@
         color: #B33DE5;
       }
     }
+    &._delete {
+      float: right;
+      margin: 0;
+      button {
+        outline: none;
+        cursor: pointer;
+      }
+    }
   }
   ._collection {
     .icon {
@@ -68,6 +76,9 @@
         position: relative;
         top: -2px;
         font-size: 16px;
+      }
+      &._delete {
+        display: none;
       }
     }
   }

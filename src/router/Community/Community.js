@@ -71,7 +71,8 @@ class Community extends Component {
   fetch() {
     const self = this;
     const { pagination, messages } = this.state;
-    const { hiddenScrollLoading } = this.props;
+    const { hiddenScrollLoading, userInfo } = this.props;
+    const userId = userInfo && userInfo.user && userInfo.user.id ? userInfo.user.id : '';
 
     if (this.state.completed || this.state.loading) {
       return false;
@@ -84,6 +85,7 @@ class Community extends Component {
     }, () => {
       getPostList({
         isFollow: true,
+        userId,
         sort: '-createdAt',
         limit: pagination.pageSize,
         offset
@@ -131,10 +133,13 @@ class Community extends Component {
 
   pollingPost () {
     const self = this;
+    const { userInfo } = this.props;
+    const userId = userInfo && userInfo.user && userInfo.user.id ? userInfo.user.id : '';
     clearInterval(this.pollingPostTimer);
     this.pollingPostTimer = setInterval(() => {
       getPostList({
         isFollow: true,
+        userId,
         limit: 10,
         offset: 0,
         sort: '-createdAt'
@@ -276,7 +281,7 @@ class Community extends Component {
     const self = this;
     this._isMounted = true;
 
-    // document.title = "Night+--社区";
+    document.title = "Night+";
     const { messages, pagination } = this.state;
     const { loading, loadSuccess, loadFail, showScrollLoading } = this.props;
 
@@ -370,8 +375,9 @@ class Community extends Component {
 }
 
 const mapStateToProps = state => {
-  const { appStatus, router } = state;
+  const { appStatus, router, userInfo } = state;
   return {
+    userInfo,
     router,
     scrollLoading: appStatus.scrollLoading || false,
     loading: appStatus.loading || false

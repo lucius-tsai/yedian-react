@@ -8,6 +8,7 @@
 .#{$ionicons-prefix}cta-collection:before,
 .#{$ionicons-prefix}cta-comment:before,
 .#{$ionicons-prefix}cta-like:before,
+.#{$ionicons-prefix}flickr:before,
 .#{$ionicons-prefix}index:before,
 .#{$ionicons-prefix}index-active:before,
 .#{$ionicons-prefix}list:before,
@@ -31,6 +32,7 @@
 .#{$ionicons-prefix}cta-collection:before { content: $ionicon-var-cta-collection; }
 .#{$ionicons-prefix}cta-comment:before { content: $ionicon-var-cta-comment; }
 .#{$ionicons-prefix}cta-like:before { content: $ionicon-var-cta-like; }
+.#{$ionicons-prefix}flickr:before { content: $ionicon-var-flickr; }
 .#{$ionicons-prefix}index:before { content: $ionicon-var-index; }
 .#{$ionicons-prefix}index-active:before { content: $ionicon-var-index-active; }
 .#{$ionicons-prefix}list:before { content: $ionicon-var-list; }

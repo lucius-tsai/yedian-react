@@ -7,7 +7,14 @@ import { connect } from 'react-redux';
 import Avator from '../Avator';
 import LoadMore from '../LoadMore';
 
-import { getComments, commentMessage } from '../../libs/api';
+import {
+	getComments,
+	commentMessage,
+	infrom,
+	likeComment,
+	deleteLikeComment,
+	deleteComment
+} from '../../libs/api';
 import { os } from '../../libs/uitls';
 
 import {
@@ -30,15 +37,18 @@ class Comment extends Component {
 			showComment: false,
 			showBtn: false,
 			pagination: {
-				pageSize: 2,
+				pageSize: 10,
 				current: 1
 			},
 			offset: 0,
 			loading: false,
 			completed: false,
+			userId: null,
+			isSelf: false,
 		}
 
 		this.__openComment = this.__openComment.bind(this);
+		this.infromComment = this.infromComment.bind(this);
 		this.comment = this.comment.bind(this);
 		this.input = this.input.bind(this);
 	}
@@ -59,13 +69,15 @@ class Comment extends Component {
 					displayName: userInfo.user.displayName,
 					headImgUrl: userInfo.user.Wechat && userInfo.user.Wechat.headimgurl
 				},
-				target
+				target,
+				userId: userInfo && userInfo.user && userInfo.user.id,
+				isSelf: userInfo && userInfo.user && userInfo.user.id && userInfo.user.id === target.postedBy._id
 			})
 		}
 	}
 
 	componentWillReceiveProps(nextProps) {
-		const { userInfo, showComment } = nextProps;
+		const { userInfo, showComment, target } = nextProps;
 		if (userInfo && userInfo.user && userInfo.user.id) {
 			this.setState({
 				profile: {
@@ -73,7 +85,9 @@ class Comment extends Component {
 					_id: userInfo.user.id,
 					displayName: userInfo.user.displayName,
 					headImgUrl: userInfo.user.Wechat && userInfo.user.Wechat.headimgurl
-				}
+				},
+				userId: userInfo && userInfo.user && userInfo.user.id,
+				isSelf: userInfo && userInfo.user && userInfo.user.id && userInfo.user.id === target.postedBy._id
 			})
 		}
 		if (!showComment) {
@@ -99,7 +113,7 @@ class Comment extends Component {
 
 	fetch() {
 		const self = this;
-		const { pagination, data, offset } = this.state;
+		const { pagination, data, offset, userId } = this.state;
 		const { target, hiddenScrollLoading } = this.props;
 
 		if (this.state.completed || this.state.loading) {
@@ -120,6 +134,10 @@ class Comment extends Component {
 				if (res.code === 200) {
 					const list = [], total = res.data.count;
 					res.data.commentList.forEach(cell => {
+						let liked = false;
+						cell.like && cell.like.forEach(cell => {
+							liked = cell.userId === userId;
+						});
 						list.push({
 							profile: {
 								_id: cell.userId,
@@ -127,6 +145,9 @@ class Comment extends Component {
 								headImgUrl: cell.userInfo.Wechat && cell.userInfo.Wechat.headimgurl,
 								userType: 'User'
 							},
+							like: cell.like,
+							__liked: liked,
+							createdAt: cell.createdAt,
 							comment: cell.comment,
 							_id: cell._id
 						});
@@ -143,6 +164,7 @@ class Comment extends Component {
 								current: (pagination.current + 1)
 							}
 						});
+						// return false;
 					}
 
 					if (!res.data.commentList.length) {
@@ -150,6 +172,7 @@ class Comment extends Component {
 							completed: true,
 							loading: false
 						});
+						// return false;
 					}
 
 					self.setState({
@@ -204,9 +227,7 @@ class Comment extends Component {
 			isDisplay: true,
 			comment: this.state.comment
 		}).then(res => {
-
 			if (res.code === 200) {
-
 				data.unshift({
 					_id: res.data._id,
 					comment: res.data.comment,
@@ -217,12 +238,10 @@ class Comment extends Component {
 						userType: 'User'
 					}
 				});
-
 				if (os.isPhone) {
 					document.body.className = '';
 					document.body.style.height = 'auto';
 				}
-
 				this.setState({
 					data,
 					offset: (this.state.offset + 1)
@@ -234,14 +253,92 @@ class Comment extends Component {
 		});
 	}
 
+	likeComment(index) {
+		const { data } = this.state;
+		const self = this;
+		if (data[index].__liked) {
+			deleteLikeComment(data[index]._id).then(res => {
+				if (res.code === 200) {
+					data[index].__liked = !data[index].__liked;
+					self.setState(data);
+				}
+			}, error => {
+
+			});
+		} else {
+			likeComment({
+				commentId: data[index]._id
+			}).then(res => {
+				if (res.code === 200) {
+					data[index].__liked = !data[index].__liked;
+					self.setState(data);
+				}
+			}, error => {
+
+			});
+		}
+	}
+
+	infromComment(cm) {
+		infrom({
+			commentId: cm._id
+		}).then(res => {
+			if(res.code === 200) {
+
+			}
+		}, error => {
+
+		});
+	}
+
+	deleteComment(index) {
+		const self = this;
+		const { data } = this.state;
+		deleteComment(data[index]._id).then(res => {
+				if (res.code === 200) {
+					setTimeout(() => {
+						data.splice(index, 1);
+						self.setState(data);
+					}, 200);
+				}
+			}, error => {
+
+			});
+	}
+
 	__openComment(e) {
 		e.nativeEvent.stopImmediatePropagation();
 		const { __showComment } = this.props;
 		__showComment();
 	}
 
+	showMoreActions(ref) {
+		const className = ref && ref.className;
+		ref && ref.addEventListener && ref.addEventListener('click', (e) => {
+			e.stopPropagation();
+			const actions = document.querySelectorAll('div[data-actions]');
+			actions.forEach(cell => {
+				cell.className = 'actions';
+			});
+			let parent = ref.parentNode;
+			parent.className = /active/g.test(parent.className) ? 'actions' : 'actions active';
+		});
+	}
+
+	handleClick(ref) {
+    const className = ref && ref.className;
+		ref && ref.addEventListener && ref.addEventListener('click', (e) => {
+      if(e && e.target && e.target.dataset && e.target.dataset.origin === 'delete') {
+        ref.className = `${ref.className} bounceOutRight animated`;
+        setTimeout(() => {
+          ref.className = className;
+        }, 300);
+      }
+		});
+  }
+
 	render() {
-		const { profile, data, loading, completed, showComment, showBtn } = this.state;
+		const { profile, data, userId, loading, isSelf, completed, showComment, showBtn } = this.state;
 		return (
 			<div className="comment">
 				<div className="_title">夜猫子们评论</div>
@@ -253,10 +350,26 @@ class Comment extends Component {
 				</div>
 				<ul className="comment-content">
 					{
-						!!data.length && data.map(cell => {
+						!!data.length && data.map((cell, index) => {
 							return (
-								<li className="cell" key={cell._id}>
-									<Avator profile={cell.profile} model={"default"} />
+								<li className="cell" key={cell._id} ref={this.handleClick}>
+									<div className='avator-action'>
+										<Avator profile={cell.profile} model={"default"} date={cell.createdAt} />
+										<div data-actions="ref" className='actions'>
+											<i className='icon ion-flickr' ref={this.showMoreActions}></i>
+											{
+												cell.userId === userId ?
+													<div className='btns'>
+														<span className={cell.__liked ? 'icon ion-cta-like active' : 'icon ion-cta-like'} onClick={this.likeComment.bind(this, index)}>&nbsp;点赞</span>
+														<span className="icon" onClick={this.infromComment.bind(this, cell)}>举报</span>
+													</div>
+													:
+													<div className='btns' style={{width: `50px`}}>
+														<span className="icon" data-origin='delete' onClick={this.deleteComment.bind(this, index)}>删除</span>
+													</div>
+											}
+										</div>
+									</div>
 									<div className="_content">{cell.comment}</div>
 								</li>
 							)
@@ -281,6 +394,12 @@ class Comment extends Component {
 	componentDidMount() {
 		this.props.showScrollLoading();
 		this.fetch();
+		document.addEventListener('click', () => {
+			const actions = document.querySelectorAll('div[data-actions]');
+			actions.forEach(cell => {
+				cell.className = 'actions';
+			});
+		});
 	}
 
 	componentWillUnmount() {

@@ -20,6 +20,11 @@ import {
   showScrollLoading
 } from '../../store/actions/appStatus';
 
+import {
+  putPostList,
+  resetPostList
+} from '../../store/actions/posts';
+
 class UserTimeLine extends Component {
   constructor(props) {
     super(props);
@@ -63,12 +68,19 @@ class UserTimeLine extends Component {
     if (nextProps.scrollLoading && !this.state.completed) {
       this.fetch();
     }
+    // const { posts } = this.props;
+    // if (nextProps.posts.length != posts.length) {
+    console.log(nextProps.posts);
+    this.setState({
+      messages: nextProps.posts
+    });
+    // }
   }
 
   fetch() {
     const self = this;
     const { pagination, messages, user } = this.state;
-    const { hiddenScrollLoading } = this.props;
+    const { hiddenScrollLoading, putPostList } = this.props;
 
     if (this.state.completed || this.state.loading) {
       return false;
@@ -82,7 +94,8 @@ class UserTimeLine extends Component {
         getPostList({
           _posterId: user._id,
           limit: pagination.pageSize,
-          offset: offset
+          offset: offset,
+          sort: '-createdAt'
         }).then(res => {
           if (res.code === 200) {
             const list = [], total = res.count;
@@ -93,21 +106,20 @@ class UserTimeLine extends Component {
             });
             const merge = messages.concat(list);
             if (merge.length === total || !(total > this.state.pagination.pageSize)) {
-              self.setState({
+              self._isMounted && self.setState({
                 completed: true,
                 loading: false
               });
             }
             if (!res.data.length) {
-              self.setState({
+              self._isMounted && self.setState({
                 completed: true,
                 loading: false
               });
             }
-
+            putPostList(merge);
             self._isMounted && self.setState({
               loading: false,
-              messages: merge,
               pagination: {
                 total,
                 pageSize: pagination.pageSize,
@@ -156,7 +168,7 @@ class UserTimeLine extends Component {
           loading && <LoadMore />
         }
         {
-          completed && <p style={{ textAlign: 'center', paddingBottom: '10px' }}>没有更多数据了</p>
+          completed && <p style={{ textAlign: 'center', margin: '10px auto' }}>没有更多数据了</p>
         }
       </div>
     )
@@ -234,6 +246,7 @@ class UserTimeLine extends Component {
 
   componentWillUnmount() {
     this._isMounted = false;
+    this.props.resetPostList();
     trackPageLeave({
       pageName: this.state.track.pageName,
       pageStayTime: ((new Date().getTime() - this.state.track.startTime.getTime()) / 1000)
@@ -242,11 +255,12 @@ class UserTimeLine extends Component {
 }
 
 const mapStateToProps = state => {
-  const { appStatus, router, userInfo } = state;
+  const { appStatus, router, userInfo, posts } = state;
   return {
     router,
     userInfo,
-    scrollLoading: appStatus.scrollLoading || false
+    scrollLoading: appStatus.scrollLoading || false,
+    posts: posts.posts || []
   }
 };
 
@@ -266,6 +280,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     hiddenScrollLoading: () => {
       dispatch(hiddenScrollLoading())
+    },
+    putPostList: (cell) => {
+      dispatch(putPostList(cell))
+    },
+    resetPostList: () => {
+      dispatch(resetPostList())
     }
   }
 };

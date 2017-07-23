@@ -45,7 +45,55 @@
       font-size: 16px;
       line-height: 1.4em;
       color: #333333;
+      word-break: break-all;
       margin: 10px auto;
+    }
+  }
+}
+
+.avator-action {
+  position: relative;
+  overflow: hidden;
+  .actions {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    .icon {
+      font-size: 12px;
+      &.active {
+        color: #B33DE5;
+      }
+    }
+    .ion-flickr {
+      position: relative;
+      z-index: 2;
+      font-size: 8px;
+      background-color: #ffffff;
+      &::before {
+        transform: rotate(90deg);
+      }
+    }
+    &.active {
+      .btns {
+        transform: translate(0, -50%);
+      }
+    }
+  }
+  .btns {
+    width: 100px;
+    height: 24px;
+    line-height: 24px;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    z-index: 1;
+    transform: translate(200%, -50%);
+    transition: all 0.3s ease-in-out;
+    text-align: center;
+    display: flex;
+    span {
+      flex: 1;
     }
   }
 }

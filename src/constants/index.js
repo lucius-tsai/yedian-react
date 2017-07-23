@@ -5,24 +5,24 @@ let venuesCoreApiDomain = null; // venues sysytem
 let cmsCoreApiDomain = null; // venues sysytem
 
 if (process.env.NODE_ENV === "development") {
-	userApiDomain = "http://user.dev.ye-dian.com";
-	userCoreApiDomain = "http://userCore.dev.ye-dian.com";
-	commontCoreApiDomain = "http://feedback.dev.ye-dian.com";
-	venuesCoreApiDomain = "http://venuescore.dev.ye-dian.com";
-	cmsCoreApiDomain = "http://cmscore.dev.ye-dian.com";
+	userApiDomain = "//user.dev.ye-dian.com";
+	userCoreApiDomain = "//userCore.dev.ye-dian.com";
+	commontCoreApiDomain = "//feedback.dev.ye-dian.com";
+	venuesCoreApiDomain = "//venuescore.dev.ye-dian.com";
+	cmsCoreApiDomain = "//cmscore.dev.ye-dian.com";
 
 } else if (process.env.NODE_ENV === "staging") {
-	userApiDomain = "http://user.staging.ye-dian.com";
-	userCoreApiDomain = "http://userCore.staging.ye-dian.com";
-	commontCoreApiDomain = "http://feedback.staging.ye-dian.com";
-	venuesCoreApiDomain = "http://venuescore.staging.ye-dian.com";
-	cmsCoreApiDomain = "http://cmscore.staging.ye-dian.com";
+	userApiDomain = "//user.staging.ye-dian.com";
+	userCoreApiDomain = "//userCore.staging.ye-dian.com";
+	commontCoreApiDomain = "//feedback.staging.ye-dian.com";
+	venuesCoreApiDomain = "//venuescore.staging.ye-dian.com";
+	cmsCoreApiDomain = "//cmscore.staging.ye-dian.com";
 } else {
-	userApiDomain = "http://user.staging.ye-dian.com";
-	userCoreApiDomain = "http://userCore.staging.ye-dian.com";
-	commontCoreApiDomain = "http://feedback.staging.ye-dian.com";
-	venuesCoreApiDomain = "http://venuescore.staging.ye-dian.com";
-	cmsCoreApiDomain = "http://cmscore.staging.ye-dian.com";
+	userApiDomain = "//user.staging.ye-dian.com";
+	userCoreApiDomain = "//userCore.staging.ye-dian.com";
+	commontCoreApiDomain = "//feedback.staging.ye-dian.com";
+	venuesCoreApiDomain = "//venuescore.staging.ye-dian.com";
+	cmsCoreApiDomain = "//cmscore.staging.ye-dian.com";
 }
 
 let __API_ROOT = {
@@ -52,6 +52,9 @@ let __API_ROOT = {
 	// uploadFile: "http://10.85.108.33:3007/public/file/upload",
 	uploadFile: venuesCoreApiDomain + "/public/file/upload",
 
+	/**
+	 * Feedback 三要素 like favorite comment
+	 */
 	getLikes: commontCoreApiDomain + "/users/likes",
 	likeMessage: commontCoreApiDomain + "/users/likes",
 	delLikeMessage: commontCoreApiDomain + "/users/likes/",
@@ -61,11 +64,22 @@ let __API_ROOT = {
 	delFavoriteMessage: commontCoreApiDomain + "/users/favorites/",
 
 	getFollwers: commontCoreApiDomain + "/users/follows",
+	creatFollow: commontCoreApiDomain + "/users/follows",
+	deleteFollow: commontCoreApiDomain + "/users/follows",
 
-	getTopicById: commontCoreApiDomain + "/community/topic/",
+	deletePost: commontCoreApiDomain + "/community/post",
+	infrom: commontCoreApiDomain + "/users/comment/inform",
+
 
 	commentMessage: commontCoreApiDomain + "/users/comments",
-	getComments: commontCoreApiDomain + "/users/comments/byTargetId"
+	getComments: commontCoreApiDomain + "/users/comments/byTargetId",
+	deleteComment: commontCoreApiDomain + "/users/comment",
+	likeComment: commontCoreApiDomain + "/users/comments/like",
+	deleteLikeComment: commontCoreApiDomain + "/users/comments/like",
+	/**
+	 * 
+	 */
+	getTopicById: commontCoreApiDomain + "/community/topic/",
 }
 if (process.env.NODE_ENV === "localhost") {
 	// localhost

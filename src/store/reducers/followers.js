@@ -7,7 +7,7 @@ import {
 	SET_USER_FOLLOWERS
 } from '../actions/followers';
 
-const publish = (state = {venuesFollowers: null, userFollowers: null}, action) => {
+const followers = (state = {venuesFollowers: null, userFollowers: null}, action) => {
 	// console.log(action);
 	switch (action.type) {
 		case GET_VENUES_FOLLOWERS_LOADING:
@@ -39,4 +39,4 @@ const publish = (state = {venuesFollowers: null, userFollowers: null}, action) =
 	}
 }
 
-export default publish;
+export default followers;

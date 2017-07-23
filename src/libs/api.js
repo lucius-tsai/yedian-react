@@ -105,11 +105,7 @@ export const sendSMS = (data) => {
 
 
 /**
- * 社区首页
- */
-
-/**
- * 获取HOME页面 Banner列表
+ * 获取HOME页面 Banner 以及Topic 相关
  */
 export const getCommunityBanner = (query) => {
 	return __promiseTask(_instance().get(`${API_ROOT.getCommunityBanner}${query}`));
@@ -118,31 +114,10 @@ export const getCommunityBanner = (query) => {
 
 export const getBannerById = (query) => {
 	return __promiseTask(_instance().get(`${API_ROOT.getBannerById}${query}`));
-}
-
-/**
- * 获取HOME页面 消息列表
- */
-export const getIndexMessage = () => {
-	return __promiseTask(_instance().get(API_ROOT.getIndexMessage));
 };
 
-/**
- * 获取HOME页面推送 大V 列表
- */
-export const getIndexUserList = () => {
-	return __promiseTask(_instance().get(API_ROOT.getIndexUserList));
-};
-
-/**
- * 获取消息详情
- */
-export const getMessageInfo = (id) => {
-	return __promiseTask(_instance().get(`${API_ROOT.getMessageInfo}/${id}`));
-};
-
-export const getSearch = () => {
-	return __promiseTask(_instance().get(API_ROOT.getSearch));
+export const getTopicById = (id) => {
+	return __promiseTask(_instance().get(`${API_ROOT.getTopicById}${id}`))
 };
 
 /***********************************************************************************************************/
@@ -151,7 +126,7 @@ export const getSearch = () => {
 /***********************************************************************************************************/
 /***********************************************************************************************************/
 /**
- * POST like 收藏
+ * POST like 收藏 关注 评论
  * @param {*} data 
  */
 
@@ -180,19 +155,57 @@ export const delFavoriteMessage = (id) => {
 };
 
 export const getFavorites = (data) => {
-	return __promiseTask(_instance().get(API_ROOT.getFavorites,  {
+	return __promiseTask(_instance().get(API_ROOT.getFavorites, {
 		params: data
 	}));
 };
 
 export const getFollwers = (data) => {
-	return __promiseTask(_instance().get(API_ROOT.getFollwers,  {
+	return __promiseTask(_instance().get(API_ROOT.getFollwers, {
 		params: data
 	}));
 }
 
 export const creatFollow = (data) => {
-	return __promiseTask(_instance().post(API_ROOT.getFollwers, data));
+	return __promiseTask(_instance().post(API_ROOT.creatFollow, data));
+}
+
+export const deleteFollow = (id) => {
+	return __promiseTask(_instance().delete(`${API_ROOT.deleteFollow}/${id}`))
+}
+
+export const getComments = (data) => {
+	return __promiseTask(_instance().get(API_ROOT.getComments, {
+		params: data
+	}));
+}
+
+export const commentMessage = (data) => {
+	return __promiseTask(_instance().post(API_ROOT.commentMessage, data));
+};
+
+export const deleteComment = (commentId) => {
+	return __promiseTask(_instance()({
+		method: 'DELETE',
+		url: API_ROOT.deleteComment,
+		params: {
+			commentId
+		}
+	}));
+}
+
+export const likeComment = (data) => {
+	return __promiseTask(_instance().post(API_ROOT.likeComment, data))
+}
+
+export const deleteLikeComment = (commentId) => {
+	return __promiseTask(_instance()({
+		method: 'DELETE',
+		url: API_ROOT.deleteLikeComment,
+		data: {
+			commentId
+		}
+	}))
 }
 
 /***********************************************************************************************************/
@@ -203,19 +216,37 @@ export const creatFollow = (data) => {
 
 
 /**
- * 评论
+ * post 发文相关接口
  */
-export const commentMessage = (data) => {
-	return __promiseTask(_instance().post(API_ROOT.commentMessage, data));
+
+export const getMessageInfo = (id) => {
+	return __promiseTask(_instance().get(`${API_ROOT.getMessageInfo}/${id}`));
 };
 
-export const getComments= (data) => {
-	return __promiseTask(_instance().get(API_ROOT.getComments,  {
-		params: data
-	}));
+export const postMessage = (data) => {
+	return __promiseTask(_instance().post(API_ROOT.postMessage, data));
+};
+
+export const uploadFile = (data) => {
+	return __promiseTask(_instance().post(API_ROOT.uploadFile, data));
+};
+
+export const deletePost = (id) => {
+	return __promiseTask(_instance().delete(`${API_ROOT.deletePost}/${id}`))
 }
 
 
+export const getPostList = (data) => {
+	return __promiseTask(_instance().get(API_ROOT.getMessage, {
+		params: data
+	}));
+};
+
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+/***********************************************************************************************************/
 
 
 
@@ -229,32 +260,14 @@ export const creatTag = (data) => {
 
 
 
-
-export const getPostList = (data) => {
-	return __promiseTask(_instance().get(API_ROOT.getMessage, {
-		params: data
-	}));
-};
-
 export const getVenues = (query) => {
 	return __promiseTask(_instance().get(`${API_ROOT.getVenues}${query}`));
 };
 
-export const postMessage = (data) => {
-	return __promiseTask(_instance().post(API_ROOT.postMessage, data));
+
+export const infrom = (data) => {
+	return __promiseTask(_instance().post(API_ROOT.infrom, data));
 }
-
-
-
-export const uploadFile = (data) => {
-	return __promiseTask(_instance().post(API_ROOT.uploadFile, data));
-}
-
-
-export const getTopicById = (id) => {
-	return __promiseTask(_instance().get(`${API_ROOT.getTopicById}${id}`))
-}
-
 
 /**
  * 通用

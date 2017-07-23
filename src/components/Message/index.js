@@ -77,6 +77,18 @@ class Message extends Component {
     }
   }
 
+  handleClick(ref) {
+    const className = ref && ref.className;
+		ref && ref.addEventListener && ref.addEventListener('click', (e) => {
+      if(e && e.target && e.target.dataset && e.target.dataset.origin === 'delete') {
+        ref.className = `${ref.className} bounceOutRight animated`;
+        setTimeout(() => {
+          ref.className = className;
+        }, 400);
+      }
+		});
+  }
+
   render() {
     const { post, canLink, showFollow, disabledLink, __showComment } = this.state;
     const { __parentOpenComment } = this.props;
@@ -130,9 +142,9 @@ class Message extends Component {
       });
     }
     return (
-      <div className="card-message">
+      <div className="card-message" ref={this.handleClick}>
         <div className="card-message-top">
-          <Avator profile={post.postedBy} showFollow={showFollow} model={"default"} disabledLink={disabledLink} affiliates={affiliates} />
+          <Avator profile={post.postedBy} date={post.createdAt} showFollow={showFollow} model={"default"} disabledLink={disabledLink} affiliates={affiliates} />
         </div>
         {
           !canLink && <div className="card-message-content">
@@ -189,7 +201,7 @@ class Message extends Component {
         }
         {
           <div className={"card-message-bottom"}>
-            <CTABar fix={canLink} post={post} __showComment={__showComment} />
+            <CTABar fix={canLink} post={post} __showComment={__showComment} deletePost={this.deletePost}/>
           </div>
         }
       </div>

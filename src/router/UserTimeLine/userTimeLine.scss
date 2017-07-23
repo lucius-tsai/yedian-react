@@ -4,13 +4,13 @@ $max : 100;
 .user-time-line {
   ._top {
     height: 37vh;
+    position: relative;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
     background-color: #2a1e46;
     background-image: url("user-bg.jpg");
     .avator {
-      margin: 50px auto 15px;
       padding: 2px;
       width: 70px;
       height: 70px;
@@ -18,6 +18,11 @@ $max : 100;
       border-radius: 50%;
     }
     .avator-box {
+      height: auto;
+      width: 100%;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
       .follow-box {
         button {
           background-color: #ffffff;

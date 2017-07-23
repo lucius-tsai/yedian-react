@@ -4,7 +4,11 @@ import { Link } from 'react-router-dom';
 import './avator.scss';
 
 import { parseDate } from '../../libs/uitls';
-import { getFollwers, creatFollow } from '../../libs/api';
+import {
+  getFollwers,
+  creatFollow,
+  deleteFollow
+} from '../../libs/api';
 
 import { getVenuesFollowers, getVenuesFollowersFail, getUserFollowers, getUserFollowersFail, setUserFollowers, setVenuesFollowers } from '../../store/actions/followers';
 
@@ -35,13 +39,16 @@ class Avator extends Component {
         headImgUrl: "http://www.wangmingdaquan.cc/tx61/66.jpg",
         displayName: 'N'
       },
-      date: date ? parseDate('yyyy/mm/dd', new Date(date)) : parseDate('yyyy/MM/dd hh:mm:ss', new Date()),
+      date: date ? parseDate('yyyy/MM/dd hh:mm:ss', new Date(date)) : parseDate('yyyy/MM/dd hh:mm:ss', new Date()),
       size: size ? size : "normal",
       style: style ? style : "horizontal", //vertical
-      showFollow: showFollow ? showFollow : false,
       model: model ? model : undefined,
       disabledLink: disabledLink ? disabledLink : false,
-      affiliates: affiliates ? affiliates : null
+      affiliates: affiliates ? affiliates : null,
+      showFollow: showFollow ? showFollow : false,
+      isSelf: false,
+      isFollow: false,
+      followId: null,
     });
     this.handleFollow = this.handleFollow.bind(this);
   }
@@ -49,16 +56,21 @@ class Avator extends Component {
   componentWillReceiveProps(nextProps) {
     const { userInfo, followers } = nextProps;
     const { profile } = this.state;
+    this.setState({
+      isFollow: false,
+      followId: null
+    });
     if (userInfo && userInfo.user && userInfo.user.id && userInfo.user.id === profile._id) {
       this.setState({
-        showFollow: false
+        isSelf: true
       })
     }
     if (profile.userType.toLocaleLowerCase() === 'user') {
       followers.userFollowers && followers.userFollowers.forEach(cell => {
         if (cell.targetId === profile._id) {
           this.setState({
-            showFollow: false
+            isFollow: true,
+            followId: cell._id
           });
         }
       });
@@ -66,14 +78,25 @@ class Avator extends Component {
       followers.venuesFollowers && followers.venuesFollowers.forEach(cell => {
         if (cell.targetId === profile.venuesId) {
           this.setState({
-            showFollow: false
+            isFollow: true,
+            followId: cell._id
           });
         }
       });
     }
   }
+  
+  handleClick(ref) {
+    const className = ref && ref.className;
+		ref && ref.addEventListener && ref.addEventListener('click', (e) => {
+			ref.className = `${ref.className} flipInX animated`;
+			setTimeout(() => {
+				ref.className = className;
+			}, 400);
+		});
+  }
 
-  handleFollow() {
+  handleFollow(ref) {
     const { profile } = this.state;
     const {
       setVenuesFollowers,
@@ -84,48 +107,82 @@ class Avator extends Component {
       getUserFollowersFail,
     } = this.props;
 
-    creatFollow({
-      type: profile.userType === 'User' ? 'USER' : 'VENUES',
-      targetId: profile.userType === 'User' ? profile._id : profile.venuesId
-    }).then(res => {
-      if (res.code === 200) {
-        this.setState({
-          showFollow: false
-        });
-
-        if (profile.userType === 'User') {
-          getUserFollowers();
-          getFollwers({
-            type: 'USER'
-          }).then(res => {
-            if (res.code === 200) {
-              setUserFollowers(res.data);
-            } else {
+    if (this.state.isFollow && this.state.followId) {
+      deleteFollow(this.state.followId).then(res => {
+        if (res.code === 200) {
+          if (profile.userType === 'User') {
+            getUserFollowers();
+            getFollwers({
+              type: 'USER'
+            }).then(res => {
+              if (res.code === 200) {
+                setUserFollowers(res.data);
+              } else {
+                getUserFollowersFail();
+              }
+            }, error => {
               getUserFollowersFail();
-            }
-          }, error => {
-            getUserFollowersFail();
-          });
-        } else {
-          getVenuesFollowers();
-          getFollwers({
-            type: 'VENUES'
-          }).then(res => {
-            if (res.code === 200) {
-              setVenuesFollowers(res.data);
-            } else {
+            });
+          } else {
+            getVenuesFollowers();
+            getFollwers({
+              type: 'VENUES'
+            }).then(res => {
+              if (res.code === 200) {
+                setVenuesFollowers(res.data);
+              } else {
+                getVenuesFollowersFail();
+              }
+            }, error => {
               getVenuesFollowersFail();
-            }
-          }, error => {
-            getVenuesFollowersFail();
-          });
+            });
+          }
+
         }
-      }
-    });
+      }, error => {
+
+      })
+    } else {
+      creatFollow({
+        type: profile.userType === 'User' ? 'USER' : 'VENUES',
+        targetId: profile.userType === 'User' ? profile._id : profile.venuesId
+      }).then(res => {
+        if (res.code === 200) {
+          if (profile.userType === 'User') {
+            getUserFollowers();
+            getFollwers({
+              type: 'USER'
+            }).then(res => {
+              if (res.code === 200) {
+                setUserFollowers(res.data);
+              } else {
+                getUserFollowersFail();
+              }
+            }, error => {
+              getUserFollowersFail();
+            });
+          } else {
+            getVenuesFollowers();
+            getFollwers({
+              type: 'VENUES'
+            }).then(res => {
+              if (res.code === 200) {
+                setVenuesFollowers(res.data);
+              } else {
+                getVenuesFollowersFail();
+              }
+            }, error => {
+              getVenuesFollowersFail();
+            });
+          }
+        }
+      });
+    }
+
   }
 
   render() {
-    const { profile, size, style, showFollow, model, date, disabledLink, affiliates } = this.state;
+    const { profile, size, style, isSelf, showFollow, isFollow, model, date, disabledLink, affiliates } = this.state;
     const query = '?fromwhere=community';
 
     return (
@@ -133,13 +190,13 @@ class Avator extends Component {
         {
           disabledLink &&
           <div className="avator">
-            <img src={profile.headImgUrl ? profile.headImgUrl : defaultAvator} alt="" />
+            <img src={profile.headImgUrl && profile.headImgUrl !== '/0' ? profile.headImgUrl : defaultAvator} alt="" />
           </div>
         }
         {
           !disabledLink && profile.userType === 'User' &&
           <Link className="avator" to={{ pathname: `${BASENAME}user/times/${profile._id}`, state: profile }}>
-            <img src={profile.headImgUrl ? profile.headImgUrl : defaultAvator} alt="" />
+            <img src={profile.headImgUrl && profile.headImgUrl !== '/0' ? profile.headImgUrl : defaultAvator} alt="" />
           </Link>
         }
         {
@@ -163,11 +220,11 @@ class Avator extends Component {
           </div>
         }
         {
-          model === "followCard" && 
-            <div className="profile">
-              <strong>{profile.displayName}</strong>
-              <p>{`${profile.city}-${profile.area}`}</p>
-            </div>
+          model === "followCard" &&
+          <div className="profile">
+            <strong>{profile.displayName}</strong>
+            <p>{`${profile.city}-${profile.area}`}</p>
+          </div>
         }
         {
           model === "userTimeLine" &&
@@ -176,9 +233,9 @@ class Avator extends Component {
           </div>
         }
         {
-          showFollow &&
+          !isSelf && showFollow && 
           <div className="follow-box" onClick={this.handleFollow}>
-            <button>关注</button>
+            <button ref={this.handleClick}>{!isFollow ? '关注' : '取消关注' }</button>
           </div>
         }
       </div>
@@ -191,14 +248,15 @@ class Avator extends Component {
 
     if (userInfo && userInfo.user && userInfo.user.id && userInfo.user.id === profile._id) {
       this.setState({
-        showFollow: false
-      })
+        isSelf: true
+      });
     } else if (showFollow) {
       if (profile.userType.toLocaleLowerCase() === 'user') {
         followers.userFollowers && followers.userFollowers.forEach(cell => {
           if (cell.targetId === profile._id) {
             this.setState({
-              showFollow: false
+              isFollow: true,
+              followId: cell._id
             });
           }
         });
@@ -206,7 +264,8 @@ class Avator extends Component {
         followers.venuesFollowers && followers.venuesFollowers.forEach(cell => {
           if (cell.targetId === profile.venuesId) {
             this.setState({
-              showFollow: false
+              isFollow: true,
+              followId: cell._id
             });
           }
         });

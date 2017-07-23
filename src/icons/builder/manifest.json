@@ -1,5 +1,5 @@
 {
-  "build_hash": "25007cac918dfd6fbd2e5aeafa154b9b",
+  "build_hash": "bee2e61e14da2cd79ae07078637c5ebe",
   "prefix": "ion-",
   "version": "2.0.1",
   "name": "Ionicons",
@@ -951,6 +951,10 @@
     {
       "code": "0xf136",
       "name": "flash-off"
+    },
+    {
+      "code": "0xf15a",
+      "name": "flickr"
     },
     {
       "code": "0xf139",

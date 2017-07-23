@@ -12,7 +12,7 @@ import { weChatAuth, getWeChatSDKSign, getScripts } from './libs/api';
  * sensorsdata[神策监测代码]
  */
 // if(process.env.NODE_ENV !== 'localhost') {
-const __API = process.env.NODE_ENV === 'production' ? 'http://yd-data.chinacloudapp.cn:8006/sa?project=production' : 'http://yd-data.chinacloudapp.cn:8006/sa';
+const __API = process.env.NODE_ENV === 'production' ? '//yd-data.chinacloudapp.cn:8006/sa?project=production' : '//yd-data.chinacloudapp.cn:8006/sa';
 (function (para) {
   var p = para.sdk_url, n = para.name, w = window, d = document, s = 'script', x = null, y = null;
   w['sensorsDataAnalytic201505'] = n;
@@ -29,7 +29,7 @@ const __API = process.env.NODE_ENV === 'production' ? 'http://yd-data.chinacloud
     w[n].para = para;
   }
 })({
-  sdk_url: process.env.NODE_ENV !== 'localhost' ? `${location.origin}${BASENAME}static/sensorsdata.min.js` : `http://staging-app.ye-dian.com${BASENAME}static/sensorsdata.min.js`,
+  sdk_url: process.env.NODE_ENV !== 'localhost' ? `${location.origin}${BASENAME}static/sensorsdata.min.js` : `//staging-app.ye-dian.com${BASENAME}static/sensorsdata.min.js`,
   name: 'sa',
   server_url: __API
 });
@@ -110,7 +110,7 @@ if (process.env.NODE_ENV === 'localhost') {
 (() => {
   const body = document.getElementsByTagName('body')[0];
   const fastClickScriptDom = document.createElement('script');
-  const url = process.env.NODE_ENV !== 'localhost' ? `${location.origin}${BASENAME}static/fastclick.js` : `http://staging-app.ye-dian.com${BASENAME}static/fastclick.js`;
+  const url = process.env.NODE_ENV !== 'localhost' ? `${location.origin}${BASENAME}static/fastclick.js` : `//staging-app.ye-dian.com${BASENAME}static/fastclick.js`;
   fastClickScriptDom.setAttribute('src', url);
   fastClickScriptDom.addEventListener('load', () => {
     window.FastClick.attach(document.body);

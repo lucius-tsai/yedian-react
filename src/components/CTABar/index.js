@@ -9,11 +9,15 @@ import {
 	delLikeMessage,
 	getFavorites,
 	favoriteMessage,
-	delFavoriteMessage
+	delFavoriteMessage,
+	deletePost
 } from '../../libs/api';
 import { os } from '../../libs/uitls';
 
 import { showComment, hiddenComment } from '../../store/actions/appStatus';
+import {
+	putPostList
+} from '../../store/actions/posts';
 
 class CTABar extends Component {
 	constructor(props) {
@@ -26,27 +30,33 @@ class CTABar extends Component {
 			favoriteID: null,
 			likeCount: 0,
 			favoriteCount: 0,
-			commentCount: 0
+			commentCount: 0,
+      isSelf: false,
 		}
 		this.like = this.like.bind(this);
 		this.favorite = this.favorite.bind(this);
 		this.openComment = this.openComment.bind(this);
+		this.deletePost = this.deletePost.bind(this);
 		this.__hidden = this.__hidden.bind(this);
 	}
 
 	componentWillMount() {
-		const { post, showComment } = this.props;
+		const { post, showComment, userInfo } = this.props;
 		this.setState({
 			likeCount: post.likeCount,
 			favoriteCount: post.favoriteCount,
 			commentCount: post.commentCount,
-			showComment
+			showComment,
+			isSelf: userInfo && userInfo.user && userInfo.user.id && userInfo.user.id === post.postedBy._id
 		});
 	}
 
 	componentWillReceiveProps(nextProps) {
-		const { showComment } = nextProps;
-		this.setState({ showComment });
+		const { showComment, userInfo, post } = nextProps;
+		this.setState({
+			showComment,
+			isSelf: userInfo && userInfo.user && userInfo.user.id && userInfo.user.id === post.postedBy._id
+		});
 	}
 
 	like() {
@@ -142,8 +152,31 @@ class CTABar extends Component {
 		});
 	}
 
+  deletePost(e) {
+		const { post, posts, putPostList } = this.props;
+		const localPosts = Object.assign({}, JSON.parse(JSON.stringify({o: posts}))).o;
+		deletePost(post._id).then(res => {
+			if(res.code === 200) {
+				localPosts.every((cell, index) => {
+					if (post._id === cell._id) {
+						localPosts.splice(index, 1);
+						return false;
+					} else {
+						return true;
+					}
+				});
+				setTimeout(() => {
+					putPostList(localPosts);
+				}, 100)
+			}
+		}, error => {
+
+		});
+    
+  }
+
 	render() {
-		const { showComment, favorited, liked, likeCount, favoriteCount, commentCount } = this.state;
+		const { showComment, favorited, liked, likeCount, favoriteCount, commentCount, isSelf } = this.state;
 		const { fix, post } = this.props;
 
 		let catBarClass = 'cta-box';
@@ -172,12 +205,20 @@ class CTABar extends Component {
 						}
 						<span className="text">{commentCount}</span>
 					</div>
+					{
+						isSelf && 
+						<div className="cell _delete">
+							<button onClick={this.deletePost} data-origin='delete'>删除</button>
+						</div>
+					}
 				</div>
 			</div>
 		)
 	}
 	
   componentDidMount() {
+		this._isMounted = true;
+		const self = this;
 		const { post, userInfo, showComment } = this.props;
 		const userId = userInfo && userInfo.user ? userInfo.user.id : null;
 		getLikes({
@@ -187,7 +228,7 @@ class CTABar extends Component {
 			if (res.code === 200) {
 				res.data.forEach(cell => {
 					if (cell.userId === userId) {
-						this.setState({
+						self._isMounted && self.setState({
 							liked: true,
 							likeID: cell._id
 						})
@@ -204,7 +245,7 @@ class CTABar extends Component {
 			if (res.code === 200) {
 				res.data.forEach(cell => {
 					if (cell.userId === userId) {
-						this.setState({
+						self._isMounted && self.setState({
 							favorited: true,
 							favoriteID: cell._id
 						})
@@ -224,16 +265,18 @@ class CTABar extends Component {
 	}
 
 	componentWillUnmount() {
+    this._isMounted = false;
 		document.removeEventListener('click', this.__hidden);
 	}
 }
 
 
 const mapStateToProps = state => {
-	const { userInfo, appStatus } = state;
+	const { userInfo, appStatus, posts } = state;
 	return {
 		userInfo,
-		showComment: appStatus.showComment || false
+		showComment: appStatus.showComment || false,
+		posts: posts.posts || []
 	}
 };
 
@@ -244,7 +287,10 @@ const mapDispatchToProps = (dispatch) => {
 		},
 		__hiddenComment: (cell) => {
 			dispatch(hiddenComment(cell));
-		}
+		},
+    putPostList: (cell) => {
+      dispatch(putPostList(cell))
+    }
 	}
 };
 
