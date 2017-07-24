@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import Avator from '../Avator';
 import CTABar from '../CTABar';
@@ -10,6 +11,14 @@ const defaultMessage = {
     "http://onq4xhob0.bkt.clouddn.com/bdc270ac6e5642b880b60b002e3a81a6.jpeg"
   ]
 };
+
+import {
+  deletePost
+} from '../../libs/api.js';
+
+import {
+  putPostList
+} from '../../store/actions/posts';
 
 /**
  * [社区消息组件]
@@ -26,11 +35,12 @@ class Message extends Component {
     this.state = {
       post: defaultMessage,
       canLink: false,
-      showFollow: true,
+      showFollow: false,
       __showComment: false
     };
 
     this.lazyLoadPictures = this.lazyLoadPictures.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentWillMount() {
@@ -77,16 +87,44 @@ class Message extends Component {
     }
   }
 
-  handleClick(ref) {
-    const className = ref && ref.className;
-		ref && ref.addEventListener && ref.addEventListener('click', (e) => {
-      if(e && e.target && e.target.dataset && e.target.dataset.origin === 'delete') {
-        ref.className = `${ref.className} bounceOutRight animated`;
-        setTimeout(() => {
-          ref.className = className;
-        }, 400);
+  deletePost(cb) {
+    // return false;
+    const { post } = this.state;
+    const { posts, putPostList } = this.props;
+    const localPosts = Object.assign({}, JSON.parse(JSON.stringify({ o: posts }))).o;
+    deletePost(post._id).then(res => {
+      if (res.code === 200) {
+        localPosts.every((cell, index) => {
+          if (post._id === cell._id) {
+            localPosts.splice(index, 1);
+            return false;
+          } else {
+            return true;
+          }
+        });
+        putPostList(localPosts);
+        cb && cb();
       }
-		});
+    }, error => {
+      cb && cb();
+    });
+  }
+
+  handleClick(ref) {
+    const self = this;
+    const className = ref && ref.className;
+    ref && ref.addEventListener && ref.addEventListener('click', (e) => {
+      if (e && e.target && e.target.dataset && e.target.dataset.origin === 'delete') {
+        ref.className = `${ref.className} bounceOutRight animated`;
+      }
+    });
+
+    ref && ref.addEventListener && ref.addEventListener('webkitAnimationEnd', (e) => {
+      self.deletePost(() => {
+        self.lazyLoadPictures();
+        ref.className = className;
+      });
+    });
   }
 
   render() {
@@ -142,7 +180,7 @@ class Message extends Component {
       });
     }
     return (
-      <div className="card-message" ref={this.handleClick}>
+      <div className="card-message" ref={this.handleClick} key={post._id}>
         <div className="card-message-top">
           <Avator profile={post.postedBy} date={post.createdAt} showFollow={showFollow} model={"default"} disabledLink={disabledLink} affiliates={affiliates} />
         </div>
@@ -201,7 +239,7 @@ class Message extends Component {
         }
         {
           <div className={"card-message-bottom"}>
-            <CTABar fix={canLink} post={post} __showComment={__showComment} deletePost={this.deletePost}/>
+            <CTABar fix={canLink} post={post} __showComment={__showComment}/>
           </div>
         }
       </div>
@@ -216,6 +254,7 @@ class Message extends Component {
 
   componentDidUpdate() {
     const { post } = this.state;
+    this.lazyLoadPictures();
   }
 
   componentWillUnmount() {
@@ -223,16 +262,20 @@ class Message extends Component {
   }
 }
 
-// const mapStateToProps = state => {
-//   const { router } = state;
-//   return {
-//     router
-//   }
-// };
+const mapStateToProps = state => {
+  const { posts } = state;
+  return {
+    posts: posts.posts || []
+  }
+};
 
-// const mapDispatchToProps = (dispatch) => {
-//   return {}
-// };
+const mapDispatchToProps = (dispatch) => {
+  return {
+    putPostList: (cell) => {
+      dispatch(putPostList(cell))
+    }
+  }
+};
 
-// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Message));
-export default Message;
+export default connect(mapStateToProps, mapDispatchToProps)(Message);
+// export default Message;

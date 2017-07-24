@@ -15,6 +15,10 @@ import { getCommunityBanner, getPostList, getIndexUserList, getTopicById } from 
 import { trackPageView, trackPageLeave } from '../../libs/track';
 import { reSetShare } from '../../libs/wechat';
 
+import {
+  putPostList,
+  resetPostList
+} from '../../store/actions/posts';
 import { loading, loadSuccess, loadFail, hiddenScrollLoading, showScrollLoading } from '../../store/actions/appStatus';
 import { delAll } from '../../store/actions/publish';
 
@@ -45,8 +49,10 @@ class Community extends Component {
   }
 
   componentWillMount() {
-    const { delAll } = this.props;
+    const { delAll, hiddenScrollLoading, resetPostList } = this.props;
     delAll();
+    hiddenScrollLoading();
+    resetPostList();
     trackPageView({
       pageName: this.state.track.pageName
     });
@@ -62,6 +68,9 @@ class Community extends Component {
     if (nextProps.scrollLoading && !this.state.completed) {
       this.fetch();
     }
+    this.setState({
+      messages: nextProps.posts
+    });
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -71,7 +80,7 @@ class Community extends Component {
   fetch() {
     const self = this;
     const { pagination, messages } = this.state;
-    const { hiddenScrollLoading, userInfo } = this.props;
+    const { hiddenScrollLoading, userInfo, putPostList } = this.props;
     const userId = userInfo && userInfo.user && userInfo.user.id ? userInfo.user.id : '';
 
     if (this.state.completed || this.state.loading) {
@@ -106,8 +115,8 @@ class Community extends Component {
             });
           }
 
+          putPostList(merge);
           self._isMounted && self.setState({
-            messages: merge,
             loading: false,
             pagination: {
               total,
@@ -224,7 +233,7 @@ class Community extends Component {
     const messagesList = messages.map((cell, index) => {
       return (
         <li className="message-cell" key={index}>
-          <Message profile={cell.profile} post={cell} canLink={true} showFollow={true} />
+          <Message profile={cell.profile} post={cell} canLink={true} showFollow={false} />
         </li>
       )
     });
@@ -281,7 +290,7 @@ class Community extends Component {
     const self = this;
     this._isMounted = true;
 
-    document.title = "Night+";
+    document.title = "NIGHT+";
     const { messages, pagination } = this.state;
     const { loading, loadSuccess, loadFail, showScrollLoading } = this.props;
 
@@ -359,12 +368,13 @@ class Community extends Component {
     }, error => {
 
     });
-    showScrollLoading();
+    // showScrollLoading();
     self.fetch();
   }
 
   componentWillUnmount() {
     this._isMounted = false;
+    // this.props.resetPostList();
     clearInterval(this.pollingPostTimer);
     clearInterval(this.pollingDynamicMessagesTimer);
     trackPageLeave({
@@ -375,12 +385,13 @@ class Community extends Component {
 }
 
 const mapStateToProps = state => {
-  const { appStatus, router, userInfo } = state;
+  const { appStatus, router, userInfo, posts } = state;
   return {
     userInfo,
     router,
     scrollLoading: appStatus.scrollLoading || false,
-    loading: appStatus.loading || false
+    loading: appStatus.loading || false,
+    posts: posts.posts || []
   }
 };
 
@@ -403,6 +414,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     delAll: () => {
       dispatch(delAll())
+    },
+    putPostList: (cell) => {
+      dispatch(putPostList(cell))
+    },
+    resetPostList: () => {
+      dispatch(resetPostList())
     }
   }
 };

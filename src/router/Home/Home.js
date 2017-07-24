@@ -33,7 +33,7 @@ class Home extends Component {
     }
 
     componentDidMount() {
-        document.title = "Night+--首页";
+        document.title = "NIGHT";
     }
 
     componentWillReceiveProps(nextProps) {

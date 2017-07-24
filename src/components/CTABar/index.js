@@ -15,9 +15,6 @@ import {
 import { os } from '../../libs/uitls';
 
 import { showComment, hiddenComment } from '../../store/actions/appStatus';
-import {
-	putPostList
-} from '../../store/actions/posts';
 
 class CTABar extends Component {
 	constructor(props) {
@@ -36,7 +33,7 @@ class CTABar extends Component {
 		this.like = this.like.bind(this);
 		this.favorite = this.favorite.bind(this);
 		this.openComment = this.openComment.bind(this);
-		this.deletePost = this.deletePost.bind(this);
+		// this.deletePost = this.deletePost.bind(this);
 		this.__hidden = this.__hidden.bind(this);
 	}
 
@@ -54,6 +51,9 @@ class CTABar extends Component {
 	componentWillReceiveProps(nextProps) {
 		const { showComment, userInfo, post } = nextProps;
 		this.setState({
+			likeCount: post.likeCount,
+			favoriteCount: post.favoriteCount,
+			commentCount: post.commentCount,
 			showComment,
 			isSelf: userInfo && userInfo.user && userInfo.user.id && userInfo.user.id === post.postedBy._id
 		});
@@ -148,32 +148,10 @@ class CTABar extends Component {
 			ref.className = `${ref.className} bounceIn animated`;
 			setTimeout(() => {
 				ref.className = className;
-			}, 400);
-		});
+			}, 300);
+		}, false);
 	}
 
-  deletePost(e) {
-		const { post, posts, putPostList } = this.props;
-		const localPosts = Object.assign({}, JSON.parse(JSON.stringify({o: posts}))).o;
-		deletePost(post._id).then(res => {
-			if(res.code === 200) {
-				localPosts.every((cell, index) => {
-					if (post._id === cell._id) {
-						localPosts.splice(index, 1);
-						return false;
-					} else {
-						return true;
-					}
-				});
-				setTimeout(() => {
-					putPostList(localPosts);
-				}, 100)
-			}
-		}, error => {
-
-		});
-    
-  }
 
 	render() {
 		const { showComment, favorited, liked, likeCount, favoriteCount, commentCount, isSelf } = this.state;
@@ -208,7 +186,7 @@ class CTABar extends Component {
 					{
 						isSelf && 
 						<div className="cell _delete">
-							<button onClick={this.deletePost} data-origin='delete'>删除</button>
+							<button data-origin='delete'>删除</button>
 						</div>
 					}
 				</div>
@@ -272,11 +250,10 @@ class CTABar extends Component {
 
 
 const mapStateToProps = state => {
-	const { userInfo, appStatus, posts } = state;
+	const { userInfo, appStatus } = state;
 	return {
 		userInfo,
-		showComment: appStatus.showComment || false,
-		posts: posts.posts || []
+		showComment: appStatus.showComment || false
 	}
 };
 
@@ -287,10 +264,7 @@ const mapDispatchToProps = (dispatch) => {
 		},
 		__hiddenComment: (cell) => {
 			dispatch(hiddenComment(cell));
-		},
-    putPostList: (cell) => {
-      dispatch(putPostList(cell))
-    }
+		}
 	}
 };
 

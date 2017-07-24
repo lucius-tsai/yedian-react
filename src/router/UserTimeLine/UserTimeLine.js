@@ -56,6 +56,8 @@ class UserTimeLine extends Component {
     trackPageView({
       pageName: this.state.track.pageName
     });
+    this.props.hiddenScrollLoading();
+    this.props.resetPostList();
     this.setState({
       track: {
         pageName: this.state.track.pageName,
@@ -70,7 +72,7 @@ class UserTimeLine extends Component {
     }
     // const { posts } = this.props;
     // if (nextProps.posts.length != posts.length) {
-    console.log(nextProps.posts);
+    // console.log(nextProps.posts);
     this.setState({
       messages: nextProps.posts
     });
@@ -202,7 +204,7 @@ class UserTimeLine extends Component {
           }
         });
         document.title = `${self.state.user.displayName}`;
-        showScrollLoading();
+        // showScrollLoading();
         this.fetch();
       });
 
@@ -233,7 +235,7 @@ class UserTimeLine extends Component {
                 }
               });
               document.title = `${self.state.user.displayName}`;
-              showScrollLoading();
+              // showScrollLoading();
               self.fetch();
             });
           }
@@ -246,7 +248,7 @@ class UserTimeLine extends Component {
 
   componentWillUnmount() {
     this._isMounted = false;
-    this.props.resetPostList();
+    // this.props.resetPostList();
     trackPageLeave({
       pageName: this.state.track.pageName,
       pageStayTime: ((new Date().getTime() - this.state.track.startTime.getTime()) / 1000)

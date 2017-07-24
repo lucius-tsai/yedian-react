@@ -27,6 +27,12 @@ import {
   hiddenScrollLoading,
   showScrollLoading
 } from '../../store/actions/appStatus';
+
+import {
+  putPostList,
+  resetPostList
+} from '../../store/actions/posts';
+
 import { delAll } from '../../store/actions/publish';
 
 import style from './topic.css';
@@ -46,7 +52,7 @@ class Topic extends Component {
       messages: [],
       userList: [],
       pagination: {
-        pageSize: 2,
+        pageSize: 10,
         current: 1
       },
       actionTags: [],
@@ -58,9 +64,10 @@ class Topic extends Component {
   }
 
   componentWillMount() {
-    const { delAll } = this.props;
+    const { delAll, hiddenScrollLoading, resetPostList } = this.props;
     delAll();
-
+    hiddenScrollLoading();
+    resetPostList();
     trackPageView({
       pageName: this.state.track.pageName
     });
@@ -81,8 +88,11 @@ class Topic extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.scrollLoading && !this.state.completed) {
-      this.fetch();
+      this.fetch(false);
     }
+    this.setState({
+      messages: nextProps.posts
+    });
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -92,7 +102,7 @@ class Topic extends Component {
   fetch(reset) {
     const self = this;
     const { pagination, messages, tab } = this.state;
-    const { hiddenScrollLoading } = this.props;
+    const { hiddenScrollLoading, putPostList } = this.props;
 
     if (this.state.completed || this.state.loading) {
       return false;
@@ -126,8 +136,8 @@ class Topic extends Component {
             });
           }
 
+          putPostList(merge);
           self._isMounted && self.setState({
-            messages: merge,
             loading: false,
             pagination: {
               total,
@@ -153,7 +163,8 @@ class Topic extends Component {
   tab(key) {
     const self = this;
     const { pagination } = this.state;
-    const { showScrollLoading } = this.props;
+    const { showScrollLoading, resetPostList } = this.props;
+    
     this.setStateAynsc({
       tab: key === 0 ? 'createdAt' : 'likeCount',
       messages: [],
@@ -163,7 +174,8 @@ class Topic extends Component {
         current: 1
       }
     }).then(() => {
-      showScrollLoading();
+      // showScrollLoading();
+      resetPostList();
       self.fetch(true);
     });
   }
@@ -299,8 +311,8 @@ class Topic extends Component {
                 })
               }).then(() => {
                 setShareLocal(id, userId, banner.image, res.data[0].title, banner.title);
-                showScrollLoading();
-                self.fetch();
+                // showScrollLoading();
+                self.fetch(true);
               });
             }
           }).catch(error => {
@@ -338,11 +350,12 @@ class Topic extends Component {
 }
 
 const mapStateToProps = state => {
-  const { router, appStatus, userInfo } = state;
+  const { router, appStatus, userInfo, posts } = state;
   return {
     router,
     userInfo,
-    scrollLoading: appStatus.scrollLoading || false
+    scrollLoading: appStatus.scrollLoading || false,
+    posts: posts.posts || []
   }
 };
 
@@ -371,6 +384,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     delAll: () => {
       dispatch(delAll());
+    },
+    putPostList: (cell) => {
+      dispatch(putPostList(cell))
+    },
+    resetPostList: () => {
+      dispatch(resetPostList())
     }
   }
 };

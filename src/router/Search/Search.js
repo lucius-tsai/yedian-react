@@ -232,6 +232,7 @@ class Search extends Component {
     )
   }
   componentDidMount() {
+    document.title = "NIGHT+";
     const self = this;
     const { showBar, router, location, hideBar, gps } = this.props;
     const pathname = router.location.pathname;

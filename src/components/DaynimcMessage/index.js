@@ -77,9 +77,9 @@ export default class DaynimcMessage extends Component {
             <Avator size={"sx"} profile={list[currentIndex].postedBy} affiliates={list[currentIndex].affiliates} showFollow={false}/>
             {
               list[currentIndex].postType === 0 ?
-                <Link to={{ pathname: `${BASENAME}message/${list[currentIndex]._id}`, state: { id: list[currentIndex]._id } }} className={`_text`} style={{ width: `${textWidth}px` }}>{`${list[currentIndex].postedBy.displayName}啊刚刚发布了一条动态`}</Link>
+                <Link to={{ pathname: `${BASENAME}message/${list[currentIndex]._id}`, state: { id: list[currentIndex]._id } }} className={`_text`} style={{ width: `${textWidth}px` }}>{`${list[currentIndex].postedBy.displayName}刚刚发布了一条动态`}</Link>
                 :
-                <a href={`${location.origin}/dist/?#!/venues/event/${list[currentIndex]._id}${query}`} className={`_text`} style={{ width: `${textWidth}px` }}>{`${list[currentIndex].postedBy.displayName}啊刚刚发布了一条动态`}</a>
+                <a href={`${location.origin}/dist/?#!/venues/event/${list[currentIndex]._id}${query}`} className={`_text`} style={{ width: `${textWidth}px` }}>{`${list[currentIndex].postedBy.displayName}刚刚发布了一条动态`}</a>
             }
           </div>
         </CSSTransitionGroup>

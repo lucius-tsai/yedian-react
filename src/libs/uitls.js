@@ -122,6 +122,7 @@ export const getLocation = () => {
 				});
 			});
 		} else if (navigator.geolocation) {
+			console.log(`run navigator geolocation`);
 			navigator.geolocation.getCurrentPosition(function ({ coords }) {
 				resolve({
 					lat: coords.latitude,

@@ -54,9 +54,20 @@ class Avator extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { userInfo, followers } = nextProps;
-    const { profile } = this.state;
+    const { userInfo, followers, size, style, showFollow, profile, model, date, disabledLink, affiliates } = nextProps;
+    // const { profile } = this.state;
     this.setState({
+      profile: profile ? profile : {
+        headImgUrl: "http://www.wangmingdaquan.cc/tx61/66.jpg",
+        displayName: 'N'
+      },
+      date: date ? parseDate('yyyy/MM/dd hh:mm:ss', new Date(date)) : parseDate('yyyy/MM/dd hh:mm:ss', new Date()),
+      size: size ? size : "normal",
+      style: style ? style : "horizontal", //vertical
+      model: model ? model : undefined,
+      disabledLink: disabledLink ? disabledLink : false,
+      affiliates: affiliates ? affiliates : null,
+      showFollow: showFollow ? showFollow : false,
       isFollow: false,
       followId: null
     });

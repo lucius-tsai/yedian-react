@@ -220,7 +220,7 @@ class Comment extends Component {
 
 	comment(e) {
 		const { data } = this.state;
-		const { target, userInfo, __hiddenComment } = this.props;
+		const { target, userInfo, __hiddenComment, updateComments } = this.props;
 		commentMessage({
 			type: 'POST',
 			targetId: target._id,
@@ -242,6 +242,8 @@ class Comment extends Component {
 					document.body.className = '';
 					document.body.style.height = 'auto';
 				}
+
+				updateComments((target.commentCount * 1 + 1))
 				this.setState({
 					data,
 					offset: (this.state.offset + 1)
@@ -283,7 +285,7 @@ class Comment extends Component {
 		infrom({
 			commentId: cm._id
 		}).then(res => {
-			if(res.code === 200) {
+			if (res.code === 200) {
 
 			}
 		}, error => {
@@ -294,16 +296,18 @@ class Comment extends Component {
 	deleteComment(index) {
 		const self = this;
 		const { data } = this.state;
+		const { updateComments, target} = this.props;
 		deleteComment(data[index]._id).then(res => {
-				if (res.code === 200) {
-					setTimeout(() => {
-						data.splice(index, 1);
-						self.setState(data);
-					}, 200);
-				}
-			}, error => {
+			if (res.code === 200) {
+				updateComments((target.commentCount * 1 - 1))
+				setTimeout(() => {
+					data.splice(index, 1);
+					self.setState(data);
+				}, 200);
+			}
+		}, error => {
 
-			});
+		});
 	}
 
 	__openComment(e) {
@@ -326,16 +330,16 @@ class Comment extends Component {
 	}
 
 	handleClick(ref) {
-    const className = ref && ref.className;
+		const className = ref && ref.className;
 		ref && ref.addEventListener && ref.addEventListener('click', (e) => {
-      if(e && e.target && e.target.dataset && e.target.dataset.origin === 'delete') {
-        ref.className = `${ref.className} bounceOutRight animated`;
-        setTimeout(() => {
-          ref.className = className;
-        }, 300);
-      }
+			if (e && e.target && e.target.dataset && e.target.dataset.origin === 'delete') {
+				ref.className = `${ref.className} bounceOutRight animated`;
+				setTimeout(() => {
+					ref.className = className;
+				}, 300);
+			}
 		});
-  }
+	}
 
 	render() {
 		const { profile, data, userId, loading, isSelf, completed, showComment, showBtn } = this.state;
@@ -364,7 +368,7 @@ class Comment extends Component {
 														<span className="icon" onClick={this.infromComment.bind(this, cell)}>举报</span>
 													</div>
 													:
-													<div className='btns' style={{width: `50px`}}>
+													<div className='btns' style={{ width: `50px` }}>
 														<span className="icon" data-origin='delete' onClick={this.deleteComment.bind(this, index)}>删除</span>
 													</div>
 											}

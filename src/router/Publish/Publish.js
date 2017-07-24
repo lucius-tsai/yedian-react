@@ -303,6 +303,7 @@ class Publish extends Component {
 
   componentDidMount() {
     reSetShare();
+    document.title = "NIGHT+";
   }
 
   componentDidUpdate() {

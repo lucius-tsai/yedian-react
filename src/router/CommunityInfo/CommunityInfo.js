@@ -25,6 +25,7 @@ class CommunityInfo extends Component {
       messageInfo: null,
       venuesInfo: null,
     }
+    this.updateComments = this.updateComments.bind(this);
   }
 
   componentWillMount() {
@@ -46,6 +47,15 @@ class CommunityInfo extends Component {
     return true;
   }
 
+
+  updateComments(newNum) {
+    const { messageInfo } = this.state;
+    messageInfo.commentCount = newNum;
+    this.setState({
+      messageInfo
+    });
+  }
+
   render() {
     const { messageInfo, venuesInfo, __showComment } = this.state;
     let venuesID = null;
@@ -56,7 +66,7 @@ class CommunityInfo extends Component {
       <div className="community-info-box">
         <div className="community-info">
           {
-            messageInfo && <Message post={messageInfo} canLink={false} showFollow={true} />
+            messageInfo && <Message post={messageInfo} canLink={false} showFollow={true} key={`${messageInfo._id}-${messageInfo.likeCount}-${messageInfo.favoriteCount}-${messageInfo.commentCount}`}/>
           }
           {
             venuesInfo &&
@@ -67,7 +77,7 @@ class CommunityInfo extends Component {
         </div>
         {
           messageInfo &&
-          <Comment target={messageInfo} />
+          <Comment target={messageInfo} updateComments={this.updateComments}/>
         }
       </div>
     )

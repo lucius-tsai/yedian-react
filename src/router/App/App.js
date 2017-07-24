@@ -297,7 +297,6 @@ class Bootstrap extends Component {
     const token = cookie('js_session');
     if (token) {
       if (!(userInfo && userInfo.user && userInfo.user.id) && !userInfo.loading) {
-        // alert(1);
         this.getUserInfo();
       }
       if (!(followers && followers.userFollowers) && !followers.loadingUserFollowers) {
