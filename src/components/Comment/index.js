@@ -43,8 +43,7 @@ class Comment extends Component {
 			offset: 0,
 			loading: false,
 			completed: false,
-			userId: null,
-			isSelf: false,
+			userId: null
 		}
 
 		this.__openComment = this.__openComment.bind(this);
@@ -70,8 +69,7 @@ class Comment extends Component {
 					headImgUrl: userInfo.user.Wechat && userInfo.user.Wechat.headimgurl
 				},
 				target,
-				userId: userInfo && userInfo.user && userInfo.user.id,
-				isSelf: userInfo && userInfo.user && userInfo.user.id && userInfo.user.id === target.postedBy._id
+				userId: userInfo && userInfo.user && userInfo.user.id
 			})
 		}
 	}
@@ -86,8 +84,7 @@ class Comment extends Component {
 					displayName: userInfo.user.displayName,
 					headImgUrl: userInfo.user.Wechat && userInfo.user.Wechat.headimgurl
 				},
-				userId: userInfo && userInfo.user && userInfo.user.id,
-				isSelf: userInfo && userInfo.user && userInfo.user.id && userInfo.user.id === target.postedBy._id
+				userId: userInfo && userInfo.user && userInfo.user.id
 			})
 		}
 		if (!showComment) {
@@ -149,7 +146,8 @@ class Comment extends Component {
 							__liked: liked,
 							createdAt: cell.createdAt,
 							comment: cell.comment,
-							_id: cell._id
+							_id: cell._id,
+							userId: cell.userId
 						});
 					});
 
@@ -230,6 +228,7 @@ class Comment extends Component {
 			if (res.code === 200) {
 				data.unshift({
 					_id: res.data._id,
+					userId: res.data.userId,
 					comment: res.data.comment,
 					profile: {
 						_id: userInfo.user.id,
@@ -342,7 +341,7 @@ class Comment extends Component {
 	}
 
 	render() {
-		const { profile, data, userId, loading, isSelf, completed, showComment, showBtn } = this.state;
+		const { profile, data, userId, loading, completed, showComment, showBtn } = this.state;
 		return (
 			<div className="comment">
 				<div className="_title">夜猫子们评论</div>
@@ -362,7 +361,7 @@ class Comment extends Component {
 										<div data-actions="ref" className='actions'>
 											<i className='icon ion-flickr' ref={this.showMoreActions}></i>
 											{
-												cell.userId === userId ?
+												cell.userId !== userId ?
 													<div className='btns'>
 														<span className={cell.__liked ? 'icon ion-cta-like active' : 'icon ion-cta-like'} onClick={this.likeComment.bind(this, index)}>&nbsp;点赞</span>
 														<span className="icon" onClick={this.infromComment.bind(this, cell)}>举报</span>
