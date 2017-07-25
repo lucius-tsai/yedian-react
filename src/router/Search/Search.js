@@ -206,7 +206,7 @@ class Search extends Component {
     return (
       <div className={styles["search-page"]}>
         <div className={input ? `${styles['input-box']} ${styles['focus']}` : styles["input-box"]}>
-          <i className="icon ion-search-square"></i>
+          <i className={`${styles['icon']} ${styles['ion-search-square']}`}></i>
           <input type="text" value={search} placeholder={searchPlaceholder} className={styles["search-input"]} onBlur={this.blur}
             onFocus={this.focus} onChange={this.change} />
         </div>

@@ -92,8 +92,8 @@ class Publish extends Component {
     const { description, tags, venues, tmpImages } = this.state;
     const { history } = this.props;
 
-    if (!description || !venues || !tags || !tags.length) {
-      return alert('信息不全！')
+    if (!description || !tags || !tags.length) {
+      return alert('信息不全！');
     }
 
     post.postType = 0;
@@ -108,11 +108,13 @@ class Publish extends Component {
       }
     });
 
-    post.affiliates = [{
-      type: 'venues',
-      targetId: venues._id
-    }];
-
+    if (venues) {
+      post.affiliates = [{
+        type: 'venues',
+        targetId: venues._id
+      }];
+    }
+    
     postMessage(post).then(res => {
       if (res.code === 200) {
         history.goBack();

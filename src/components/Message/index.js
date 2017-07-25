@@ -68,7 +68,6 @@ class Message extends Component {
   }
 
   lazyLoadPictures(e) {
-
     const cellWidth = window.innerWidth > 414 ? (414 - 20) : (window.innerWidth - 20);
     const currentScrollY = window.scrollY + window.innerHeight - 40;
     for (const i in this.refs) {
@@ -80,7 +79,7 @@ class Message extends Component {
         image.onload = function () {
           cell.style.backgroundImage = `url(${originSrc})`;
           cell.style.backgroundColor = 'transparent';
-          if (cell.getAttribute('class') === 'single') {
+          if (cell && cell.dataset && cell.dataset.origin === 'single') {
             cell.style.height = `${cellWidth * image.height / image.width}px`;
           }
         }
@@ -170,7 +169,7 @@ class Message extends Component {
     }
     if (message.images && message.images.length === 1) {
       picturesList = (
-        <div className={styles['single']} style={{ height: `${cellWidth * 12 / 7}px`, backgroundColor: `rgb(${random()}, ${random()}, ${random()})` }} ref={`lazyImages-${new Date().getTime()}`} data-src={message.images[0]}>
+        <div className={styles['single']} data-origin='single' style={{ height: `${cellWidth * 12 / 7}px`, backgroundColor: `rgb(${random()}, ${random()}, ${random()})` }} ref={`lazyImages-${new Date().getTime()}`} data-src={message.images[0]}>
         </div>
       );
     } else if (message.images && message.images.length > 1) {
