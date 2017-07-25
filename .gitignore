@@ -7,6 +7,7 @@ yarn-error.log*
 
 .vscode
 .idea
+
 # Runtime data
 pids
 *.pid
@@ -59,8 +60,9 @@ typings/
 # dotenv environment variables file
 .env
 
+.sass-cache/
 .sass-cache
-
+.sass-cache/*
 dist/
-app
-app_tmp
+app/
+app_tmp/
