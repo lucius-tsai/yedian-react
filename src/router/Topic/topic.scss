@@ -1,4 +1,5 @@
 @import '../../assets/scss/setting';
+@import '../../assets/scss/animate';
 
 .community {
   margin-bottom: 20px;
@@ -7,7 +8,7 @@
   position: relative;
   height: 170px;
 }
-.topic-info {
+.topicInfo {
   width: 100%;
   box-sizing: border-box;
   padding: 10px;
@@ -39,7 +40,7 @@
   }
 }
 
-.news-timeLine {
+.newsTimeLine {
   margin: 10px auto;
   padding: 10px;
   line-height: 26px;
@@ -64,10 +65,10 @@
     text-align: left;
   }
 }
-.section-follow {
+.sectionFollow {
   overflow-x: scroll;
   overflow-y: hidden;
-  .follow-list {
+  .followList {
     padding: 0 10px; 
     li {
       width: 128px;
@@ -102,5 +103,39 @@ $max : 100;
         animation-delay: #{($i - 1)*50}ms;
       }
     }
+  }
+}
+
+.topicTab {
+  height: 48px;
+  line-height: 48px;
+  font-size: 16px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  background-color: #ffffff;
+  border-bottom: 1px solid #E1E1E1;
+  .tab {
+    height: 48px;
+    flex: 1;
+    padding-left: 20px;
+    text-align: left;
+    &:first-child {
+      padding-left: 0;
+      padding-right: 20px;
+      text-align: right;
+    }
+  }
+  span {
+    display: inline-block;
+    padding: 0 5px;
+    cursor: pointer;
+    height: 45px;
+    border-bottom: 3px solid #ffffff;
+    color: #999999;
+  }
+  .active span {
+    color: #B746E7;
+    border-color: #B746E7;
   }
 }

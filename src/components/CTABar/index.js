@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import './ctabar.scss';
 
 import {
 	getLikes,
@@ -16,15 +15,17 @@ import { os } from '../../libs/uitls';
 
 import { showComment, hiddenComment } from '../../store/actions/appStatus';
 
+import styles from './ctabar.scss';
+
 class CTABar extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			showComment: false,
-			liked: false,
-			likeID: null,
-			favorited: false,
-			favoriteID: null,
+			// liked: false,
+			likeId: null,
+			// favorited: false,
+			favoriteId: null,
 			likeCount: 0,
 			favoriteCount: 0,
 			commentCount: 0,
@@ -44,6 +45,8 @@ class CTABar extends Component {
 			favoriteCount: post.favoriteCount,
 			commentCount: post.commentCount,
 			showComment,
+			likeId: post.likeId,
+			favoriteId: post.favoriteId,
 			isSelf: userInfo && userInfo.user && userInfo.user.id && userInfo.user.id === post.postedBy._id
 		});
 	}
@@ -55,6 +58,8 @@ class CTABar extends Component {
 			favoriteCount: post.favoriteCount,
 			commentCount: post.commentCount,
 			showComment,
+			likeId: post.likeId,
+			favoriteId: post.favoriteId,
 			isSelf: userInfo && userInfo.user && userInfo.user.id && userInfo.user.id === post.postedBy._id
 		});
 	}
@@ -62,12 +67,12 @@ class CTABar extends Component {
 	like() {
 		const self = this;
 		const { post } = this.props;
-		if (this.state.liked) {
-			delLikeMessage(this.state.likeID).then(res => {
+		if (this.state.likeId) {
+			delLikeMessage(this.state.likeId).then(res => {
 				if (res.code === 200) {
 					self.setState({
-						liked: false,
-						likeID: null,
+						// liked: false,
+						likeId: null,
 						likeCount: (self.state.likeCount * 1 - 1)
 					})
 				}
@@ -81,8 +86,8 @@ class CTABar extends Component {
 			}).then(res => {
 				if (res.code === 200) {
 					self.setState({
-						liked: true,
-						likeID: res.data._id,
+						// liked: true,
+						likeId: res.data._id,
 						likeCount: (self.state.likeCount * 1 + 1)
 					});
 				}
@@ -95,12 +100,12 @@ class CTABar extends Component {
 	favorite() {
 		const self = this;
 		const { post } = this.props;
-		if (this.state.favorited) {
-			delFavoriteMessage(this.state.favoriteID).then(res => {
+		if (this.state.favoriteId) {
+			delFavoriteMessage(this.state.favoriteId).then(res => {
 				if (res.code === 200) {
 					self.setState({
-						favorited: false,
-						favoriteID: null,
+						// favorited: false,
+						favoriteId: null,
 						favoriteCount: (self.state.favoriteCount * 1 - 1)
 					})
 				}
@@ -114,8 +119,8 @@ class CTABar extends Component {
 			}).then(res => {
 				if (res.code === 200) {
 					self.setState({
-						favorited: true,
-						favoriteID: res.data._id,
+						// favorited: true,
+						favoriteId: res.data._id,
 						favoriteCount: (self.state.favoriteCount * 1 + 1)
 					});
 				}
@@ -145,7 +150,7 @@ class CTABar extends Component {
 	handleClick(ref) {
 		const className = ref && ref.className;
 		ref && ref.addEventListener && ref.addEventListener('click', (e) => {
-			ref.className = `${ref.className} bounceIn animated`;
+			ref.className = `${ref.className} ${styles.bounceIn} ${styles.animated}`;
 			setTimeout(() => {
 				ref.className = className;
 			}, 300);
@@ -154,38 +159,38 @@ class CTABar extends Component {
 
 
 	render() {
-		const { showComment, favorited, liked, likeCount, favoriteCount, commentCount, isSelf } = this.state;
+		const { showComment, favoriteId, likeId, likeCount, favoriteCount, commentCount, isSelf } = this.state;
 		const { fix, post } = this.props;
 
 		let catBarClass = 'cta-box';
 
 		if (fix) {
-			catBarClass = `${catBarClass} clearfix`;
+			catBarClass = `${styles[catBarClass]} ${styles['clearfix']}`;
 		} else {
-			catBarClass = `${catBarClass} fix`;
+			catBarClass = `${styles[catBarClass]} ${styles['fix']}`;
 		}
 
 		return (
 			<div onClick={e => { e.nativeEvent.stopImmediatePropagation(); }}>
-				<div className={showComment ? `${catBarClass} bar-hidden` : catBarClass}>
-					<div className={liked ? "cell _like active" : "cell _like"}>
-						<div className="icon ion-cta-like" onClick={this.like} ref={this.handleClick}>&nbsp;</div>
-						<span className="text" style={{width: `${String(likeCount).length * 10}px`}}>{likeCount}</span>
+				<div className={showComment ? `${catBarClass} ${styles['bar-hidden']}` : catBarClass}>
+					<div className={likeId ? `${styles['cell']} ${styles['_like']} ${styles['active']}` : `${styles['cell']} ${styles['_like']}`}>
+						<div className={`${styles['icon']} ${styles['ion-cta-like']}`} onClick={this.like} ref={this.handleClick}>&nbsp;</div>
+						<span className={styles["text"]} style={{width: `${String(likeCount).length * 10}px`}}>{likeCount}</span>
 					</div>
-					<div className={favorited ? "cell _collection active" : "cell _collection"}>
-						<div className="icon ion-cta-collection" onClick={this.favorite} ref={this.handleClick}>&nbsp;</div>
-						<span className="text" style={{width: `${String(favoriteCount).length * 10}px`}}>{favoriteCount}</span>
+					<div className={favoriteId ? `${styles['cell']} ${styles['_collection']} ${styles['active']}` : `${styles['cell']} ${styles['_collection']}`}>
+						<div className={`${styles['icon']} ${styles['ion-cta-collection']}`} onClick={this.favorite} ref={this.handleClick}>&nbsp;</div>
+						<span className={styles["text"]} style={{width: `${String(favoriteCount).length * 10}px`}}>{favoriteCount}</span>
 					</div>
-					<div className="cell _comment">
+					<div className={`${styles['cell']} ${styles['_comment']}`}>
 						{
-							fix ? <Link className="icon ion-cta-comment" to={{ pathname: `${BASENAME}message/${post._id}`, state: { id: post._id } }}>&nbsp;</Link>
-								: <div className="icon ion-cta-comment" onClick={this.openComment}>&nbsp;</div>
+							fix ? <Link className={`${styles['icon']} ${styles['ion-cta-comment']}`} to={{ pathname: `${BASENAME}message/${post._id}`, state: { id: post._id } }}>&nbsp;</Link>
+								: <div className={`${styles['icon']} ${styles['ion-cta-comment']}`} onClick={this.openComment}>&nbsp;</div>
 						}
-						<span className="text">{commentCount}</span>
+						<span className={styles["text"]}>{commentCount}</span>
 					</div>
 					{
 						isSelf && 
-						<div className="cell _delete">
+						<div className={`${styles['cell']} ${styles['_delete']}`}>
 							<button data-origin='delete'>删除</button>
 						</div>
 					}
@@ -199,40 +204,40 @@ class CTABar extends Component {
 		const self = this;
 		const { post, userInfo, showComment } = this.props;
 		const userId = userInfo && userInfo.user ? userInfo.user.id : null;
-		getLikes({
-			type: "POST",
-			targetId: post._id
-		}).then(res => {
-			if (res.code === 200) {
-				res.data.forEach(cell => {
-					if (cell.userId === userId) {
-						self._isMounted && self.setState({
-							liked: true,
-							likeID: cell._id
-						})
-					}
-				})
-			}
-		}, error => {
-			console.log(error);
-		});
-		getFavorites({
-			type: "POST",
-			targetId: post._id
-		}).then(res => {
-			if (res.code === 200) {
-				res.data.forEach(cell => {
-					if (cell.userId === userId) {
-						self._isMounted && self.setState({
-							favorited: true,
-							favoriteID: cell._id
-						})
-					}
-				})
-			}
-		}, error => {
-			console.log(error);
-		});
+		// getLikes({
+		// 	type: "POST",
+		// 	targetId: post._id
+		// }).then(res => {
+		// 	if (res.code === 200) {
+		// 		res.data.forEach(cell => {
+		// 			if (cell.userId === userId) {
+		// 				self._isMounted && self.setState({
+		// 					liked: true,
+		// 					likeID: cell._id
+		// 				})
+		// 			}
+		// 		})
+		// 	}
+		// }, error => {
+		// 	console.log(error);
+		// });
+		// getFavorites({
+		// 	type: "POST",
+		// 	targetId: post._id
+		// }).then(res => {
+		// 	if (res.code === 200) {
+		// 		res.data.forEach(cell => {
+		// 			if (cell.userId === userId) {
+		// 				self._isMounted && self.setState({
+		// 					favorited: true,
+		// 					favoriteID: cell._id
+		// 				})
+		// 			}
+		// 		})
+		// 	}
+		// }, error => {
+		// 	console.log(error);
+		// });
 	}
 
 	componentDidUpdate() {

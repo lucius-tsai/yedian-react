@@ -144,7 +144,7 @@ table {
     color: #999;
 }
 
-#app {
+#app, div[data-app] {
   max-width: 414px;
   min-height: 100vh;
   margin: 0 auto;

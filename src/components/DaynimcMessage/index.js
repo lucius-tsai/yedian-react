@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 import Avator from '../Avator';
-// import style from './carousel.css';
-import './style.scss';
+import './style.css';
+import styles from  './style.scss';
 
 export default class DaynimcMessage extends Component {
   constructor(props) {
@@ -73,13 +73,13 @@ export default class DaynimcMessage extends Component {
           transitionLeave={true}
           transitionEnterTimeout={enterDelay}
           transitionLeaveTimeout={leaveDelay}>
-          <div className="message-animate-cell clearfix" key={currentIndex}>
+          <div className={`${styles['message-animate-cell']} ${styles['clearfix']}`} key={currentIndex}>
             <Avator size={"sx"} profile={list[currentIndex].postedBy} affiliates={list[currentIndex].affiliates} showFollow={false}/>
             {
               list[currentIndex].postType === 0 ?
-                <Link to={{ pathname: `${BASENAME}message/${list[currentIndex]._id}`, state: { id: list[currentIndex]._id } }} className={`_text`} style={{ width: `${textWidth}px` }}>{`${list[currentIndex].postedBy.displayName}刚刚发布了一条动态`}</Link>
+                <Link to={{ pathname: `${BASENAME}message/${list[currentIndex]._id}`, state: { id: list[currentIndex]._id } }} className={styles['_text']} style={{ width: `${textWidth}px` }}>{`${list[currentIndex].postedBy.displayName}刚刚发布了一条动态`}</Link>
                 :
-                <a href={`${location.origin}/dist/?#!/venues/event/${list[currentIndex]._id}${query}`} className={`_text`} style={{ width: `${textWidth}px` }}>{`${list[currentIndex].postedBy.displayName}刚刚发布了一条动态`}</a>
+                <a href={`${location.origin}/dist/?#!/venues/event/${list[currentIndex]._id}${query}`} className={styles['_text']} style={{ width: `${textWidth}px` }}>{`${list[currentIndex].postedBy.displayName}刚刚发布了一条动态`}</a>
             }
           </div>
         </CSSTransitionGroup>

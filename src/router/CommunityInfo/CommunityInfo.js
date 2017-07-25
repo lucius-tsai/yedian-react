@@ -18,7 +18,7 @@ import {
   showBar
 } from '../../store/actions/appStatus';
 
-import './communityInfo.scss';
+import styles from './communityInfo.scss';
 
 class CommunityInfo extends Component {
   constructor(props) {
@@ -69,8 +69,8 @@ class CommunityInfo extends Component {
       venuesID = cell.type === 'venues' ? cell.targetId : null;
     });
     return (
-      <div className="community-info-box">
-        <div className="community-info">
+      <div className={styles["community-info-box"]}>
+        <div className={styles["community-info"]}>
           {
             messageInfo && <Message post={messageInfo} canLink={false} showFollow={true} key={`${messageInfo._id}-${messageInfo.likeCount}-${messageInfo.favoriteCount}-${messageInfo.commentCount}`} />
           }

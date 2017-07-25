@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
-import style from './carousel.css';
-import './carousel.scss';
+import style from './carousel.scss';
+import './carousel.css';
 
 class Carousel extends Component {
   constructor(props) {
@@ -270,7 +270,7 @@ class Carousel extends Component {
   }
 
   componentDidMount() {
-    // this.autoRun();
+    this.autoRun();
     const { slides } = this.props;
     let carousel = this.refs.carousel;
     if (!carousel) return false;

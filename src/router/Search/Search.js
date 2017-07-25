@@ -12,7 +12,7 @@ import { trackPageView, trackPageLeave } from '../../libs/track';
 import { loading, loadSuccess, loadFail, hideBar, showBar } from '../../store/actions/appStatus';
 import { addTag, addVenues } from '../../store/actions/publish';
 
-import './search.scss';
+import styles from  './search.scss';
 
 class Search extends Component {
   constructor(props) {
@@ -204,15 +204,15 @@ class Search extends Component {
     });
 
     return (
-      <div className="search-page">
-        <div className={input ? "input-box focus" : "input-box"}>
+      <div className={styles["search-page"]}>
+        <div className={input ? `${styles['input-box']} ${styles['focus']}` : styles["input-box"]}>
           <i className="icon ion-search-square"></i>
-          <input type="text" value={search} placeholder={searchPlaceholder} className="search-input" onBlur={this.blur}
+          <input type="text" value={search} placeholder={searchPlaceholder} className={styles["search-input"]} onBlur={this.blur}
             onFocus={this.focus} onChange={this.change} />
         </div>
         {
           type === 'tags' && !list.length && search.length ?
-          <div className='creatTag-box'>
+          <div className={styles['creatTag-box']}>
             <button onClick={this.creatTag}>创建这个标签</button>
           </div>
           : ''
@@ -226,7 +226,7 @@ class Search extends Component {
           {listStr}
         </ul>
         {
-          list.length < total ? <button className='showMore' onClick={this.getMore}>显示更多数据</button> : ''
+          list.length < total ? <button className={styles['showMore']} onClick={this.getMore}>显示更多数据</button> : ''
         }
       </div>
     )

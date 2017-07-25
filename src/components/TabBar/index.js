@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import './tabBar.scss';
+import style from './tabBar.scss';
 
 let domain = '';
 const query = '?fromwhere=community';
@@ -37,35 +37,35 @@ class TabBar extends Component {
     const { hide } = this.state;
     const cellWidth = window.innerWidth > 414 ? 414 : window.innerWidth;
     return (
-      <div className={!hide ? 'tab-bar show' : 'tab-bar'} style={{ width: cellWidth, marginLeft: `-${cellWidth / 2}px` }}>
-        <div className="item-index">
+      <div className={!hide ? `${style.tabBar} ${style.show}` : style.tabBar} style={{ width: cellWidth, marginLeft: `-${cellWidth / 2}px` }}>
+        <div>
           <a href={`${domain}${query}`}>
-            <div className="icon ion-index"></div>
-            <span className="text">精选</span>
+            <div className={`${style.icon} ${style["ion-index"]}`}></div>
+            <span className={style.text}>精选</span>
           </a>
         </div>
-        <div className="item-list">
+        <div>
           <a href={`${domain}list/ktv${query}`}>
-            <div className="icon ion-list"></div>
-            <span className="text">预订</span>
+            <div className={`${style.icon} ${style["ion-list"]}`}></div>
+            <span className={style.text}>预订</span>
           </a>
         </div>
-        <div className="item-community active">
+        <div className={style.active}>
           {
             window.location.pathname !== `${BASENAME}community` ? <Link to={{ pathname: `${BASENAME}community` }}>
-              <div className="icon ion-community-active"></div>
-              <span className="text">社区</span>
+              <div className={`${style.icon} ${style["ion-community-active"]}`}></div>
+              <span className={style.text}>社区</span>
             </Link>
               : <a href="javascript:;">
-                <div className="icon ion-community-active"></div>
-                <span className="text">社区</span>
+                <div className={`${style.icon} ${style["ion-community-active"]}`}></div>
+                <span className={style.text}>社区</span>
               </a>
           }
         </div>
-        <div className="item-user">
+        <div>
           <a href={`${domain}user${query}`}>
-            <div className="icon ion-user"></div>
-            <span className="text">我的</span>
+            <div className={`${style.icon} ${style["ion-user"]}`}></div>
+            <span className={style.text}>我的</span>
           </a>
         </div>
       </div>

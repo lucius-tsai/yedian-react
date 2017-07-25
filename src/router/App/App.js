@@ -16,12 +16,12 @@ import Search from '../Search/';
 import Topic from '../Topic/';
 import UserTimeLine from '../UserTimeLine/';
 import Login from '../Login/';
-import NotFound from '../NotFound/NotFound';
+import FeedBack from '../FeedBack/';
+import NotFound from '../NotFound/';
 
 // components
 import TabBar from '../../components/TabBar';
 import Loading from '../../components/Loading';
-import './app.scss';
 
 // apis
 import { getUserInfo, getFollwers } from '../../libs/api';
@@ -47,6 +47,7 @@ import {
   getUserInfoFail
 } from '../../store/actions/userInfo';
 
+import './app.css';
 
 class Bootstrap extends Component {
   constructor(props) {
@@ -224,6 +225,7 @@ class Bootstrap extends Component {
         key = "app";
         break;
     }
+      // alert(key)
     if (userInfo && userInfo.loading) {
       return (<Loading />)
     } else {
@@ -252,6 +254,7 @@ class Bootstrap extends Component {
                   <Route exact path={`${BASENAME}topic/:id`} component={Topic} name="topic" />
                   <Route exact path={`${BASENAME}user/times/:id`} component={UserTimeLine} name="userTimeLine" />
                   <Route exact path={`${BASENAME}login`} component={Login} name="login" />
+                  <Route exact path={`${BASENAME}feedback`} component={FeedBack} name="feedback" />
                   <Route path={`${BASENAME}*`} component={NotFound} name="notFound" />
                 </Switch>
               </CSSTransitionGroup>

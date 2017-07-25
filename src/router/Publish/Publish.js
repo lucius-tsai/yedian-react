@@ -4,7 +4,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import './publish.scss';
 
 import VenuesCell from '../../components/VenuesCell';
 import Tag from '../../components/Tag';
@@ -26,6 +25,8 @@ import { postMessage, uploadFile } from '../../libs/api';
 import { minSizeImage } from '../../libs/uitls';
 import { reSetShare } from '../../libs/wechat';
 import { trackPageView, trackPageLeave } from '../../libs/track';
+
+import styles from './publish.scss';
 
 class Publish extends Component {
   constructor(props) {
@@ -226,15 +227,16 @@ class Publish extends Component {
 
         if (X < -35) {
           dom.removeAttribute("style");
-          dom.className = "venues-holder show-remove"
+          dom.className = `${styles['venues-holder']} ${styles['show-remove']}`
         } else {
           dom.removeAttribute("style");
-          dom.className = "venues-holder"
+          dom.className = styles["venues-holder"]
         }
+        
         /**
          * 处理 删除venues
          */
-        if (e.target && e.target.className === "remove") {
+        if (e && e.target && e.target.dataset && e.target.dataset.origin === 'delete') {
           const { removeVenues } = self.props;
           return removeVenues();
         }
@@ -256,55 +258,53 @@ class Publish extends Component {
     const { show, description, tags, venues, tmpImages, showRomeVenues } = this.state;
     const tmpImageStr = tmpImages.map((cell, index) => {
       return (
-        <div className="pic" key={index} style={{ backgroundImage: `url(${cell})` }}></div>
+        <div className={styles.pic} key={index} style={{ backgroundImage: `url(${cell})` }}></div>
       );
     });
 
     return (
-      <div className="publish" style={show ? { display: "block" } : { display: "none" }}>
-        <form action="" className="publish-form" ref={this.loadPage}>
+      <div className={styles.publish} style={show ? { display: "block" } : { display: "none" }}>
+        <form action="" className={styles["publish-form"]} ref={this.loadPage}>
           <textarea value={description} cols="30" rows="10" placeholder="Show出你的夜生活～" onChange={this.input} onBlur={this.blur}></textarea>
-          <div className="pics-box">
+          <div className={styles["pics-box"]}>
             {tmpImageStr}
-            <div className="file">
+            <div className={styles["file"]}>
               <input type="file" multiple accept='image/*' onChange={this.handleFileUpload} />
             </div>
           </div>
-          <div className="select">
-            <p className="_cell">
+          <div className={styles["select"]}>
+            <p className={styles["_cell"]}>
               <Link to={{ pathname: `${BASENAME}search`, state: { type: "venues" } }}>
-                <i className="icon ion-venues-address"></i> <span>所在地点</span> <i className="icon ion-angle-right"></i>
+                <i className={`${styles['icon']} ${styles['ion-venues-address']}`}></i> <span>所在地点</span> <i className={`${styles['icon']} ${styles['ion-angle-right']}`}></i>
               </Link>
             </p>
             {
-              venues ?
-                <div className="venues-box">
-                  <div className="venues-holder" ref={this.handleRemoveVenues}>
-                    <VenuesCell simple={true} venuesInfo={venues} />
-                    <div className="remove" onClick={this.removeVenue}>
-                      <span className="remove">删除</span>
-                    </div>
+              venues &&
+              <div className={styles["venues-box"]}>
+                <div className={styles["venues-holder"]} ref={this.handleRemoveVenues}>
+                  <VenuesCell simple={true} venuesInfo={venues} />
+                  <div className={styles["remove"]} onClick={this.removeVenue}>
+                    <span className={styles["remove"]}  data-origin='delete'>删除</span>
                   </div>
                 </div>
-                : ""
+              </div>
             }
           </div>
-          <div className="select">
-            <p className="_cell">
+          <div className={styles["select"]}>
+            <p className={styles["_cell"]}>
               <Link to={{ pathname: `${BASENAME}search`, state: { type: "tags" } }}>
-                <i className="icon ion-topic"></i> <span>添加话题</span> <i className="icon ion-angle-right"></i>
+                <i className={`${styles['icon']} ${styles['ion-topic']}`}></i> <span>添加话题</span> <i className={`${styles['icon']} ${styles['ion-angle-right']}`}></i>
               </Link>
             </p>
-            <div className="tags-box">
+            <div className={styles["tags-box"]}>
               {
-                tags ? tags.map((cell, index) => {
+                tags && !!tags.length && tags.map((cell, index) => {
                   return <Tag word={cell.tag} cell={cell} remove={this.removeTag.bind(this, index)} key={cell._id} />
                 })
-                  : ""
               }
             </div>
           </div>
-          <button className="publish-submit" onClick={this.submit}>发布</button>
+          <button className={styles["publish-submit"]} onClick={this.submit}>发布</button>
         </form>
       </div>
     )

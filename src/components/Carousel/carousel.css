@@ -1,76 +1,43 @@
-.carouselBox {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	overflow: hidden;
-	background-size: 50px auto;
+.carousel-default-enter {
+  position: absolute;
+  transform: translate3d(100%, 0, 0);
+  transition: transform 0.5s;
+  z-index: 1;
 }
 
-.carouselBox .sliderCarousel {
-	position: relative;
-	overflow: hidden;
-	height: 100% !important;
+.carousel-default-enter.carousel-default-enter-active {
+  transform: translate3d(0, 0, 0);
 }
 
-.carouselBox div {
-	height: 100% !important;
-	display: block;
+.carousel-default-leave {
+  position: absolute;
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.5s;
 }
 
-.carouselBox .slide {
-	width: 100%;
-	height: 100% !important;
+.carousel-default-leave.carousel-default-leave-active {
+  transform: translate3d(-100%, 0, 0);
 }
 
-.carouselBox .slide .pic {
-	height: 100%;
-	position: relative;
-	background-repeat: no-repeat;
-	background-position: 50% 50%;
-	background-size: cover;
+/**
+ *  渐变
+ */
+.carousel-fade-enter {
+  position: absolute;
+  opacity: 0.01;
+  transition: .7s opacity ease-in-out;
 }
 
-.carouselBox .slide .pic::before {
-	content: "";
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	left: 0;
-	top: 0;
-	background-color: rgba(0, 0, 0, 0.3);
+.carousel-fade-enter.carousel-fade-enter-active {
+  opacity: 1;
 }
 
-.carouselBox .slide .word {
-	width: 100%;
-	line-height: 32px;
-	position: absolute;
-	left: 0;
-	top: 50%;
-	transform: translateY(-50%);
-	text-align: center;
-	color: #ffffff;
+.carousel-fade-leave {
+  position: absolute;
+  opacity: 1;
+  transition: .7s opacity ease-in-out;
 }
 
-.carouselBox .slide .word span {
-	font-size: 18px;
-	font-weight: normal;
-}
-.carouselBox .slide .word strong {
-	font-size: 14px;
-	font-weight: normal;
-}
-
-.carouselBox .swiper {
-	width: 300%;
-	position: absolute;
-	left: -100%;
-	top: 0;
-	display: none;
-}
-
-.carouselBox .swiper .slide {
-	width: 33.3333333333%;
-	float: left;
+.carousel-fade-leave.carousel-fade-leave-active {
+  opacity: 0.01;
 }

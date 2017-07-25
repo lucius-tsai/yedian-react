@@ -1,4 +1,6 @@
-.avator-box {
+@import "../../assets/scss/animate";
+@import "../../assets/scss/base";
+.avatorBox {
   height: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -58,13 +60,13 @@
       padding-top: 3px;
       color: #999999;
     }
-    &.user-time-line {
+    &.userTimeLine {
       strong {
         color: #ffffff;
       }
     }
   }
-  .follow-box {
+  .followBox {
     //float: right;
     position: absolute;
     right: 0;
@@ -98,13 +100,13 @@
         font-size: 12px;
         line-height: 1.35em;
       }
-      &.user-time-line {
+      &.userTimeLine {
         strong {
           color: #ffffff;
         }
       }
     }
-    .follow-box {
+    .followBox {
       text-align: center;
       position: static;
     }

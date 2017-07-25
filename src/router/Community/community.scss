@@ -1,11 +1,12 @@
 @import '../../assets/scss/setting';
+@import '../../assets/scss/animate';
 .community {
   margin-bottom: 20px;
 }
 
 .banner {
   position: relative;
-  height: 35vh;
+  height: 25vh;
 }
 
 .title {
@@ -69,5 +70,38 @@ $max : 100;
     li:last-child {
       margin-right: 0;
     }
+  }
+}
+
+.newsTimeLine {
+  margin: 10px auto;
+  padding: 10px;
+  line-height: 26px;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  .title {
+    width: 40px;
+    color: #333333;
+    font-size: 13px;
+    line-height: 1em;
+    border-right: 1px solid #D8D8D8;
+  }
+  .message {
+    padding-left: 12px;
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+  .text {
+    font-size: 14px;
+    color: #666666;
+    text-align: left;
+    box-sizing: border-box;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

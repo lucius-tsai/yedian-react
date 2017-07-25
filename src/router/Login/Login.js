@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import './login.scss';
 
 import { loading, loadSuccess, loadFail, hideBar, showBar } from '../../store/actions/appStatus';
 
 import { cookie } from '../../libs/uitls';
 import { sendSMS, smsLogin } from '../../libs/api';
+
+import styles from './login.scss';
 
 class Login extends Component {
 	constructor(props) {
@@ -134,26 +135,26 @@ class Login extends Component {
 	render() {
 		const { account, captchaTxt, isSendSMS, isLogin } = this.state;
 		return (
-			<div className="login">
-				<div className="logo">
+			<div className={style.login}>
+				<div className={style.logo}>
 					<span></span>
 					<img alt="Night Plus" src={require('../../assets/images/logo-sprite.png')} />
 				</div>
-				<div className="loginForm">
-					<ul className="list">
+				<div className={style.loginForm}>
+					<ul className={style.list}>
 						<li>
 							<i className="icon ion-login-user"></i>
 							<input type="tel" placeholder="手机" maxLength="11" onChange={this.filterMobile} />
 						</li>
-						<li className="captchaBox">
+						<li className={style.captchaBox}>
 							<i className="icon ion-login-captcha"></i>
 							<input type="number" placeholder="验证码" maxLength="6" onChange={this.filterCaptcha} />
-							<button className="btn" onClick={this.sendSMS}>{captchaTxt}</button>
+							<button className={style.btn} onClick={this.sendSMS}>{captchaTxt}</button>
 						</li>
 					</ul>
-					<button className="submitBtn" onClick={this.submit}>登 录</button>
+					<button className={style.submitBtn} onClick={this.submit}>登 录</button>
 				</div>
-				<div className="footer">
+				<div className={style.footer}>
 					<a href="tel:4006507351"> 联系客服 </a>
 				</div>
 			</div>

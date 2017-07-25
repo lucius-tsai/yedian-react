@@ -1,44 +1,68 @@
 
-.carousel-default-enter {
-  position: absolute;
-  transform: translate3d(100%, 0, 0);
-  transition: transform 0.5s;
-  z-index: 1;
-}
-
-.carousel-default-enter.carousel-default-enter-active {
-  transform: translate3d(0, 0, 0);
-}
-
-.carousel-default-leave {
-  position: absolute;
-  transform: translate3d(0, 0, 0);
-  transition: transform 0.5s;
-}
-
-.carousel-default-leave.carousel-default-leave-active {
-  transform: translate3d(-100%, 0, 0);
-}
-
-/**
- *  渐变
- */
-.carousel-fade-enter {
-  position: absolute;
-  opacity: 0.01;
-  transition: .7s opacity ease-in-out;
-}
-
-.carousel-fade-enter.carousel-fade-enter-active {
-  opacity: 1;
-}
-
-.carousel-fade-leave {
-  position: absolute;
-  opacity: 1;
-  transition: .7s opacity ease-in-out;
-}
-
-.carousel-fade-leave.carousel-fade-leave-active {
-  opacity: 0.01;
+.carouselBox {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+  background-size: 50px auto;
+  .sliderCarousel {
+    position: relative;
+    overflow: hidden;
+    height: 100% !important;
+  }
+  div {
+    height: 100% !important;
+    display: block;
+  }
+  .slide {
+    width: 100%;
+    height: 100% !important;
+    .pic {
+      height: 100%;
+      position: relative;
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+      background-size: cover;
+      &::before {
+        content: "";
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background-color: rgba(0, 0, 0, 0.3);
+      }
+    }
+    .word {
+      width: 100%;
+      line-height: 32px;
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      text-align: center;
+      color: #ffffff;
+      span {
+        font-size: 18px;
+        font-weight: normal;
+      }
+      strong {
+        font-size: 14px;
+        font-weight: normal;
+      }
+    }
+  }
+  .swiper {
+    width: 300%;
+    position: absolute;
+    left: -100%;
+    top: 0;
+    display: none;
+    .slide {
+      width: 33.3333333333%;
+      float: left;
+    }
+  }
 }

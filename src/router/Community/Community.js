@@ -8,8 +8,6 @@ import Message from '../../components/Message';
 import ActionBar from '../../components/ActionBar';
 import LoadMore from '../../components/LoadMore';
 
-import './community.scss';
-import style from './community.css';
 
 import { getCommunityBanner, getPostList, getIndexUserList, getTopicById } from '../../libs/api';
 import { trackPageView, trackPageLeave } from '../../libs/track';
@@ -28,6 +26,7 @@ import {
 } from '../../store/actions/appStatus';
 import { delAll } from '../../store/actions/publish';
 
+import styles from './community.scss';
 
 class Community extends Component {
   constructor(props) {
@@ -238,7 +237,7 @@ class Community extends Component {
 
     const messagesList = messages.map((cell, index) => {
       return (
-        <li className="message-cell" key={index}>
+        <li className={styles["message-cell"]} key={index}>
           <Message profile={cell.profile} post={cell} canLink={true} showFollow={false} />
         </li>
       )
@@ -253,30 +252,30 @@ class Community extends Component {
     });
 
     return (
-      <div className="community" ref={this.handleLoad}>
-        <div className="banner">
+      <div className={styles["community"]} ref={this.handleLoad}>
+        <div className={styles["banner"]}>
           {
             !!slides.length && <Carousel slides={slides} element={"div"} enterDelay={1000} leaveDelay={1000} speed={3000} />
           }
         </div>
-        <div className={style.newsTimeLine}>
-          <div className={style.title}>
+        <div className={styles.newsTimeLine}>
+          <div className={styles.title}>
             最新<br />动态
           </div>
-          <div className={style.message}>
-            <div className="message-cell clearfix">
+          <div className={styles.message}>
+            <div className={`${styles["message-cell"]} ${styles["clearfix"]}`}>
               {
                 !!dynamicMessages.length && <DaynimcMessage list={dynamicMessages} enterDelay={1000} leaveDelay={1000} speed={3000} />
               }
             </div>
           </div>
         </div>
-        <div className="section section-follow">
-          <ul className="follow-list clearfix" style={{ width: `${userList.length * 137 - 7}px` }}>
+        {/* <div className={`${styles["section"]} ${styles["section-follow"]}`}>
+          <ul className={`${styles["follow-list"]} ${styles["clearfix"]}`} style={{ width: `${userList.length * 137 - 7}px` }}>
             {userListStr}
           </ul>
-        </div>
-        <div className="section">
+        </div> */}
+        <div className={styles['section']}>
           <ul>
             {messagesList}
           </ul>

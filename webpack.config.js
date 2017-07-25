@@ -53,19 +53,6 @@ var webpackConfig = {
       },
       {
         test: /\.scss$/,
-        use: extractSass.extract({
-          use: [{
-            loader: "css-loader",
-          }, {
-            loader: 'postcss-loader'
-          }, {
-            loader: "sass-loader"
-          }],
-          fallback: "style-loader"
-        })
-      },
-      {
-        test: /\.css$/,
         loader: ExtractTextPlugin.extract({
           fallbackLoader: 'style-loader',
           loader: [
@@ -77,12 +64,20 @@ var webpackConfig = {
                 importLoaders: 1,
                 localIdentName: '[local]_[hash:base64:5]'
               }
+            }, {
+              loader: 'resolve-url-loader'
             },
             {
               loader: 'postcss-loader'
+            }, {
+              loader: "sass-loader"
             }
           ]
         })
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader','css-loader']
       },
       {
         test: /\.json$/,
@@ -247,7 +242,7 @@ if (process.env.NODE_ENV === 'production') {
       }
     })
   ]);
-  
+
   fs.ensureDirSync(path.resolve(__dirname, './app/mockData'));
   fs.copySync(path.resolve(__dirname, './mockData'), path.resolve(__dirname, './app/mockData'))
 

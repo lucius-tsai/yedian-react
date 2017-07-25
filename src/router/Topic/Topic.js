@@ -35,8 +35,7 @@ import {
 
 import { delAll } from '../../store/actions/publish';
 
-import style from './topic.css';
-import './topic.scss';
+import style from './topic.scss';
 
 class Topic extends Component {
 
@@ -102,7 +101,8 @@ class Topic extends Component {
   fetch(reset) {
     const self = this;
     const { pagination, messages, tab } = this.state;
-    const { hiddenScrollLoading, putPostList } = this.props;
+    const { hiddenScrollLoading, putPostList, userInfo } = this.props;
+    const userId = userInfo && userInfo.user && userInfo.user.id ? userInfo.user.id : '';
 
     if (this.state.completed || this.state.loading) {
       return false;
@@ -113,6 +113,7 @@ class Topic extends Component {
       loading: true
     }).then(() => {
       getPostList({
+        userId,
         limit: pagination.pageSize,
         offset,
         _tags: JSON.stringify(this.state.tags),
@@ -185,7 +186,7 @@ class Topic extends Component {
 
     const messagesList = messages.map((cell, index) => {
       return (
-        <li className='messageCell' key={index}>
+        <li className={style.messageCell} key={index}>
           <Message profile={cell.profile} post={cell} canLink={true} showFollow={true} />
         </li>
       )
@@ -200,13 +201,13 @@ class Topic extends Component {
     });
 
     return (
-      <div className='community'>
-        <div className='banner'>
+      <div className={style.community}>
+        <div className={style.banner}>
           {
             !!slides.length && <Carousel slides={slides} element={'div'} enterDelay={1000} leaveDelay={1000} speed={3000} />
           }
         </div>
-        <div className='topic-info'>
+        <div className={style.topicInfo}>
           {description}
         </div>
         <div className={style.topicTab}>
@@ -221,7 +222,7 @@ class Topic extends Component {
             </span>
           </p>
         </div>
-        <div className='topicSetion'>
+        <div className={style.topicSetion}>
           <ul>
             {messagesList}
           </ul>

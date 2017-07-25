@@ -2,7 +2,7 @@
  * Created by townmi on 17/6/4.
  */
 import React, { Component } from 'react';
-import './tag.scss';
+import styles from './tag.scss';
 
 export default class Tag extends Component {
     constructor(props) {
@@ -20,8 +20,8 @@ export default class Tag extends Component {
     render() {
         const { word, remove } = this.props;
         return (
-            <div className="tag">
-                <i className="icon" onClick={remove}>×</i>
+            <div className={styles["tag"]}>
+                <i className={styles["icon"]} onClick={remove}>×</i>
                 <span>{word}</span>
             </div>
         )

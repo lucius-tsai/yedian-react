@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import './avator.scss';
+import styles from './avator.scss';
 
 import { parseDate } from '../../libs/uitls';
 import {
@@ -100,7 +100,7 @@ class Avator extends Component {
   handleClick(ref) {
     const className = ref && ref.className;
 		ref && ref.addEventListener && ref.addEventListener('click', (e) => {
-			ref.className = `${ref.className} flipInX animated`;
+			ref.className = `${ref.className} ${styles.flipInX} ${styles.animated}`;
 			setTimeout(() => {
 				ref.className = className;
 			}, 400);
@@ -197,55 +197,55 @@ class Avator extends Component {
     const query = '?fromwhere=community';
 
     return (
-      <div className={`avator-box clearfix ${style} ${size}`}>
+      <div className={`${styles.avatorBox} ${styles.clearfix} ${styles[style]} ${styles[size]}`} data-avator-box>
         {
           disabledLink &&
-          <div className="avator">
+          <div className={styles.avator} data-avator>
             <img src={profile.headImgUrl && profile.headImgUrl !== '/0' ? profile.headImgUrl : defaultAvator} alt="" />
           </div>
         }
         {
           !disabledLink && profile.userType === 'User' &&
-          <Link className="avator" to={{ pathname: `${BASENAME}user/times/${profile._id}`, state: profile }}>
+          <Link className={styles.avator} to={{ pathname: `${BASENAME}user/times/${profile._id}`, state: profile }} data-avator>
             <img src={profile.headImgUrl && profile.headImgUrl !== '/0' ? profile.headImgUrl : defaultAvator} alt="" />
           </Link>
         }
         {
           !disabledLink && profile.userType === 'VenuesManager' &&
-          <a className="avator" href={`${location.origin}/dist/?#!/ktv/${profile.venuesId}${query}`}>
+          <a className={styles.avator} href={`${location.origin}/dist/?#!/ktv/${profile.venuesId}${query}`} data-avator>
             <img src={profile.venuesImage ? profile.venuesImage : defaultAvator} alt="" />
           </a>
         }
         {
           model === "default" && profile.userType === 'User' &&
-          <div className="profile">
+          <div className={styles.profile}>
             <strong>{profile.displayName}</strong>
             <p>{date}</p>
           </div>
         }
         {
           model === "default" && profile.userType === 'VenuesManager' &&
-          <div className="profile">
+          <div className={styles.profile}>
             <strong>{profile.venuesName}</strong>
             <p>{date}</p>
           </div>
         }
         {
           model === "followCard" &&
-          <div className="profile">
+          <div className={styles.profile}>
             <strong>{profile.displayName}</strong>
             <p>{`${profile.city}-${profile.area}`}</p>
           </div>
         }
         {
           model === "userTimeLine" &&
-          <div className="profile user-time-line">
+          <div className={`${styles.profile} ${styles.userTimeLine}`}>
             <strong>{profile.displayName}</strong>
           </div>
         }
         {
           !isSelf && showFollow && 
-          <div className="follow-box" onClick={this.handleFollow}>
+          <div className={styles.followBox} onClick={this.handleFollow} data-follow-box>
             <button ref={this.handleClick}>{!isFollow ? '关注' : '取消关注' }</button>
           </div>
         }

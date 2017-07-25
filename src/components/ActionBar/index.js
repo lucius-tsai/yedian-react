@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import './actionBar.scss';
+import style from './actionBar.scss';
 
 export default class ActionBar extends Component {
 	constructor(props) {
@@ -24,8 +24,8 @@ export default class ActionBar extends Component {
 		const { tags } = this.state;
 		const cellWidth = window.innerWidth > 414 ? 414 / 2 : window.innerWidth / 2;
 		return (
-			<Link className={position === "bottom" ? "action-bar bottom" : "action-bar"} to={{ pathname: `${BASENAME}publish`, state: { tags } }} style={{ transform: `translateX(calc(${cellWidth}px - 140%))` }}>
-				<div className="icon ion-pencil"></div>
+			<Link className={position === "bottom" ? `${style.actionBar} ${style.bottom}` : style.actionBar} to={{ pathname: `${BASENAME}publish`, state: { tags } }} style={{ transform: `translateX(calc(${cellWidth}px - 140%))` }}>
+				<div className={`${style.icon} ${style['ion-pencil']}`}></div>
 			</Link>
 		)
 	}

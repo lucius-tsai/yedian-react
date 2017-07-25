@@ -24,8 +24,7 @@ import {
 	showScrollLoading
 } from '../../store/actions/appStatus';
 
-import './comment.scss';
-import style from './comment.css';
+import styles from './comment.scss';
 
 class Comment extends Component {
 	constructor(props) {
@@ -321,10 +320,10 @@ class Comment extends Component {
 			e.stopPropagation();
 			const actions = document.querySelectorAll('div[data-actions]');
 			actions.forEach(cell => {
-				cell.className = 'actions';
+				cell.className = styles['actions'];
 			});
 			let parent = ref.parentNode;
-			parent.className = /active/g.test(parent.className) ? 'actions' : 'actions active';
+			parent.className = /active/g.test(parent.className) ? styles['actions'] : `${styles['actions']} ${styles['active']}`;
 		});
 	}
 
@@ -332,7 +331,7 @@ class Comment extends Component {
 		const className = ref && ref.className;
 		ref && ref.addEventListener && ref.addEventListener('click', (e) => {
 			if (e && e.target && e.target.dataset && e.target.dataset.origin === 'delete') {
-				ref.className = `${ref.className} bounceOutRight animated`;
+				ref.className = `${ref.className} ${styles.bounceOutRight} ${styles.animated}`;
 				setTimeout(() => {
 					ref.className = className;
 				}, 300);
@@ -343,37 +342,37 @@ class Comment extends Component {
 	render() {
 		const { profile, data, userId, loading, completed, showComment, showBtn } = this.state;
 		return (
-			<div className="comment">
-				<div className="_title">夜猫子们评论</div>
-				<div className="_top-enter clearfix">
-					<div className="user-self">
+			<div className={styles["comment"]}>
+				<div className={styles["_title"]}>夜猫子们评论</div>
+				<div className={`${styles['_top-enter']} ${styles['clearfix']}`}>
+					<div className={styles["user-self"]}>
 						<Avator profile={profile} />
 					</div>
-					<div className="input-enter" onClick={this.__openComment}>我也要留下一评</div>
+					<div className={styles["input-enter"]} onClick={this.__openComment}>我也要留下一评</div>
 				</div>
-				<ul className="comment-content">
+				<ul className={styles["comment-content"]}>
 					{
 						!!data.length && data.map((cell, index) => {
 							return (
-								<li className="cell" key={cell._id} ref={this.handleClick}>
-									<div className='avator-action'>
+								<li className={styles["cell"]} key={cell._id} ref={this.handleClick}>
+									<div className={styles["avator-action"]}>
 										<Avator profile={cell.profile} model={"default"} date={cell.createdAt} />
-										<div data-actions="ref" className='actions'>
-											<i className='icon ion-flickr' ref={this.showMoreActions}></i>
+										<div data-actions="ref" className={styles["actions"]}>
+											<i className={`${styles['icon']} ${styles['ion-flickr']} ${styles['_more']}`} ref={this.showMoreActions}></i>
 											{
 												cell.userId !== userId ?
-													<div className='btns'>
-														<span className={cell.__liked ? 'icon ion-cta-like active' : 'icon ion-cta-like'} onClick={this.likeComment.bind(this, index)}>&nbsp;点赞</span>
-														<span className="icon" onClick={this.infromComment.bind(this, cell)}>举报</span>
+													<div className={styles["btns"]}>
+														<span className={cell.__liked ? `${styles['icon']} ${styles['ion-cta-like']} ${styles['active']}` : `${styles['icon']} ${styles['ion-cta-like']}`} onClick={this.likeComment.bind(this, index)}>&nbsp;点赞</span>
+														<span className={styles["icon"]} onClick={this.infromComment.bind(this, cell)}>举报</span>
 													</div>
 													:
-													<div className='btns' style={{ width: `50px` }}>
-														<span className="icon" data-origin='delete' onClick={this.deleteComment.bind(this, index)}>删除</span>
+													<div className={styles["btns"]} style={{ width: `50px` }}>
+														<span className={styles["icon"]} data-origin='delete' onClick={this.deleteComment.bind(this, index)}>删除</span>
 													</div>
 											}
 										</div>
 									</div>
-									<div className="_content">{cell.comment}</div>
+									<div className={styles["_content"]}>{cell.comment}</div>
 								</li>
 							)
 						})
@@ -385,11 +384,11 @@ class Comment extends Component {
 				{
 					completed && <p style={{ textAlign: 'center' }}>没有更多数据了</p>
 				}
-				<div className={showComment ? style.commentBox : `${style.commentBox} ${style.barHidden}`} onClick={e => { e.nativeEvent.stopImmediatePropagation(); }}>
+				<div className={showComment ? styles.commentBox : `${styles.commentBox} ${styles.barHidden}`} onClick={e => { e.nativeEvent.stopImmediatePropagation(); }}>
 					{
-						showComment && <textarea className={showBtn ? style.commentTxt : `${style.commentTxt} ${style.btnHidden}`} placeholder='我也要留下一评' ref={this.focus} onChange={this.input}></textarea>
+						showComment && <textarea className={showBtn ? styles.commentTxt : `${styles.commentTxt} ${styles.btnHidden}`} placeholder='我也要留下一评' ref={this.focus} onChange={this.input}></textarea>
 					}
-					<button className={showBtn ? style.commentBtn : `${style.commentBtn} ${style.btnHidden}`} onClick={this.comment}>提交</button>
+					<button className={showBtn ? styles.commentBtn : `${styles.commentBtn} ${styles.btnHidden}`} onClick={this.comment}>提交</button>
 				</div>
 			</div>
 		)
@@ -400,7 +399,7 @@ class Comment extends Component {
 		document.addEventListener('click', () => {
 			const actions = document.querySelectorAll('div[data-actions]');
 			actions.forEach(cell => {
-				cell.className = 'actions';
+				cell.className = styles['actions'];
 			});
 		});
 	}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
-import './loading.scss';
+import styles from './loading.scss';
 
 export default class Loading extends Component {
     constructor(props) {
@@ -12,10 +12,10 @@ export default class Loading extends Component {
     }
     render() {
         return (
-            <div className="loading">
-                <div className="_holder">
-                    <div className="icon ion-loading"></div>
-                    <p className="text">正在加载…</p>
+            <div className={styles["loading"]}>
+                <div className={styles["_holder"]}>
+                    <div className={`${styles['icon']} ${styles['ion-loading']}`}></div>
+                    <p className={styles["text"]}>正在加载…</p>
                 </div>
             </div>
         )

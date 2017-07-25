@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import './userTimeLine.scss';
 
 import Avator from '../../components/Avator';
 import Message from '../../components/Message';
@@ -11,6 +10,9 @@ import LoadMore from '../../components/LoadMore';
 import { getPostList, getUserInfoById } from '../../libs/api';
 import { setShare } from '../../libs/wechat';
 import { trackPageView, trackPageLeave, track } from '../../libs/track';
+
+
+import style from './userTimeLine.scss';
 
 import {
   loading,
@@ -82,7 +84,8 @@ class UserTimeLine extends Component {
   fetch() {
     const self = this;
     const { pagination, messages, user } = this.state;
-    const { hiddenScrollLoading, putPostList } = this.props;
+    const { hiddenScrollLoading, putPostList, userInfo } = this.props;
+    const userId = userInfo && userInfo.user && userInfo.user.id ? userInfo.user.id : '';
 
     if (this.state.completed || this.state.loading) {
       return false;
@@ -94,6 +97,7 @@ class UserTimeLine extends Component {
         loading: true
       }).then(() => {
         getPostList({
+          userId, 
           _posterId: user._id,
           limit: pagination.pageSize,
           offset: offset,
@@ -148,20 +152,20 @@ class UserTimeLine extends Component {
     const { messages, user, loading, completed } = this.state;
     const messagesList = messages.map((cell, index) => {
       return (
-        <li className="message-cell" key={index}>
+        <li className={style["message-cell"]} key={index}>
           <Message profile={cell.profile} post={cell} canLink={true} showFollow={false} disabledLink={true} />
         </li>
       )
     });
     return (
-      <div className="user-time-line">
-        <div className="_top">
+      <div className={style["user-time-line"]}>
+        <div className={style["_top"]}>
           {
             user && <Avator style={"vertical"} profile={user}
               size={"small"} model={"userTimeLine"} showFollow={true} disabledLink={true} />
           }
         </div>
-        <div className="_messages">
+        <div className={style["_messages"]}>
           <ul>
             {messagesList}
           </ul>

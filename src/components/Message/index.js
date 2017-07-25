@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import Avator from '../Avator';
 import CTABar from '../CTABar';
-import './message.scss';
 
 const defaultMessage = {
   description: "呃呃呃～算是吧～",
@@ -19,6 +18,9 @@ import {
 import {
   putPostList
 } from '../../store/actions/posts';
+
+
+import styles from  './message.scss';
 
 /**
  * [社区消息组件]
@@ -115,7 +117,7 @@ class Message extends Component {
     const className = ref && ref.className;
     ref && ref.addEventListener && ref.addEventListener('click', (e) => {
       if (e && e.target && e.target.dataset && e.target.dataset.origin === 'delete') {
-        ref.className = `${ref.className} bounceOutRight animated`;
+        ref.className = `${ref.className} ${styles.bounceOutRight} ${styles.animated}`;
       }
     });
 
@@ -168,36 +170,36 @@ class Message extends Component {
     }
     if (message.images && message.images.length === 1) {
       picturesList = (
-        <div className='single' style={{ height: `${cellWidth * 12 / 7}px`, backgroundColor: `rgb(${random()}, ${random()}, ${random()})` }} ref={`lazyImages-${new Date().getTime()}`} data-src={message.images[0]}>
+        <div className={styles['single']} style={{ height: `${cellWidth * 12 / 7}px`, backgroundColor: `rgb(${random()}, ${random()}, ${random()})` }} ref={`lazyImages-${new Date().getTime()}`} data-src={message.images[0]}>
         </div>
       );
     } else if (message.images && message.images.length > 1) {
       picturesList = message.images.map((cell, index) => {
         return (
-          <div className="img-single" key={`${post._id}${index}`} style={{ backgroundColor: `rgb(${random()}, ${random()}, ${random()})`, height: `${cellWidth}px` }} ref={`lazyImages-${new Date().getTime()}-${index}`} data-src={cell}>
+          <div className={styles["img-single"]} key={`${post._id}${index}`} style={{ backgroundColor: `rgb(${random()}, ${random()}, ${random()})`, height: `${cellWidth}px` }} ref={`lazyImages-${new Date().getTime()}-${index}`} data-src={cell}>
           </div>
         )
       });
     }
     return (
-      <div className="card-message" ref={this.handleClick} key={post._id}>
-        <div className="card-message-top">
+      <div className={styles["card-message"]} ref={this.handleClick} key={post._id}>
+        <div className={styles["card-message-top"]}>
           <Avator profile={post.postedBy} date={post.createdAt} showFollow={showFollow} model={"default"} disabledLink={disabledLink} affiliates={affiliates} />
         </div>
         {
-          !canLink && <div className="card-message-content">
+          !canLink && <div className={styles["card-message-content"]}>
             <h4>{message.description}</h4>
             {
               message.images.length > 1 ?
-                <div className="imgs">
+                <div className={styles["imgs"]}>
                   {picturesList}
                 </div>
                 :
-                <div className="img-single">
+                <div className={styles["img-single"]}>
                   {picturesList}
                 </div>
             }
-            <div className="topics">
+            <div className={styles["topics"]}>
               {
                 tags.map(cell => {
                   return (<a key={cell._id}>{`#${cell.tag}#`}</a>)
@@ -208,37 +210,37 @@ class Message extends Component {
           </div>
         }
         {
-          canLink && post.postType === 0 && <Link className="card-message-content clearfix" to={{ pathname: `${BASENAME}message/${post._id}`, state: { id: post._id } }}>
+          canLink && post.postType === 0 && <Link className={`${styles['card-message-content']} ${styles['clearfix']}`} to={{ pathname: `${BASENAME}message/${post._id}`, state: { id: post._id } }}>
             <h4>{message.description}</h4>
             {
               message.images && message.images.length > 1 ?
-                <div className="imgs">
+                <div className={styles["imgs"]}>
                   {picturesList}
                 </div>
                 :
-                <div className="img-single">
+                <div className={styles["img-single"]}>
                   {picturesList}
                 </div>
             }
           </Link>
         }
         {
-          canLink && post.postType === 1 && <a className="card-message-content clearfix" href={`${location.origin}/dist/?#!/venues/event/${post._id}${query}`}>
+          canLink && post.postType === 1 && <a className={`${styles['card-message-content']} ${styles['clearfix']}`} href={`${location.origin}/dist/?#!/venues/event/${post._id}${query}`}>
             <h4>{message.description}</h4>
             {
               message.images && message.images.length > 1 ?
-                <div className="imgs">
+                <div className={styles["imgs"]}>
                   {picturesList}
                 </div>
                 :
-                <div className="img-single">
+                <div className={styles["img-single"]}>
                   {picturesList}
                 </div>
             }
           </a>
         }
         {
-          <div className={"card-message-bottom"}>
+          <div className={styles["card-message-bottom"]}>
             <CTABar fix={canLink} post={post} __showComment={__showComment}/>
           </div>
         }
