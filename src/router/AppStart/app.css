@@ -1,8 +1,8 @@
 .app {
 	padding-bottom: 50px;
-	&.no-tab-bar {
-		padding-bottom: 0;
-	}
+}
+.app .no-tab-bar {
+  padding-bottom: 0;
 }
 
 .app-enter {
