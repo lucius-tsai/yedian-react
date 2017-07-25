@@ -9,8 +9,18 @@ import './publish.scss';
 import VenuesCell from '../../components/VenuesCell';
 import Tag from '../../components/Tag';
 
-import { hideBar, showBar, deleteUnmount } from '../../store/actions/appStatus';
-import { addPictures, addTag, removeTag, removeVenues, saveDescription } from '../../store/actions/publish';
+import {
+  hideBar,
+  showBar,
+  deleteUnmount
+} from '../../store/actions/appStatus';
+import {
+  addPictures,
+  addTag,
+  removeTag,
+  removeVenues,
+  saveDescription
+} from '../../store/actions/publish';
 
 import { postMessage, uploadFile } from '../../libs/api';
 import { minSizeImage } from '../../libs/uitls';
@@ -18,7 +28,6 @@ import { reSetShare } from '../../libs/wechat';
 import { trackPageView, trackPageLeave } from '../../libs/track';
 
 class Publish extends Component {
-
   constructor(props) {
     super(props);
     this.state = {

@@ -41,7 +41,11 @@ import {
   setUserFollowers,
   setVenuesFollowers
 } from '../../store/actions/followers';
-import { getUserInfoLoading, getUserInfoSuccess, getUserInfoFail } from '../../store/actions/userInfo';
+import {
+  getUserInfoLoading,
+  getUserInfoSuccess,
+  getUserInfoFail
+} from '../../store/actions/userInfo';
 
 
 class Bootstrap extends Component {

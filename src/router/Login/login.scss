@@ -19,12 +19,16 @@
 			vertical-align: middle;
 		}
 	}
+	.footer {
+		padding-top: 15vh;
+		text-align: center;
+	}
 }
 
 .loginForm {
-	    width: 80%;
-    margin: 0 auto;
-    padding-top: 40px;
+	width: 80%;
+	margin: 0 auto;
+	padding-top: 40px;
 	.list {
 		li {
 			position: relative;
@@ -81,13 +85,21 @@
 	}
 	.submitBtn {
 		display: block;
-    width: 100%;
-    height: 44px;
-    margin-top: 50px;
-    border-radius: 3px;
-    font-size: 18px;
-    font-weight: 400;
-    color: #fff;
-    background-color: #0d213f;
+		width: 100%;
+		height: 44px;
+		margin-top: 50px;
+		border-radius: 3px;
+		font-size: 18px;
+		font-weight: 400;
+		color: #fff;
+		background-color: #0d213f;
+	}
+}
+
+@media screen and (max-width: 360px) {
+	.login {
+		.footer {
+			padding-top: 9vh;
+		}
 	}
 }

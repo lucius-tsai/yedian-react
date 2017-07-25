@@ -153,6 +153,9 @@ class Login extends Component {
 					</ul>
 					<button className="submitBtn" onClick={this.submit}>登 录</button>
 				</div>
+				<div className="footer">
+					<a href="tel:4006507351"> 联系客服 </a>
+				</div>
 			</div>
 		)
 	}

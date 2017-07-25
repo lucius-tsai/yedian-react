@@ -19,7 +19,13 @@ import {
   putPostList,
   resetPostList
 } from '../../store/actions/posts';
-import { loading, loadSuccess, loadFail, hiddenScrollLoading, showScrollLoading } from '../../store/actions/appStatus';
+import {
+  loading,
+  loadSuccess,
+  loadFail,
+  hiddenScrollLoading,
+  showScrollLoading
+} from '../../store/actions/appStatus';
 import { delAll } from '../../store/actions/publish';
 
 
@@ -140,7 +146,7 @@ class Community extends Component {
     });
   }
 
-  pollingPost () {
+  pollingPost() {
     const self = this;
     const { userInfo } = this.props;
     const userId = userInfo && userInfo.user && userInfo.user.id ? userInfo.user.id : '';
@@ -153,12 +159,12 @@ class Community extends Component {
         offset: 0,
         sort: '-createdAt'
       }).then(res => {
-        if(res.code === 200 && res.data.length) {
+        if (res.code === 200 && res.data.length) {
           if (!this.state.messages.length) {
             self._isMounted && self.setState({
               messages: res.data
             });
-          } else if(this.state.messages[0]._id !== res.data[0]._id) {
+          } else if (this.state.messages[0]._id !== res.data[0]._id) {
             const newMsg = [];
             res.data.every(cell => {
               newMsg.push(cell);

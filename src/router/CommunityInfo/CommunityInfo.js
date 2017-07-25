@@ -10,7 +10,13 @@ import { getMessageInfo, getVenues } from '../../libs/api';
 import { setShare } from '../../libs/wechat';
 import { trackPageView, trackPageLeave, track } from '../../libs/track';
 
-import { loading, loadSuccess, loadFail, hideBar, showBar } from '../../store/actions/appStatus';
+import {
+  loading,
+  loadSuccess,
+  loadFail,
+  hideBar,
+  showBar
+} from '../../store/actions/appStatus';
 
 import './communityInfo.scss';
 
@@ -66,7 +72,7 @@ class CommunityInfo extends Component {
       <div className="community-info-box">
         <div className="community-info">
           {
-            messageInfo && <Message post={messageInfo} canLink={false} showFollow={true} key={`${messageInfo._id}-${messageInfo.likeCount}-${messageInfo.favoriteCount}-${messageInfo.commentCount}`}/>
+            messageInfo && <Message post={messageInfo} canLink={false} showFollow={true} key={`${messageInfo._id}-${messageInfo.likeCount}-${messageInfo.favoriteCount}-${messageInfo.commentCount}`} />
           }
           {
             venuesInfo &&
@@ -77,7 +83,7 @@ class CommunityInfo extends Component {
         </div>
         {
           messageInfo &&
-          <Comment target={messageInfo} updateComments={this.updateComments}/>
+          <Comment target={messageInfo} updateComments={this.updateComments} />
         }
       </div>
     )

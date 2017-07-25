@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 // import {observer, inject} from 'mobx-react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './home.scss';
 
 // @inject('authData', 'homeStore') @observer
@@ -51,7 +51,7 @@ class Home extends Component {
     }
 
     render() {
-        const {account} = this.state;
+        const { account } = this.state;
         // console.log(this.state);
         return (
             <div className="user">
