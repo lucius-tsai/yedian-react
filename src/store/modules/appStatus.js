@@ -17,6 +17,8 @@ const APP_SHOW_COMMENT = "APP_SHOW_COMMENT";
 
 const APP_SET_GPS = "APP_SET_GPS";
 
+const APP_UNMOUNT_DELETE = 'APP_UNMOUNT_DELETE';
+
 const initialState = {
   loading: false
 };

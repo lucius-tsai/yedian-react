@@ -7,7 +7,7 @@ import { loading, loadSuccess, loadFail, hideBar, showBar } from '../../store/ac
 import { cookie } from '../../libs/uitls';
 import { sendSMS, smsLogin } from '../../libs/api';
 
-import styles from './login.scss';
+import style from './login.scss';
 
 class Login extends Component {
 	constructor(props) {
