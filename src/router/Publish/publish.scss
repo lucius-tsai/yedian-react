@@ -1,9 +1,6 @@
-@import "../../icons/scss/ionicons";
-@import "../../assets/scss/base";
-
+@import "../../assets/scss/animate";
 .publish {
-  width: 100%;
-  // height: calc(100vh - 45px);
+  width: 100%; // height: calc(100vh - 45px);
   height: 100vh;
   overflow-y: scroll;
   box-sizing: border-box;
@@ -45,7 +42,7 @@
     input[type='file'] {
       opacity: 0;
     }
-    & > div {
+    &>div {
       &:nth-child(2) {
         margin: 3px 2%;
       }
@@ -56,15 +53,48 @@
         margin: 3px 2%;
       }
     }
+    .pic-box {
+      position: relative;
+      [data-icon] {
+        width: 20px;
+        height: 20px;
+        line-height: 18px;
+        font-size: 14px;
+        font-style: normal;
+        text-align: center;
+        position: absolute;
+        left: -7px;
+        top: -7px;
+        border-radius: 50%;
+        background-color: #0D213F;
+        color: #ffffff;
+        vertical-align: middle;
+        display: none;
+      }
+      &.active {
+        -webkit-animation: tada 800ms linear alternate;
+        animation: tada 800ms linear alternate;
+        [data-icon] {
+          display: block;
+        }
+      }
+    }
     .pic {
+      width: 100%;
+      position: relative;
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center center;
     }
     .pic {
+      width: 100%;
+      height: 113px;
+      display: inline-block;
+      box-sizing: border-box;
       background-color: #56d432;
     }
-    .file, .pic {
+    .file,
+    .pic-box {
       margin-top: 3px;
       margin-bottom: 3px;
       width: 32%;
@@ -76,7 +106,8 @@
       position: relative;
       border: 1px dashed #CCCCCC;
       cursor: pointer;
-      &:before, &:after {
+      &:before,
+      &:after {
         content: " ";
         width: 50%;
         height: 3px;
@@ -96,7 +127,6 @@
         display: block;
         position: absolute;
         z-index: 3;
-
       }
     }
   }

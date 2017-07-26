@@ -154,7 +154,7 @@ export const minSizeImage = (files) => {
 			let reader = new FileReader();
 			reader.readAsDataURL(file);
 			reader.onloadend = function (e) {
-				console.log(this)
+				// console.log(this)
 				const dataURL = this.result;
 				let image = new Image();
 				image.src = dataURL;

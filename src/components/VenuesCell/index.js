@@ -2,7 +2,9 @@
  * Created by townmi on 17/6/4.
  */
 import React, { Component } from 'react';
+
 import styles from './venuesCell.scss';
+import styleBase from "../../assets/scss/base";
 
 export default class VenuesCell extends Component {
 	constructor(props) {
@@ -15,7 +17,7 @@ export default class VenuesCell extends Component {
 		const name = venuesInfo && venuesInfo.name ? venuesInfo.name : 'UFO';
 		const id = venuesInfo && venuesInfo._id ? venuesInfo._id : '';
 		return (
-			<div className={`${styles['venues-cell']} ${styles['clearfix']}`}>
+			<div className={`${styles['venues-cell']} ${styleBase['clearfix']}`}>
 				<div className={styles["img-holder"]} style={{ backgroundImage: `url(${picture})` }}>
 				</div>
 				<p className={styles["name"]}>

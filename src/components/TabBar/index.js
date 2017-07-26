@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+
 import style from './tabBar.scss';
+import styleIcons from  "../../icons/scss/ionicons";
+import styleBase from "../../assets/scss/base";
 
 let domain = '';
 const query = '?fromwhere=community';
@@ -40,31 +43,31 @@ class TabBar extends Component {
       <div className={!hide ? `${style.tabBar} ${style.show}` : style.tabBar} style={{ width: cellWidth, marginLeft: `-${cellWidth / 2}px` }}>
         <div>
           <a href={`${domain}${query}`}>
-            <div className={`${style.icon} ${style["ion-index"]}`}></div>
+            <div className={styleIcons["ion-index"]} data-icon></div>
             <span className={style.text}>精选</span>
           </a>
         </div>
         <div>
           <a href={`${domain}list/ktv${query}`}>
-            <div className={`${style.icon} ${style["ion-list"]}`}></div>
+            <div className={styleIcons["ion-list"]} data-icon></div>
             <span className={style.text}>预订</span>
           </a>
         </div>
         <div className={style.active}>
           {
             window.location.pathname !== `${BASENAME}community` ? <Link to={{ pathname: `${BASENAME}community` }}>
-              <div className={`${style.icon} ${style["ion-community-active"]}`}></div>
+              <div className={styleIcons["ion-community-active"]} data-icon></div>
               <span className={style.text}>社区</span>
             </Link>
               : <a href="javascript:;">
-                <div className={`${style.icon} ${style["ion-community-active"]}`}></div>
+                <div className={styleIcons["ion-community-active"]} data-icon></div>
                 <span className={style.text}>社区</span>
               </a>
           }
         </div>
         <div>
           <a href={`${domain}user${query}`}>
-            <div className={`${style.icon} ${style["ion-user"]}`}></div>
+            <div className={styleIcons["ion-user"]} data-icon></div>
             <span className={style.text}>我的</span>
           </a>
         </div>

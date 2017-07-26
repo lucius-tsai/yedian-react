@@ -16,6 +16,9 @@ import { os } from '../../libs/uitls';
 import { showComment, hiddenComment } from '../../store/actions/appStatus';
 
 import styles from './ctabar.scss';
+import styleIcons from "../../icons/scss/ionicons";
+import styleAnimate from "../../assets/scss/animate";
+import styleBase from "../../assets/scss/base";
 
 class CTABar extends Component {
 	constructor(props) {
@@ -150,7 +153,7 @@ class CTABar extends Component {
 	handleClick(ref) {
 		const className = ref && ref.className;
 		ref && ref.addEventListener && ref.addEventListener('click', (e) => {
-			ref.className = `${ref.className} ${styles.bounceIn} ${styles.animated}`;
+			ref.className = `${ref.className} ${styleAnimate.bounceIn} ${styleAnimate.animated}`;
 			setTimeout(() => {
 				ref.className = className;
 			}, 300);
@@ -165,7 +168,7 @@ class CTABar extends Component {
 		let catBarClass = 'cta-box';
 
 		if (fix) {
-			catBarClass = `${styles[catBarClass]} ${styles['clearfix']}`;
+			catBarClass = `${styles[catBarClass]} ${styleBase['clearfix']}`;
 		} else {
 			catBarClass = `${styles[catBarClass]} ${styles['fix']}`;
 		}
@@ -174,17 +177,17 @@ class CTABar extends Component {
 			<div onClick={e => { e.nativeEvent.stopImmediatePropagation(); }}>
 				<div className={showComment ? `${catBarClass} ${styles['bar-hidden']}` : catBarClass}>
 					<div className={likeId ? `${styles['cell']} ${styles['_like']} ${styles['active']}` : `${styles['cell']} ${styles['_like']}`}>
-						<div className={`${styles['icon']} ${styles['ion-cta-like']}`} onClick={this.like} ref={this.handleClick}>&nbsp;</div>
+						<div data-icon className={styleIcons['ion-cta-like']} onClick={this.like} ref={this.handleClick}>&nbsp;</div>
 						<span className={styles["text"]} style={{width: `${String(likeCount).length * 10}px`}}>{likeCount}</span>
 					</div>
 					<div className={favoriteId ? `${styles['cell']} ${styles['_collection']} ${styles['active']}` : `${styles['cell']} ${styles['_collection']}`}>
-						<div className={`${styles['icon']} ${styles['ion-cta-collection']}`} onClick={this.favorite} ref={this.handleClick}>&nbsp;</div>
+						<div data-icon className={styleIcons['ion-cta-collection']} onClick={this.favorite} ref={this.handleClick}>&nbsp;</div>
 						<span className={styles["text"]} style={{width: `${String(favoriteCount).length * 10}px`}}>{favoriteCount}</span>
 					</div>
 					<div className={`${styles['cell']} ${styles['_comment']}`}>
 						{
-							fix ? <Link className={`${styles['icon']} ${styles['ion-cta-comment']}`} to={{ pathname: `${BASENAME}message/${post._id}`, state: { id: post._id } }}>&nbsp;</Link>
-								: <div className={`${styles['icon']} ${styles['ion-cta-comment']}`} onClick={this.openComment}>&nbsp;</div>
+							fix ? <Link data-icon className={styleIcons['ion-cta-comment']} to={{ pathname: `${BASENAME}message/${post._id}`, state: { id: post._id } }}>&nbsp;</Link>
+								: <div data-icon className={styleIcons['ion-cta-comment']} onClick={this.openComment}>&nbsp;</div>
 						}
 						<span className={styles["text"]}>{commentCount}</span>
 					</div>

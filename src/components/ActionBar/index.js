@@ -4,6 +4,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import style from './actionBar.scss';
+import icons from "../../icons/scss/ionicons";
 
 export default class ActionBar extends Component {
 	constructor(props) {
@@ -25,7 +26,7 @@ export default class ActionBar extends Component {
 		const cellWidth = window.innerWidth > 414 ? 414 / 2 : window.innerWidth / 2;
 		return (
 			<Link className={position === "bottom" ? `${style.actionBar} ${style.bottom}` : style.actionBar} to={{ pathname: `${BASENAME}publish`, state: { tags } }} style={{ transform: `translateX(calc(${cellWidth}px - 140%))` }}>
-				<div className={`${style.icon} ${style['ion-pencil']}`}></div>
+				<div className={icons['ion-pencil']} data-icon></div>
 			</Link>
 		)
 	}

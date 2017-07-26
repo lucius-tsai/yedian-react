@@ -21,6 +21,8 @@ import {
 
 
 import styles from  './message.scss';
+import styleAnimate from "../../assets/scss/animate";
+import styleBase from "../../assets/scss/base";
 
 /**
  * [社区消息组件]
@@ -116,7 +118,7 @@ class Message extends Component {
     const className = ref && ref.className;
     ref && ref.addEventListener && ref.addEventListener('click', (e) => {
       if (e && e.target && e.target.dataset && e.target.dataset.origin === 'delete') {
-        ref.className = `${ref.className} ${styles.bounceOutRight} ${styles.animated}`;
+        ref.className = `${ref.className} ${styleAnimate.bounceOutRight} ${styleAnimate.animated}`;
       }
     });
 
@@ -209,7 +211,7 @@ class Message extends Component {
           </div>
         }
         {
-          canLink && post.postType === 0 && <Link className={`${styles['card-message-content']} ${styles['clearfix']}`} to={{ pathname: `${BASENAME}message/${post._id}`, state: { id: post._id } }}>
+          canLink && post.postType === 0 && <Link className={`${styles['card-message-content']} ${styleBase['clearfix']}`} to={{ pathname: `${BASENAME}message/${post._id}`, state: { id: post._id } }}>
             <h4>{message.description}</h4>
             {
               message.images && message.images.length > 1 ?
@@ -224,7 +226,7 @@ class Message extends Component {
           </Link>
         }
         {
-          canLink && post.postType === 1 && <a className={`${styles['card-message-content']} ${styles['clearfix']}`} href={`${location.origin}/dist/?#!/venues/event/${post._id}${query}`}>
+          canLink && post.postType === 1 && <a className={`${styles['card-message-content']} ${styleBase['clearfix']}`} href={`${location.origin}/dist/?#!/venues/event/${post._id}${query}`}>
             <h4>{message.description}</h4>
             {
               message.images && message.images.length > 1 ?

@@ -55,7 +55,7 @@
 			color: #333;
 			outline: none;
 		}
-		.icon {
+		[data-icon] {
 			flex: 0 0 22px;
 			display: inline-block;
 			font-size: 18px;

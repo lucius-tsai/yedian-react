@@ -2,12 +2,19 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 
-import { loading, loadSuccess, loadFail, hideBar, showBar } from '../../store/actions/appStatus';
+import {
+	loading,
+	loadSuccess,
+	loadFail,
+	hideBar,
+	showBar
+} from '../../store/actions/appStatus';
 
 import { cookie } from '../../libs/uitls';
 import { sendSMS, smsLogin } from '../../libs/api';
 
 import style from './login.scss';
+import icons from "../../icons/scss/ionicons";
 
 class Login extends Component {
 	constructor(props) {
@@ -143,11 +150,11 @@ class Login extends Component {
 				<div className={style.loginForm}>
 					<ul className={style.list}>
 						<li>
-							<i className="icon ion-login-user"></i>
+							<i className={icons['ion-login-user']} data-icon></i>
 							<input type="tel" placeholder="手机" maxLength="11" onChange={this.filterMobile} />
 						</li>
 						<li className={style.captchaBox}>
-							<i className="icon ion-login-captcha"></i>
+							<i className={icons['ion-login-captcha']} data-icon></i>
 							<input type="number" placeholder="验证码" maxLength="6" onChange={this.filterCaptcha} />
 							<button className={style.btn} onClick={this.sendSMS}>{captchaTxt}</button>
 						</li>

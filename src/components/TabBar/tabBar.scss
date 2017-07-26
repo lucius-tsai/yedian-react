@@ -1,6 +1,4 @@
-@import "../../icons/scss/ionicons";
-@import "../../assets/scss/base";
-
+@import '../../assets/scss/setting';
 .tabBar {
   max-width: 414px;
   position: fixed;
@@ -36,7 +34,7 @@
       opacity: 1;
     }
   }
-  .icon {
+  [data-icon] {
     width: 26px;
     height: 20px;
     margin: 7px auto 5px;

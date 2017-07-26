@@ -25,6 +25,9 @@ import {
 } from '../../store/actions/appStatus';
 
 import styles from './comment.scss';
+import styleIcons from "../../icons/scss/ionicons";
+import styleAnimate from "../../assets/scss/animate";
+import styleBase from "../../assets/scss/base";
 
 class Comment extends Component {
 	constructor(props) {
@@ -214,7 +217,6 @@ class Comment extends Component {
 		});
 	}
 
-
 	comment(e) {
 		const { data } = this.state;
 		const { target, userInfo, __hiddenComment, updateComments } = this.props;
@@ -331,7 +333,7 @@ class Comment extends Component {
 		const className = ref && ref.className;
 		ref && ref.addEventListener && ref.addEventListener('click', (e) => {
 			if (e && e.target && e.target.dataset && e.target.dataset.origin === 'delete') {
-				ref.className = `${ref.className} ${styles.bounceOutRight} ${styles.animated}`;
+				ref.className = `${ref.className} ${styleAnimate.bounceOutRight} ${styleAnimate.animated}`;
 				setTimeout(() => {
 					ref.className = className;
 				}, 300);
@@ -344,7 +346,7 @@ class Comment extends Component {
 		return (
 			<div className={styles["comment"]}>
 				<div className={styles["_title"]}>夜猫子们评论</div>
-				<div className={`${styles['_top-enter']} ${styles['clearfix']}`}>
+				<div className={`${styles['_top-enter']} ${styleBase['clearfix']}`}>
 					<div className={styles["user-self"]}>
 						<Avator profile={profile} />
 					</div>
@@ -358,16 +360,16 @@ class Comment extends Component {
 									<div className={styles["avator-action"]}>
 										<Avator profile={cell.profile} model={"default"} date={cell.createdAt} />
 										<div data-actions="ref" className={styles["actions"]}>
-											<i className={`${styles['icon']} ${styles['ion-flickr']} ${styles['_more']}`} ref={this.showMoreActions}></i>
+											<i className={`${styleIcons['ion-flickr']} ${styles['_more']}`} ref={this.showMoreActions} data-icon></i>
 											{
 												cell.userId !== userId ?
 													<div className={styles["btns"]}>
-														<span className={cell.__liked ? `${styles['icon']} ${styles['ion-cta-like']} ${styles['active']}` : `${styles['icon']} ${styles['ion-cta-like']}`} onClick={this.likeComment.bind(this, index)}>&nbsp;点赞</span>
-														<span className={styles["icon"]} onClick={this.infromComment.bind(this, cell)}>举报</span>
+														<span className={cell.__liked ? `${styleIcons['ion-cta-like']} ${styles['active']}` : `${styleIcons['ion-cta-like']}`} onClick={this.likeComment.bind(this, index)} data-icon>&nbsp;点赞</span>
+														<span data-icon onClick={this.infromComment.bind(this, cell)}>举报</span>
 													</div>
 													:
 													<div className={styles["btns"]} style={{ width: `50px` }}>
-														<span className={styles["icon"]} data-origin='delete' onClick={this.deleteComment.bind(this, index)}>删除</span>
+														<span data-icon data-origin='delete' onClick={this.deleteComment.bind(this, index)}>删除</span>
 													</div>
 											}
 										</div>

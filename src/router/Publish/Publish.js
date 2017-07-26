@@ -27,6 +27,7 @@ import { reSetShare } from '../../libs/wechat';
 import { trackPageView, trackPageLeave } from '../../libs/track';
 
 import styles from './publish.scss';
+import styleIcons from "../../icons/scss/ionicons";
 
 class Publish extends Component {
   constructor(props) {
@@ -114,7 +115,7 @@ class Publish extends Component {
         targetId: venues._id
       }];
     }
-    
+
     postMessage(post).then(res => {
       if (res.code === 200) {
         history.goBack();
@@ -234,7 +235,7 @@ class Publish extends Component {
           dom.removeAttribute("style");
           dom.className = styles["venues-holder"]
         }
-        
+
         /**
          * 处理 删除venues
          */
@@ -253,31 +254,61 @@ class Publish extends Component {
     removeTag(tags);
   }
 
-  removeVenue() {
+  handleClickImage(ref) {
+    const className = ref && ref.className;
+    ref && ref.addEventListener && ref.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const pictures = document.querySelectorAll('div[data-picture]');
+      pictures.forEach(cell => {
+        cell.parentNode.className = styles['pic-box'];
+      });
+      let parent = ref.parentNode;
+      parent.className = /active/g.test(parent.className) ? styles['pic-box'] : `${styles['pic-box']} ${styles['active']}`;
+    }, false);
+  }
+
+  removePicture(index, e) {
+    const { tmpImages } = this.state;
+    const { addPictures } = this.props;
+    const newTmpImages = Object.assign({}, JSON.parse(JSON.stringify({ o: tmpImages.splice(index, 1) }))).o;
+    addPictures(newTmpImages);
+  }
+
+  handleResetImages() {
+    const pictures = document.querySelectorAll('div[data-picture]');
+    pictures.forEach(cell => {
+      cell.parentNode.className = styles['pic-box'];
+    });
   }
 
   render() {
     const { show, description, tags, venues, tmpImages, showRomeVenues } = this.state;
-    const tmpImageStr = tmpImages.map((cell, index) => {
-      return (
-        <div className={styles.pic} key={index} style={{ backgroundImage: `url(${cell})` }}></div>
-      );
-    });
 
     return (
       <div className={styles.publish} style={show ? { display: "block" } : { display: "none" }}>
         <form action="" className={styles["publish-form"]} ref={this.loadPage}>
           <textarea value={description} cols="30" rows="10" placeholder="Show出你的夜生活～" onChange={this.input} onBlur={this.blur}></textarea>
           <div className={styles["pics-box"]}>
-            {tmpImageStr}
-            <div className={styles["file"]}>
-              <input type="file" multiple accept='image/*' onChange={this.handleFileUpload} />
-            </div>
+            {
+              tmpImages && tmpImages.map((cell, index) => {
+                return (
+                  <div className={styles['pic-box']} key={index}>
+                    <div className={styles.pic} style={{ backgroundImage: `url(${cell})` }} ref={this.handleClickImage} data-picture></div>
+                    <i onClick={this.removePicture.bind(this, index)} data-icon>×</i>
+                  </div>
+                );
+              })
+            }
+            {
+              tmpImages && tmpImages.length < 9 && <div className={styles["file"]}>
+                <input type="file" multiple accept='image/*' onChange={this.handleFileUpload} />
+              </div>
+            }
           </div>
           <div className={styles["select"]}>
             <p className={styles["_cell"]}>
               <Link to={{ pathname: `${BASENAME}search`, state: { type: "venues" } }}>
-                <i className={`${styles['icon']} ${styles['ion-venues-address']}`}></i> <span>所在地点</span> <i className={`${styles['icon']} ${styles['ion-angle-right']}`}></i>
+                <i className={`${styles['icon']} ${styleIcons['ion-venues-address']}`}></i> <span>所在地点</span> <i className={styleIcons['ion-angle-right']}></i>
               </Link>
             </p>
             {
@@ -286,7 +317,7 @@ class Publish extends Component {
                 <div className={styles["venues-holder"]} ref={this.handleRemoveVenues}>
                   <VenuesCell simple={true} venuesInfo={venues} />
                   <div className={styles["remove"]} onClick={this.removeVenue}>
-                    <span className={styles["remove"]}  data-origin='delete'>删除</span>
+                    <span className={styles["remove"]} data-origin='delete'>删除</span>
                   </div>
                 </div>
               </div>
@@ -295,7 +326,7 @@ class Publish extends Component {
           <div className={styles["select"]}>
             <p className={styles["_cell"]}>
               <Link to={{ pathname: `${BASENAME}search`, state: { type: "tags" } }}>
-                <i className={`${styles['icon']} ${styles['ion-topic']}`}></i> <span>添加话题</span> <i className={`${styles['icon']} ${styles['ion-angle-right']}`}></i>
+                <i className={styleIcons['ion-topic']}></i> <span>添加话题</span> <i className={styleIcons['ion-angle-right']}></i>
               </Link>
             </p>
             <div className={styles["tags-box"]}>
@@ -315,6 +346,7 @@ class Publish extends Component {
   componentDidMount() {
     reSetShare();
     document.title = "NIGHT+";
+    document.addEventListener('click', this.handleResetImages);
   }
 
   componentDidUpdate() {
@@ -327,6 +359,7 @@ class Publish extends Component {
   }
 
   componentWillUnmount() {
+    document.removeEventListener('click', this.handleResetImages);
     const { showBar, appStatus, deleteUnmount, router, match } = this.props;
     const pathname = router.location.pathname;
     const reg = new RegExp(`^${BASENAME}topic|${BASENAME}search`);

@@ -1,5 +1,3 @@
-@import "../../icons/scss/ionicons";
-
 .loading {
     position: fixed;
     left: 0;
@@ -24,7 +22,7 @@
     .text {
         line-height: 2;
     }
-    .icon {
+    [data-icon] {
         display: inline-block;
         color: #ffffff;
         font-size: 30px;

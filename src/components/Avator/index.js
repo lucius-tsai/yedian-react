@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+
+
 import styles from './avator.scss';
+import styleAnimate from  "../../assets/scss/animate";
+import styleBase from  "../../assets/scss/base";
 
 import { parseDate } from '../../libs/uitls';
 import {
@@ -100,7 +104,7 @@ class Avator extends Component {
   handleClick(ref) {
     const className = ref && ref.className;
 		ref && ref.addEventListener && ref.addEventListener('click', (e) => {
-			ref.className = `${ref.className} ${styles.flipInX} ${styles.animated}`;
+			ref.className = `${ref.className} ${styleAnimate.flipInX} ${styleAnimate.animated}`;
 			setTimeout(() => {
 				ref.className = className;
 			}, 400);

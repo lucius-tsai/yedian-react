@@ -14,6 +14,7 @@ import {
   loading,
   loadSuccess,
   loadFail,
+  hiddenComment,
   hideBar,
   showBar
 } from '../../store/actions/appStatus';
@@ -157,10 +158,11 @@ class CommunityInfo extends Component {
   }
 
   componentWillUnmount() {
-    const { showBar, router } = this.props;
+    const { showBar, router, hiddenComment } = this.props;
     this._isMounted = false;
     const pathname = router.location.pathname;
     const reg = new RegExp(`^${BASENAME}topic`);
+    hiddenComment();
     if (!reg.test(pathname)) {
       showBar();
     }
@@ -195,6 +197,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     showBar: () => {
       dispatch(showBar())
+    },
+    hiddenComment: () => {
+      dispatch(hiddenComment())
     }
   }
 };

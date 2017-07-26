@@ -4,6 +4,7 @@ import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 import style from './carousel.scss';
 import './carousel.css';
+import styleBase from  "../../assets/scss/base";
 
 class Carousel extends Component {
   constructor(props) {
@@ -261,7 +262,7 @@ class Carousel extends Component {
                 <div ref="transitionGroup">
                   {slide(slides)}
                 </div>
-                <div className={`${style.swiper} clearfix`} ref="swiperDom"></div>
+                <div className={`${style.swiper} ${styleBase.clearfix}`} ref="swiperDom"></div>
               </div>
           }
         </div>

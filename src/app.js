@@ -107,13 +107,13 @@ if (process.env.NODE_ENV === 'localhost') {
   }
 }
 
-(() => {
-  const body = document.getElementsByTagName('body')[0];
-  const fastClickScriptDom = document.createElement('script');
-  const url = process.env.NODE_ENV !== 'localhost' ? `${location.origin}${BASENAME}static/fastclick.js` : `//staging-app.ye-dian.com${BASENAME}static/fastclick.js`;
-  fastClickScriptDom.setAttribute('src', url);
-  fastClickScriptDom.addEventListener('load', () => {
-    window.FastClick.attach(document.body);
-  });
-  body.appendChild(fastClickScriptDom);
-})();
+// (() => {
+//   const body = document.getElementsByTagName('body')[0];
+//   const fastClickScriptDom = document.createElement('script');
+//   const url = process.env.NODE_ENV !== 'localhost' ? `${location.origin}${BASENAME}static/fastclick.js` : `//staging-app.ye-dian.com${BASENAME}static/fastclick.js`;
+//   fastClickScriptDom.setAttribute('src', url);
+//   fastClickScriptDom.addEventListener('load', () => {
+//     window.FastClick.attach(document.body);
+//   });
+//   body.appendChild(fastClickScriptDom);
+// })();

@@ -13,6 +13,8 @@ import { loading, loadSuccess, loadFail, hideBar, showBar } from '../../store/ac
 import { addTag, addVenues } from '../../store/actions/publish';
 
 import styles from  './search.scss';
+import styleIcon from "../../icons/scss/ionicons";
+import styleBase from "../../assets/scss/base";
 
 class Search extends Component {
   constructor(props) {
@@ -206,7 +208,7 @@ class Search extends Component {
     return (
       <div className={styles["search-page"]}>
         <div className={input ? `${styles['input-box']} ${styles['focus']}` : styles["input-box"]}>
-          <i className={`${styles['icon']} ${styles['ion-search-square']}`}></i>
+          <i className={styleIcon['ion-search-square']} data-icon></i>
           <input type="text" value={search} placeholder={searchPlaceholder} className={styles["search-input"]} onBlur={this.blur}
             onFocus={this.focus} onChange={this.change} />
         </div>

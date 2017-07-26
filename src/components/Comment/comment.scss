@@ -1,7 +1,3 @@
-@import "../../icons/scss/ionicons";
-@import "../../assets/scss/animate";
-@import "../../assets/scss/base";
-
 .comment {
   width: 100%;
   box-sizing: border-box;
@@ -63,7 +59,7 @@
     right: 0;
     top: 50%;
     transform: translateY(-50%);
-    .icon {
+    [data-icon] {
       font-size: 12px;
       &.active {
         color: #B33DE5;
