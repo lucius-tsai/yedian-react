@@ -1,9 +1,13 @@
 {
-  "build_hash": "bee2e61e14da2cd79ae07078637c5ebe",
+  "build_hash": "a139bf1422fdf9b5e66d11ac7b96cccf",
   "prefix": "ion-",
   "version": "2.0.1",
   "name": "Ionicons",
   "icons": [
+    {
+      "code": "0xf15b",
+      "name": "action-more"
+    },
     {
       "code": "0xf101",
       "name": "alert"
@@ -859,6 +863,10 @@
     {
       "code": "0xf318",
       "name": "cube"
+    },
+    {
+      "code": "0xf15c",
+      "name": "delete"
     },
     {
       "code": "0xf12d",
@@ -2473,6 +2481,10 @@
       "name": "reply-all"
     },
     {
+      "code": "0xf15d",
+      "name": "report"
+    },
+    {
       "code": "0xf348",
       "name": "ribbon-a"
     },
@@ -2991,6 +3003,10 @@
     {
       "code": "0xf358",
       "name": "wand"
+    },
+    {
+      "code": "0xf15e",
+      "name": "warning"
     },
     {
       "code": "0xf25b",

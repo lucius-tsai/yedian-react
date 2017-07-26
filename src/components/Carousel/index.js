@@ -4,7 +4,7 @@ import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 import style from './carousel.scss';
 import './carousel.css';
-import styleBase from  "../../assets/scss/base";
+import styleBase from "../../assets/scss/base";
 
 class Carousel extends Component {
   constructor(props) {
@@ -86,7 +86,7 @@ class Carousel extends Component {
           <div class="${style.slide}">
             <div class="${style.pic}" style="background-image: url('${slides[prev].image}');">
               <p class="${style.word}">
-                <span>${slides[prev].tags.map((cell, i) => { return i === 0 ? `#${cell.tag}# ` : ` #${cell.tag}#`})}</span>
+                <span>${slides[prev].tags.map((cell, i) => { return i === 0 ? `#${cell.tag}# ` : ` #${cell.tag}#` })}</span>
                 <br/>
                 <strong>内容${slides[prev].postCount}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;${slides[prev].userCount}人参与</strong>
               </p>
@@ -95,7 +95,7 @@ class Carousel extends Component {
           <div class="${style.slide}">
             <div class="${style.pic}" style="background-image: url('${slides[this.state.currentIndex].image}');">
               <p class="${style.word}">
-                <span>${slides[this.state.currentIndex].tags.map((cell, i) => { return i === 0 ? `#${cell.tag}# ` : ` #${cell.tag}#`})}</span>
+                <span>${slides[this.state.currentIndex].tags.map((cell, i) => { return i === 0 ? `#${cell.tag}# ` : ` #${cell.tag}#` })}</span>
                 <br/>
                 <strong>内容${slides[this.state.currentIndex].postCount}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;${slides[this.state.currentIndex].userCount}人参与</strong>
               </p>
@@ -104,7 +104,7 @@ class Carousel extends Component {
           <div class="${style.slide}">
             <div class="${style.pic}" style="background-image: url('${slides[next].image}');">
               <p class="${style.word}">
-                <span>${slides[next].tags.map((cell, i) => { return i === 0 ? `#${cell.tag}# ` : ` #${cell.tag}#`})}</span>
+                <span>${slides[next].tags.map((cell, i) => { return i === 0 ? `#${cell.tag}# ` : ` #${cell.tag}#` })}</span>
                 <br/>
                 <strong>内容${slides[next].postCount}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;${slides[next].userCount}人参与</strong>
               </p>
@@ -227,8 +227,8 @@ class Carousel extends Component {
             key={currentIndex}>
             <div className={style.pic} style={{ backgroundImage: `url(${slides[currentIndex].image})` }}>
               <p className={style.word}>
-                <span>{slides[currentIndex].tags.map((cell, index) => { return index === 0 ? `#${cell.tag}# ` : `, #${cell.tag}#`;})}</span>
-                <br/>
+                <span>{slides[currentIndex].tags.map((cell, index) => { return index === 0 ? `#${cell.tag}# ` : `, #${cell.tag}#`; })}</span>
+                <br />
                 <strong>内容{slides[currentIndex].postCount}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;{slides[currentIndex].userCount}人参与</strong>
               </p>
             </div>
@@ -250,8 +250,8 @@ class Carousel extends Component {
                 <a className={style.slide}>
                   <div className={style.pic} style={{ backgroundImage: `url(${slides[0].image})` }} onClick={this.hanldeSingleClick}>
                     <p className={style.word}>
-                      <span>{slides[0].tags.map((cell, index) => { return index === 0 ? `#${cell.tag}# ` : `, #${cell.tag}#`;})}</span>
-                      <br/>
+                      <span>{slides[0].tags.map((cell, index) => { return index === 0 ? `#${cell.tag}# ` : `, #${cell.tag}#`; })}</span>
+                      <br />
                       <strong>内容{slides[0].postCount}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;{slides[0].userCount}人参与</strong>
                     </p>
                   </div>

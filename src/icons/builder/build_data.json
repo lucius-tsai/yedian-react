@@ -1,9 +1,13 @@
 {
-  "build_hash": "25007cac918dfd6fbd2e5aeafa154b9b",
+  "build_hash": "fbe13132844d26a1b7dbff67e2875c57",
   "prefix": "ion-",
   "version": "2.0.1",
   "name": "Ionicons",
   "icons": [
+    {
+      "code": "0xf15b",
+      "name": "action-more"
+    },
     {
       "code": "0xf155",
       "name": "angle-right"
@@ -27,6 +31,10 @@
     {
       "code": "0xf151",
       "name": "cta-like"
+    },
+    {
+      "code": "0xf15c",
+      "name": "delete"
     },
     {
       "code": "0xf15a",
@@ -53,6 +61,10 @@
       "name": "loading"
     },
     {
+      "code": "0xf1ff",
+      "name": "location"
+    },
+    {
       "code": "0xf158",
       "name": "login-captcha"
     },
@@ -63,6 +75,10 @@
     {
       "code": "0xf156",
       "name": "pencil"
+    },
+    {
+      "code": "0xf15d",
+      "name": "report"
     },
     {
       "code": "0xf21f",
@@ -87,6 +103,10 @@
     {
       "code": "0xf154",
       "name": "venues-address"
+    },
+    {
+      "code": "0xf15e",
+      "name": "warning"
     }
   ]
 }

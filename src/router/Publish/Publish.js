@@ -308,7 +308,7 @@ class Publish extends Component {
           <div className={styles["select"]}>
             <p className={styles["_cell"]}>
               <Link to={{ pathname: `${BASENAME}search`, state: { type: "venues" } }}>
-                <i className={`${styles['icon']} ${styleIcons['ion-venues-address']}`}></i> <span>所在地点</span> <i className={styleIcons['ion-angle-right']}></i>
+                <i className={`${styles['icon']} ${styleIcons['ion-venues-address']}`}></i> <span>所在地点</span> <em>选择商家</em> <i className={styleIcons['ion-angle-right']}></i>
               </Link>
             </p>
             {
@@ -326,7 +326,7 @@ class Publish extends Component {
           <div className={styles["select"]}>
             <p className={styles["_cell"]}>
               <Link to={{ pathname: `${BASENAME}search`, state: { type: "tags" } }}>
-                <i className={styleIcons['ion-topic']}></i> <span>添加话题</span> <i className={styleIcons['ion-angle-right']}></i>
+                <i className={styleIcons['ion-topic']}></i> <span>添加话题</span>  <em>更多话题</em> <i className={styleIcons['ion-angle-right']}></i>
               </Link>
             </p>
             <div className={styles["tags-box"]}>

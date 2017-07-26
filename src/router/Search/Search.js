@@ -9,10 +9,16 @@ import { getVenues, getTags, creatTag } from '../../libs/api';
 import { reSetShare } from '../../libs/wechat';
 import { trackPageView, trackPageLeave } from '../../libs/track';
 
-import { loading, loadSuccess, loadFail, hideBar, showBar } from '../../store/actions/appStatus';
+import {
+  loading,
+  loadSuccess,
+  loadFail,
+  hideBar,
+  showBar
+} from '../../store/actions/appStatus';
 import { addTag, addVenues } from '../../store/actions/publish';
 
-import styles from  './search.scss';
+import styles from './search.scss';
 import styleIcon from "../../icons/scss/ionicons";
 import styleBase from "../../assets/scss/base";
 
@@ -127,7 +133,7 @@ class Search extends Component {
       });
     } else {
       if (!list.length) {
-        
+
       }
     }
   }
@@ -136,15 +142,15 @@ class Search extends Component {
     creatTag({
       tag: this.state.search
     }).then(res => {
-      if(res.code === 200) {
+      if (res.code === 200) {
         const tags = publish.tags ? publish.tags : [];
         let isRepeate = false;
         tags.forEach(cell => {
-          if(cell._id === res.data._id) {
+          if (cell._id === res.data._id) {
             isRepeate = true;
           }
         });
-        if(!isRepeate) {
+        if (!isRepeate) {
           addTag(tags.concat({
             _id: res.data._id,
             tag: res.data.tag
@@ -177,11 +183,11 @@ class Search extends Component {
       const tags = publish.tags ? publish.tags : [];
       let isRepeate = false;
       tags.forEach(item => {
-        if(item._id === cell._id) {
+        if (item._id === cell._id) {
           isRepeate = true;
         }
       });
-      if(!isRepeate) {
+      if (!isRepeate) {
         addTag(tags.concat({
           _id: cell._id,
           tag: cell.tag
@@ -214,10 +220,10 @@ class Search extends Component {
         </div>
         {
           type === 'tags' && !list.length && search.length ?
-          <div className={styles['creatTag-box']}>
-            <button onClick={this.creatTag}>创建这个标签</button>
-          </div>
-          : ''
+            <div className={styles['creatTag-box']}>
+              <button onClick={this.creatTag}>创建这个标签</button>
+            </div>
+            : ''
         }
         {
           type === 'tags' ?

@@ -5,10 +5,8 @@ import Avator from '../Avator';
 import CTABar from '../CTABar';
 
 const defaultMessage = {
-  description: "呃呃呃～算是吧～",
-  pictures: [
-    "http://onq4xhob0.bkt.clouddn.com/bdc270ac6e5642b880b60b002e3a81a6.jpeg"
-  ]
+  description: "not found error",
+  pictures: []
 };
 
 import {
@@ -20,7 +18,7 @@ import {
 } from '../../store/actions/posts';
 
 
-import styles from  './message.scss';
+import styles from './message.scss';
 import styleAnimate from "../../assets/scss/animate";
 import styleBase from "../../assets/scss/base";
 
@@ -242,7 +240,7 @@ class Message extends Component {
         }
         {
           <div className={styles["card-message-bottom"]}>
-            <CTABar fix={canLink} post={post} __showComment={__showComment}/>
+            <CTABar fix={canLink} post={post} __showComment={__showComment} />
           </div>
         }
       </div>

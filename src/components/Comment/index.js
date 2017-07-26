@@ -296,7 +296,7 @@ class Comment extends Component {
 	deleteComment(index) {
 		const self = this;
 		const { data } = this.state;
-		const { updateComments, target} = this.props;
+		const { updateComments, target } = this.props;
 		deleteComment(data[index]._id).then(res => {
 			if (res.code === 200) {
 				updateComments((target.commentCount * 1 - 1))
@@ -360,16 +360,16 @@ class Comment extends Component {
 									<div className={styles["avator-action"]}>
 										<Avator profile={cell.profile} model={"default"} date={cell.createdAt} />
 										<div data-actions="ref" className={styles["actions"]}>
-											<i className={`${styleIcons['ion-flickr']} ${styles['_more']}`} ref={this.showMoreActions} data-icon></i>
+											<i className={`${styleIcons['ion-action-more']} ${styles['_more']}`} ref={this.showMoreActions} data-icon></i>
 											{
 												cell.userId !== userId ?
 													<div className={styles["btns"]}>
 														<span className={cell.__liked ? `${styleIcons['ion-cta-like']} ${styles['active']}` : `${styleIcons['ion-cta-like']}`} onClick={this.likeComment.bind(this, index)} data-icon>&nbsp;点赞</span>
-														<span data-icon onClick={this.infromComment.bind(this, cell)}>举报</span>
+														<span data-icon className={styleIcons['ion-report']} onClick={this.infromComment.bind(this, cell)}>&nbsp;举报</span>
 													</div>
 													:
 													<div className={styles["btns"]} style={{ width: `50px` }}>
-														<span data-icon data-origin='delete' onClick={this.deleteComment.bind(this, index)}>删除</span>
+														<span data-icon data-origin='delete' className={styleIcons['ion-delete']} onClick={this.deleteComment.bind(this, index)}>&nbsp;删除</span>
 													</div>
 											}
 										</div>

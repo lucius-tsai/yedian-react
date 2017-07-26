@@ -72,11 +72,8 @@
       text-align: center;
       position: relative;
       z-index: 2;
-      font-size: 8px;
+      font-size: 1.2em;
       background-color: #ffffff;
-      &::before {
-        transform: rotate(90deg);
-      }
     }
     &.active {
       .btns {
@@ -89,7 +86,7 @@
     height: 24px;
     line-height: 24px;
     position: absolute;
-    right: 10px;
+    right: 18px;
     top: 50%;
     z-index: 1;
     transform: translate(200%, -50%);

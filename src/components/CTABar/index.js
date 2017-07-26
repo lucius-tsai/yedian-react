@@ -194,7 +194,10 @@ class CTABar extends Component {
 					{
 						isSelf && 
 						<div className={`${styles['cell']} ${styles['_delete']}`}>
-							<button data-origin='delete'>删除</button>
+							<div data-origin='delete'>
+								<i data-icon className={styleIcons['ion-delete']} data-origin='delete'></i>
+								<span data-origin='delete'>删除</span>
+							</div>
 						</div>
 					}
 				</div>

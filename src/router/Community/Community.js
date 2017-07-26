@@ -8,9 +8,14 @@ import Message from '../../components/Message';
 import ActionBar from '../../components/ActionBar';
 import LoadMore from '../../components/LoadMore';
 
-
-import { getCommunityBanner, getPostList, getIndexUserList, getTopicById } from '../../libs/api';
+import {
+  getCommunityBanner,
+  getPostList,
+  getIndexUserList,
+  getTopicById
+} from '../../libs/api';
 import { trackPageView, trackPageLeave } from '../../libs/track';
+// import { notification } from '../../libs/uitls';
 import { reSetShare } from '../../libs/wechat';
 
 import {
@@ -294,7 +299,6 @@ class Community extends Component {
   componentDidMount() {
     const self = this;
     this._isMounted = true;
-
     document.title = "NIGHT+";
     const { messages, pagination } = this.state;
     const { loading, loadSuccess, loadFail, showScrollLoading } = this.props;

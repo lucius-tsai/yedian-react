@@ -13,9 +13,10 @@
     &._delete {
       float: right;
       margin: 0;
-      button {
-        outline: none;
-        cursor: pointer;
+      cursor: pointer;
+      [data-icon] {
+        margin-right: 4px;
+        font-size: 1.1em;
       }
     }
   }

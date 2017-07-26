@@ -48,15 +48,15 @@ export const cookie = (name, value, options) => {
 /**
  * 清空所有cookie
  */
-export const deleteAllCookies =  () => {
-    var cookies = document.cookie.split(";");
-    for (var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i];
-        var eqPos = cookie.indexOf("=");
-        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
-    }
+export const deleteAllCookies = () => {
+	var cookies = document.cookie.split(";");
+	for (var i = 0; i < cookies.length; i++) {
+		var cookie = cookies[i];
+		var eqPos = cookie.indexOf("=");
+		var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+		document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+		document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+	}
 }
 
 /**
@@ -152,6 +152,7 @@ export const minSizeImage = (files) => {
 		const file = files[index];
 		p.push(new Promise((resolve, reject) => {
 			let reader = new FileReader();
+			// console.log(reader, file);
 			reader.readAsDataURL(file);
 			reader.onloadend = function (e) {
 				// console.log(this)
@@ -159,6 +160,7 @@ export const minSizeImage = (files) => {
 				let image = new Image();
 				image.src = dataURL;
 				image.onload = function () {
+					console.log(image);
 					let originalWidth = image.width, originalHeight = image.height;
 
 					if (image.height > MAX_HEIGHT) {
@@ -174,7 +176,10 @@ export const minSizeImage = (files) => {
 					canvas.height = originalHeight;
 
 					ctxt.drawImage(image, 0, 0, originalWidth, originalHeight);
-					const newFile = canvas.toDataURL('image/jpeg', 0.6);
+					const minRate = (9 - Math.floor(file.size / 1024 / 100));
+					const rate = minRate > 6 ? minRate * 0.1 : 0.6;
+					console.log(rate);
+					const newFile = canvas.toDataURL('image/jpeg', rate);
 					resolve(newFile);
 				}
 			}
@@ -183,21 +188,65 @@ export const minSizeImage = (files) => {
 	return Promise.all(p);
 }
 
-
-export const os = (() => {  
-		var ua = navigator.userAgent,  
-		isWindowsPhone = /(?:Windows Phone)/.test(ua),  
-		isSymbian = /(?:SymbianOS)/.test(ua) || isWindowsPhone,   
-		isAndroid = /(?:Android)/.test(ua),   
-		isFireFox = /(?:Firefox)/.test(ua),   
-		isChrome = /(?:Chrome|CriOS)/.test(ua),  
-		isTablet = /(?:iPad|PlayBook)/.test(ua) || (isAndroid && !/(?:Mobile)/.test(ua)) || (isFireFox && /(?:Tablet)/.test(ua)),  
-		isPhone = /(?:iPhone)/.test(ua) && !isTablet,  
-		isPc = !isPhone && !isAndroid && !isSymbian;  
-		return {  
-				isTablet: isTablet,  
-				isPhone: isPhone,  
-				isAndroid : isAndroid,  
-				isPc : isPc  
-		};  
+/**
+ * 浏览器版本
+ * @return {Object}
+ */
+export const os = (() => {
+	var ua = navigator.userAgent,
+		isWindowsPhone = /(?:Windows Phone)/.test(ua),
+		isSymbian = /(?:SymbianOS)/.test(ua) || isWindowsPhone,
+		isAndroid = /(?:Android)/.test(ua),
+		isFireFox = /(?:Firefox)/.test(ua),
+		isChrome = /(?:Chrome|CriOS)/.test(ua),
+		isTablet = /(?:iPad|PlayBook)/.test(ua) || (isAndroid && !/(?:Mobile)/.test(ua)) || (isFireFox && /(?:Tablet)/.test(ua)),
+		isPhone = /(?:iPhone)/.test(ua) && !isTablet,
+		isPc = !isPhone && !isAndroid && !isSymbian;
+	return {
+		isTablet: isTablet,
+		isPhone: isPhone,
+		isAndroid: isAndroid,
+		isPc: isPc
+	};
 })();
+
+/**
+ * 浏览器通知
+ * @param {Object} notice
+ */
+export const notification = (notice) => {
+	const Notification = window.Notification || window.mozNotification || window.webkitNotification;
+	if (!Notification) {
+		return false;
+	}
+	Notification.requestPermission((status) => {
+		//status默认值'default'等同于拒绝 'denied' 意味着用户不想要通知 'granted' 意味着用户同意启用通知
+		if (status === "granted") {
+			const notify = new Notification(
+				notice.title,
+				{
+					dir: 'auto',
+					lang: 'zh-CN',
+					tag: notice.id, //实例化的notification的id
+					icon: notice.icon, //通知的缩略图,//icon 支持ico、png、jpg、jpeg格式
+					body: notice.msg //通知的具体内容
+				}
+			);
+			notify.onclick = function () {
+				//如果通知消息被点击,通知窗口将被激活
+				window.focus();
+			},
+				notify.onerror = function () {
+					console.log("HTML5桌面消息出错！！！");
+				};
+			notify.onshow = function () {
+				setTimeout(function () {
+					notify.close();
+				}, 2000)
+			};
+			notify.onclose = function () {
+				console.log("HTML5桌面消息关闭！！！");
+			};
+		}
+	});
+}

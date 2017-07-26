@@ -1,8 +1,16 @@
 {
+  "presets": [
+    "es2015",
+    "stage-0",
+    "react"
+  ],
   "plugins": [
+    "transform-decorators-legacy",
     ["transform-runtime", {
+      "helpers": false,
       "polyfill": false,
-      "regenerator": true
+      "regenerator": true,
+      "moduleName": "babel-runtime"
     }]
   ]
 }
