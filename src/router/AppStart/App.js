@@ -17,6 +17,7 @@ import Topic from '../Topic/';
 import UserTimeLine from '../UserTimeLine/';
 import Login from '../Login/';
 import FeedBack from '../FeedBack/';
+import Comment from '../Comment';
 import NotFound from '../NotFound/';
 
 // components
@@ -55,10 +56,11 @@ class Bootstrap extends Component {
 
     const token = cookie('js_session');
 
+    // console.log(location.pathname);
     this.state = {
-      redirectPath: (!token && process.env.NODE_ENV !== "localhost") ? 'login' : 'community',
+      redirectPath: !token ? `${BASENAME}login` : `${BASENAME}community`,
       loading: false,
-      hideBar: false,
+      hideBar: true,
       router: null,
       lastRouter: null
     }
@@ -76,6 +78,14 @@ class Bootstrap extends Component {
   //   // console.log(this.props);
   //   // return true;
   // }
+
+  componentWillUpdate() {
+    if (window.location.pathname === `${BASENAME}login`) {
+      // this.setState({
+      //   hideBar: true
+      // });
+    }
+  }
 
   componentWillReceiveProps(nextProps) {
     const { router } = this.state;
@@ -225,7 +235,10 @@ class Bootstrap extends Component {
         key = "app";
         break;
     }
-      // alert(key)
+    if (pathname === `${BASENAME}comment`) {
+      key = 'app-bottom-to-top';
+    }
+    // alert(key)
     if (userInfo && userInfo.loading) {
       return (<Loading />)
     } else {
@@ -234,10 +247,10 @@ class Bootstrap extends Component {
           <Route render={({ location }) => (
             <div className={hideBar ? `${key} no-tab-bar` : key} style={{ width: `${cellWidth}px` }}>
               <Route exact path={BASENAME} render={() => (
-                <Redirect to={`${BASENAME}${redirectPath}`} />
+                <Redirect to={redirectPath} />
               )} />
               <Route exact path="/" render={() => (
-                <Redirect to={`${BASENAME}${redirectPath}`} />
+                <Redirect to={redirectPath} />
               )} />
               <TabBar hidden={hideBar} />
               <CSSTransitionGroup
@@ -255,6 +268,7 @@ class Bootstrap extends Component {
                   <Route exact path={`${BASENAME}user/times/:id`} component={UserTimeLine} name="userTimeLine" />
                   <Route exact path={`${BASENAME}login`} component={Login} name="login" />
                   <Route exact path={`${BASENAME}feedback`} component={FeedBack} name="feedback" />
+                  <Route exact path={`${BASENAME}comment`} component={Comment} name="comment" />
                   <Route path={`${BASENAME}*`} component={NotFound} name="notFound" />
                 </Switch>
               </CSSTransitionGroup>

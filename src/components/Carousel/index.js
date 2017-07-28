@@ -236,7 +236,10 @@ class Carousel extends Component {
         </CSSTransitionGroup>
       )
     };
+
+
     const { num, single, slides } = this.state;
+
     if (slides.length === 0) {
       return (
         <div className={style.carouselBox}></div>
@@ -263,6 +266,11 @@ class Carousel extends Component {
                   {slide(slides)}
                 </div>
                 <div className={`${style.swiper} ${styleBase.clearfix}`} ref="swiperDom"></div>
+                <ol>
+                  {slides.map((cell, index) => {
+                    return <li className={index === this.state.currentIndex ? style.activeDot : ''} key={index}></li>
+                  })}
+                </ol>
               </div>
           }
         </div>

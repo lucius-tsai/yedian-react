@@ -250,7 +250,7 @@ class Avator extends Component {
         {
           !isSelf && showFollow && 
           <div className={styles.followBox} onClick={this.handleFollow} data-follow-box>
-            <button ref={this.handleClick}>{!isFollow ? '关注' : '取消关注' }</button>
+            <button ref={this.handleClick}>{!isFollow ? '关注' : '已关注' }</button>
           </div>
         }
       </div>

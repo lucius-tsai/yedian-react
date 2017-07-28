@@ -292,11 +292,10 @@ class Topic extends Component {
       if (res.code === 200 && res.data.view.rows.length) {
         const banner = res.data.view.rows[0];
         // console.log(banner);
-        
-        document.title = `${banner.title}`;
         if (banner.topic && banner.topic.id) {
           getTopicById(banner.topic.id).then(res => {
             if (res.code === 200 && res.data.length) {
+              document.title = `${res.data[0].topic}`;
               self.setStateAynsc({
                 slides: [{
                   image: banner.image,
@@ -319,6 +318,7 @@ class Topic extends Component {
           }).catch(error => {
           });
         } else {
+          document.title = `${banner.title}`;
           setShareLocal(id, userId, banner.image, undefined, banner.title);
           self.setState({
             slides: [{
@@ -339,7 +339,7 @@ class Topic extends Component {
     this._isMounted = false;
     const { showBar, router, match } = this.props;
     const pathname = router.location.pathname;
-    const reg = new RegExp(`^${BASENAME}publish|${BASENAME}topic|${BASENAME}message`);
+    const reg = new RegExp(`^${BASENAME}publish|${BASENAME}topic|${BASENAME}message|${BASENAME}comment`);
     if (!reg.test(pathname)) {
       showBar();
     }

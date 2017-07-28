@@ -13,8 +13,6 @@ import {
 } from '../../libs/api';
 import { os } from '../../libs/uitls';
 
-import { showComment, hiddenComment } from '../../store/actions/appStatus';
-
 import styles from './ctabar.scss';
 import styleIcons from "../../icons/scss/ionicons";
 import styleAnimate from "../../assets/scss/animate";
@@ -36,9 +34,6 @@ class CTABar extends Component {
 		}
 		this.like = this.like.bind(this);
 		this.favorite = this.favorite.bind(this);
-		this.openComment = this.openComment.bind(this);
-		// this.deletePost = this.deletePost.bind(this);
-		this.__hidden = this.__hidden.bind(this);
 	}
 
 	componentWillMount() {
@@ -132,24 +127,6 @@ class CTABar extends Component {
 		}
 	}
 
-	openComment() {
-		const { __showComment } = this.props;
-		if(os.isPhone) {
-			document.body.className = 'no-scroll';
-			document.body.style.height = '100vh';
-		}
-		__showComment();
-	}
-
-	__hidden(e) {
-		const { __hiddenComment } = this.props;
-		if(os.isPhone) {
-			document.body.className = '';
-			document.body.style.height = 'auto';
-		}
-		__hiddenComment();
-	}
-
 	handleClick(ref) {
 		const className = ref && ref.className;
 		ref && ref.addEventListener && ref.addEventListener('click', (e) => {
@@ -159,7 +136,6 @@ class CTABar extends Component {
 			}, 300);
 		}, false);
 	}
-
 
 	render() {
 		const { showComment, favoriteId, likeId, likeCount, favoriteCount, commentCount, isSelf } = this.state;
@@ -185,10 +161,7 @@ class CTABar extends Component {
 						<span className={styles["text"]} style={{width: `${String(favoriteCount).length * 10}px`}}>{favoriteCount}</span>
 					</div>
 					<div className={`${styles['cell']} ${styles['_comment']}`}>
-						{
-							fix ? <Link data-icon className={styleIcons['ion-cta-comment']} to={{ pathname: `${BASENAME}message/${post._id}`, state: { id: post._id } }}>&nbsp;</Link>
-								: <div data-icon className={styleIcons['ion-cta-comment']} onClick={this.openComment}>&nbsp;</div>
-						}
+						<Link data-icon className={styleIcons['ion-cta-comment']} to={{ pathname: `${BASENAME}comment`, search: `?type=POST&id=${post._id}`, state: { post } }}>&nbsp;</Link>
 						<span className={styles["text"]}>{commentCount}</span>
 					</div>
 					{
@@ -263,19 +236,12 @@ class CTABar extends Component {
 const mapStateToProps = state => {
 	const { userInfo, appStatus } = state;
 	return {
-		userInfo,
-		showComment: appStatus.showComment || false
+		userInfo
 	}
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		__showComment: (cell) => {
-			dispatch(showComment(cell));
-		},
-		__hiddenComment: (cell) => {
-			dispatch(hiddenComment(cell));
-		}
 	}
 };
 

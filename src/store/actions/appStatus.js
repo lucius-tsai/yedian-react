@@ -8,9 +8,6 @@ export const APP_HANDLE_SCROLL_DOWN = "APP_HANDLE_SCROLL_DOWN";
 export const APP_HIDE_BAR = "APP_HIDE_BAR";
 export const APP_SHOW_BAR = "APP_SHOW_BAR";
 
-export const APP_HIDE_COMMENT = "APP_HIDE_COMMENT";
-export const APP_SHOW_COMMENT = "APP_SHOW_COMMENT";
-
 export const APP_SET_GPS = "APP_SET_GPS";
 
 export const loading = state => ({
@@ -42,16 +39,6 @@ export const hideBar = state => ({
 
 export const setLocation = newState => ({
 	type: APP_SET_GPS,
-	newState
-});
-
-export const showComment = newState => ({
-	type: APP_SHOW_COMMENT,
-	newState
-});
-
-export const hiddenComment = newState => ({
-	type: APP_HIDE_COMMENT,
 	newState
 });
 

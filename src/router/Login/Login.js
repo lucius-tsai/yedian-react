@@ -167,9 +167,16 @@ class Login extends Component {
 		)
 	}
 	componentWillUnmount() {
-		const { showBar } = this.props;
+		const { showBar, router } = this.props;
+		const token = cookie('js_session');
 		clearInterval(this.timer);
-		showBar();
+		if (router && router.action.toLocaleLowerCase() !== 'pop') {
+			showBar();
+		}
+
+		if (!token) {
+			return window.location.reload();
+		}
 	}
 }
 

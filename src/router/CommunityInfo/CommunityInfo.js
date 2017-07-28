@@ -14,7 +14,6 @@ import {
   loading,
   loadSuccess,
   loadFail,
-  hiddenComment,
   hideBar,
   showBar
 } from '../../store/actions/appStatus';
@@ -93,7 +92,7 @@ class CommunityInfo extends Component {
   componentDidMount() {
     this._isMounted = true;
     const self = this;
-
+    document.title = 'NIGHT+';
     document.body.scrollTop = 0;
 
     const { loading, loadSuccess, loadFail, hideBar, location, match, userInfo } = this.props;
@@ -107,7 +106,7 @@ class CommunityInfo extends Component {
     getMessageInfo(id).then(res => {
       loadSuccess();
       if (res.code === 200 && res.data && res.data.length) {
-        document.title = res.data[0].message.description;
+        // document.title = res.data[0].message.description;
         self._isMounted && self.setState({
           messageInfo: res.data[0]
         }, () => {
@@ -158,11 +157,10 @@ class CommunityInfo extends Component {
   }
 
   componentWillUnmount() {
-    const { showBar, router, hiddenComment } = this.props;
+    const { showBar, router } = this.props;
     this._isMounted = false;
     const pathname = router.location.pathname;
-    const reg = new RegExp(`^${BASENAME}topic`);
-    hiddenComment();
+    const reg = new RegExp(`^${BASENAME}topic|${BASENAME}comment`);
     if (!reg.test(pathname)) {
       showBar();
     }
@@ -197,9 +195,6 @@ const mapDispatchToProps = (dispatch) => {
     },
     showBar: () => {
       dispatch(showBar())
-    },
-    hiddenComment: () => {
-      dispatch(hiddenComment())
     }
   }
 };

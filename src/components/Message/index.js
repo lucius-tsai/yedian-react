@@ -27,7 +27,6 @@ import styleBase from "../../assets/scss/base";
  * post 消息对象
  * canLink 消息卡片是否可以点击
  * showFollow 是否可以关注
- * __showComment 子组件CTABar 是否显示评论输入框
  * @class Message
  * @extends {Component}
  */
@@ -38,11 +37,14 @@ class Message extends Component {
       post: defaultMessage,
       canLink: false,
       showFollow: false,
+      showModal: false,
       __showComment: false
     };
 
     this.lazyLoadPictures = this.lazyLoadPictures.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.showModal = this.showModal.bind(this);
+    this.hiddenModal = this.hiddenModal.bind(this);
   }
 
   componentWillMount() {
@@ -128,8 +130,30 @@ class Message extends Component {
     });
   }
 
+  hiddenModal() {
+    this.setState({
+      showModal: false
+    });
+  }
+
+  /**
+   * 查看 图片
+   * @param {any} ref 
+   * @memberof Message
+   */
+  showModal(ref) {
+    const self = this;
+    // ref && ref.addEventListener && ref.addEventListener('click', (e) => {
+    //   if (e && e.target && e.target.dataset && e.target.dataset.origin === 'picture') {
+    //     self.setState({
+    //       showModal: true
+    //     });
+    //   }
+    // });
+  }
+
   render() {
-    const { post, canLink, showFollow, disabledLink, __showComment } = this.state;
+    const { post, canLink, showFollow, showModal, disabledLink, __showComment } = this.state;
     const { __parentOpenComment } = this.props;
     let message = null;
     const affiliates = post.affiliates;
@@ -137,8 +161,10 @@ class Message extends Component {
     if (post && post.postType === 0) {
       message = post.message;
     } else if (post && post.postType === 1) {
+      /**
+       * 正对商家活动，特殊处理
+       */
       message = {};
-
       post.defaultComponents && post.defaultComponents.forEach(cell => {
         switch (cell.name) {
           case 'component-banner':
@@ -175,7 +201,7 @@ class Message extends Component {
     } else if (message.images && message.images.length > 1) {
       picturesList = message.images.map((cell, index) => {
         return (
-          <div className={styles["img-single"]} key={`${post._id}${index}`} style={{ backgroundColor: `rgb(${random()}, ${random()}, ${random()})`, height: `${cellWidth}px` }} ref={`lazyImages-${new Date().getTime()}-${index}`} data-src={cell}>
+          <div data-origin='picture' className={styles["img-single"]} key={`${post._id}${index}`} style={{ backgroundColor: `rgb(${random()}, ${random()}, ${random()})`, height: `${cellWidth}px` }} ref={`lazyImages-${new Date().getTime()}-${index}`} data-src={cell}>
           </div>
         )
       });
@@ -190,7 +216,7 @@ class Message extends Component {
             <h4>{message.description}</h4>
             {
               message.images.length > 1 ?
-                <div className={styles["imgs"]}>
+                <div className={styles["imgs"]} ref={this.showModal}>
                   {picturesList}
                 </div>
                 :
@@ -241,6 +267,22 @@ class Message extends Component {
         {
           <div className={styles["card-message-bottom"]}>
             <CTABar fix={canLink} post={post} __showComment={__showComment} />
+          </div>
+        }
+        {
+          !canLink && 
+          <div className={showModal ? `${styles.modal} ${styles.active}` : styles.modal} onClick={this.hiddenModal}>
+            <ul className={`${styles.carousel} ${styleBase.clearfix}`}>
+              {
+                message.images.map((cell, index) => {
+                  return (
+                    <li key={index}>
+                      <img src={cell} alt=""/>
+                    </li>
+                  )
+                })
+              }
+            </ul>
           </div>
         }
       </div>

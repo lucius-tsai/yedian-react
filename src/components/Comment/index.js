@@ -2,6 +2,7 @@
  * Created by townmi on 17/6/18.
  */
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Avator from '../Avator';
@@ -9,7 +10,6 @@ import LoadMore from '../LoadMore';
 
 import {
 	getComments,
-	commentMessage,
 	infrom,
 	likeComment,
 	deleteLikeComment,
@@ -18,8 +18,6 @@ import {
 import { os } from '../../libs/uitls';
 
 import {
-	showComment,
-	hiddenComment,
 	hiddenScrollLoading,
 	showScrollLoading
 } from '../../store/actions/appStatus';
@@ -36,8 +34,6 @@ class Comment extends Component {
 			profile: null,
 			target: null,
 			data: [],
-			showComment: false,
-			showBtn: false,
 			pagination: {
 				pageSize: 10,
 				current: 1
@@ -47,11 +43,7 @@ class Comment extends Component {
 			completed: false,
 			userId: null
 		}
-
-		this.__openComment = this.__openComment.bind(this);
 		this.infromComment = this.infromComment.bind(this);
-		this.comment = this.comment.bind(this);
-		this.input = this.input.bind(this);
 	}
 
 	setStateAynsc(state) {
@@ -77,7 +69,7 @@ class Comment extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		const { userInfo, showComment, target } = nextProps;
+		const { userInfo, target } = nextProps;
 		if (userInfo && userInfo.user && userInfo.user.id) {
 			this.setState({
 				profile: {
@@ -89,12 +81,7 @@ class Comment extends Component {
 				userId: userInfo && userInfo.user && userInfo.user.id
 			})
 		}
-		if (!showComment) {
-			this.setState({ showComment, showBtn: false });
-		} else {
-			this.setState({ showComment });
-		}
-
+		
 		if (nextProps.scrollLoading && !this.state.completed) {
 			this.fetch();
 		}
@@ -199,62 +186,6 @@ class Comment extends Component {
 		});
 	}
 
-	focus(ref) {
-		if (ref) {
-			if (os.isPhone) {
-				document.body.className = 'no-scroll';
-				document.body.style.height = '100vh';
-			}
-			ref.focus();
-		}
-	}
-
-	input(e) {
-		const input = e.target.value.trim();
-		this.setState({
-			comment: input,
-			showBtn: !!input.length
-		});
-	}
-
-	comment(e) {
-		const { data } = this.state;
-		const { target, userInfo, __hiddenComment, updateComments } = this.props;
-		commentMessage({
-			type: 'POST',
-			targetId: target._id,
-			isDisplay: true,
-			comment: this.state.comment
-		}).then(res => {
-			if (res.code === 200) {
-				data.unshift({
-					_id: res.data._id,
-					userId: res.data.userId,
-					comment: res.data.comment,
-					profile: {
-						_id: userInfo.user.id,
-						displayName: userInfo.user.displayName || (userInfo.user.mobile && `${userInfo.user.mobile.substring(0, 3)}****${`${userInfo.user.mobile} `.slice(-5, -1)}`),
-						headImgUrl: userInfo.user.Wechat && userInfo.user.Wechat.headimgurl,
-						userType: 'User'
-					}
-				});
-				if (os.isPhone) {
-					document.body.className = '';
-					document.body.style.height = 'auto';
-				}
-
-				updateComments((target.commentCount * 1 + 1))
-				this.setState({
-					data,
-					offset: (this.state.offset + 1)
-				});
-				__hiddenComment();
-			}
-		}, error => {
-
-		});
-	}
-
 	likeComment(index) {
 		const { data } = this.state;
 		const self = this;
@@ -310,12 +241,6 @@ class Comment extends Component {
 		});
 	}
 
-	__openComment(e) {
-		e.nativeEvent.stopImmediatePropagation();
-		const { __showComment } = this.props;
-		__showComment();
-	}
-
 	showMoreActions(ref) {
 		const className = ref && ref.className;
 		ref && ref.addEventListener && ref.addEventListener('click', (e) => {
@@ -342,7 +267,7 @@ class Comment extends Component {
 	}
 
 	render() {
-		const { profile, data, userId, loading, completed, showComment, showBtn } = this.state;
+		const { profile, data, target, userId, loading, completed } = this.state;
 		return (
 			<div className={styles["comment"]}>
 				<div className={styles["_title"]}>夜猫子们评论</div>
@@ -350,7 +275,7 @@ class Comment extends Component {
 					<div className={styles["user-self"]}>
 						<Avator profile={profile} />
 					</div>
-					<div className={styles["input-enter"]} onClick={this.__openComment}>我也要留下一评</div>
+					<Link to={{ pathname: `${BASENAME}comment`, search: `?type=POST&id=${target._id}`, state: { post: target } }} className={styles["input-enter"]}>我也要留下一评</Link>
 				</div>
 				<ul className={styles["comment-content"]}>
 					{
@@ -386,12 +311,6 @@ class Comment extends Component {
 				{
 					completed && <p style={{ textAlign: 'center' }}>没有更多数据了</p>
 				}
-				<div className={showComment ? styles.commentBox : `${styles.commentBox} ${styles.barHidden}`} onClick={e => { e.nativeEvent.stopImmediatePropagation(); }}>
-					{
-						showComment && <textarea className={showBtn ? styles.commentTxt : `${styles.commentTxt} ${styles.btnHidden}`} placeholder='我也要留下一评' ref={this.focus} onChange={this.input}></textarea>
-					}
-					<button className={showBtn ? styles.commentBtn : `${styles.commentBtn} ${styles.btnHidden}`} onClick={this.comment}>提交</button>
-				</div>
 			</div>
 		)
 	}
@@ -416,19 +335,12 @@ const mapStateToProps = state => {
 	return {
 		router,
 		scrollLoading: appStatus.scrollLoading || false,
-		userInfo,
-		showComment: appStatus.showComment || false
+		userInfo
 	}
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		__showComment: (cell) => {
-			dispatch(showComment(cell))
-		},
-		__hiddenComment: (cell) => {
-			dispatch(hiddenComment(cell));
-		},
 		showScrollLoading: (cell) => {
 			dispatch(showScrollLoading(cell));
 		},
