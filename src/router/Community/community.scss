@@ -74,20 +74,21 @@ $max : 100;
 }
 
 .newsTimeLine {
-  margin: 10px auto;
-  padding: 10px;
-  line-height: 26px;
+  margin: 0 auto 10px;
+  padding: 15px 10px;
+  // height: 56px;
+  line-height: 36px;
   box-sizing: border-box;
-  background-color: #ffffff;
+  background-color: #0D213F;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   .title {
     width: 40px;
-    color: #333333;
+    color: #ffffff;
     font-size: 13px;
     line-height: 1em;
-    border-right: 1px solid #D8D8D8;
+    border-right: 1px solid #666666;
   }
   .message {
     padding-left: 12px;
