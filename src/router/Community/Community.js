@@ -15,7 +15,7 @@ import {
   getTopicById
 } from '../../libs/api';
 import { trackPageView, trackPageLeave } from '../../libs/track';
-// import { notification } from '../../libs/uitls';
+import { cookie } from '../../libs/uitls';
 import { reSetShare } from '../../libs/wechat';
 
 import {
@@ -247,7 +247,7 @@ class Community extends Component {
     document.addEventListener('click', (e) => {
       body.removeAttribute("new_user_guide");
     });
-    
+
     cookie('new_user_guide',  'dot', { path: '/', expires: 35600 })
   }
 
@@ -318,6 +318,8 @@ class Community extends Component {
     const { loading, loadSuccess, loadFail, showScrollLoading } = this.props;
 
     reSetShare();
+
+    this.showGuide();
 
     // 拉取banner
     const query = `query=query

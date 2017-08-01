@@ -299,7 +299,6 @@ class Bootstrap extends Component {
         this.setUserFollowers();
         this.setVenuesFollowers();
       }
-      this.showGuide();
     } else {
       history.push(`${BASENAME}login`, {
         redirectUri: window.location.pathname
@@ -328,7 +327,6 @@ class Bootstrap extends Component {
       if (!(followers && followers.venuesFollowers) && !followers.loadingVenuesFollowers) {
         this.setVenuesFollowers();
       }
-      this.showGuide();
     }
   }
 
