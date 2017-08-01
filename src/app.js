@@ -44,10 +44,12 @@ const isWechat = !!(/micromessenger|webbrowser/i).test(navigator.userAgent);
 
 let render = () => {
   // const routes = require('./router/index').default();
-  ReactDOM.render(
-    <App />,
-    MOUNT_NODE
-  )
+  setTimeout(() => {
+    ReactDOM.render(
+      <App />,
+      MOUNT_NODE
+    )
+  }, 1000);
 };
 
 const sdk = () => {

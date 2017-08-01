@@ -142,6 +142,49 @@ export const getLocation = () => {
 }
 
 /**
+ * dataURLtoBuffer base64 to Buffer
+ * @param {String} base64 
+ */
+const dataURLtoBuffer = function (base64) {
+	base64 = base64.replace(/data\:image\/jpeg\;base64\,/g, '');
+	var binary_string = window.atob(base64);
+	var len = binary_string.length;
+	var bytes = new Uint8Array(len);
+	for (var i = 0; i < len; i++) {
+		bytes[i] = binary_string.charCodeAt(i);
+	}
+	return bytes.buffer;
+}
+
+/**
+ * getOrientation 获取照片信息
+ * @param {File} e 
+ */
+const getOrientation = function (e) {
+	const buffer = dataURLtoBuffer(e.target.result);
+	var view = new DataView(buffer);
+	if (view.getUint16(0, false) != 0xFFD8) return -2;
+	var length = view.byteLength, offset = 2;
+	while (offset < length) {
+		var marker = view.getUint16(offset, false);
+		offset += 2;
+		if (marker == 0xFFE1) {
+			if (view.getUint32(offset += 2, false) != 0x45786966) return -2;
+			var little = view.getUint16(offset += 6, false) == 0x4949;
+			offset += view.getUint32(offset + 4, little);
+			var tags = view.getUint16(offset, little);
+			offset += 2;
+			for (var i = 0; i < tags; i++)
+				if (view.getUint16(offset + (i * 12), little) == 0x0112)
+					return view.getUint16(offset + (i * 12) + 8, little);
+		}
+		else if ((marker & 0xFF00) != 0xFF00) break;
+		else offset += view.getUint16(offset, false);
+	}
+	return -1;
+}
+
+/**
  * 上传图片压缩处理
  * @param {*} files
  * @return {Promise}
@@ -152,33 +195,50 @@ export const minSizeImage = (files) => {
 		const file = files[index];
 		p.push(new Promise((resolve, reject) => {
 			let reader = new FileReader();
-			// console.log(reader, file);
 			reader.readAsDataURL(file);
 			reader.onloadend = function (e) {
-				// console.log(this)
+				let orientation = null,
+					needRotate = false;
+				if (os.isPhone) {
+					orientation = getOrientation(e);
+					if (orientation === 6) {
+						needRotate = true;
+					}
+				}
+
 				const dataURL = this.result;
 				let image = new Image();
 				image.src = dataURL;
 				image.onload = function () {
-					console.log(image);
 					let originalWidth = image.width, originalHeight = image.height;
 
 					if (image.height > MAX_HEIGHT) {
 						originalWidth = (MAX_HEIGHT / image.height) * originalWidth;
 						originalHeight = MAX_HEIGHT;
 					}
+
 					let canvas = document.createElement('canvas');
 
 					let ctxt = canvas.getContext('2d');
 					ctxt.clearRect(0, 0, canvas.width, canvas.height);
 
+
 					canvas.width = originalWidth;
 					canvas.height = originalHeight;
+
+					if (needRotate) {
+						const buildingImgX = originalWidth / 2;
+						const buildingImgY = originalHeight / 2;
+
+						ctxt.translate(buildingImgX, buildingImgY);
+						ctxt.rotate(90 * Math.PI / 180);
+						ctxt.translate(-buildingImgX, -buildingImgY);
+					}
 
 					ctxt.drawImage(image, 0, 0, originalWidth, originalHeight);
 					const minRate = (9 - Math.floor(file.size / 1024 / 100));
 					const rate = minRate > 6 ? minRate * 0.1 : 0.6;
-					console.log(rate);
+
 					const newFile = canvas.toDataURL('image/jpeg', rate);
 					resolve(newFile);
 				}

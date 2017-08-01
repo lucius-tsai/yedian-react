@@ -308,6 +308,7 @@ class Bootstrap extends Component {
     // 全局处理SPA下拉滚动加载数据
     document.addEventListener("touchstart", this.handleTouch);
     window.addEventListener("scroll", this.handleScroll);
+    document.getElementById("app").style.background = '#F5F5F5';
 
   }
   componentDidUpdate() {
