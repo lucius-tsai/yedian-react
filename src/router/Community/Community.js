@@ -237,6 +237,20 @@ class Community extends Component {
     }, 20e3);
   }
 
+  showGuide() {
+    if (cookie('new_user_guide')) {
+      return false;
+    }
+
+    let body = document.getElementsByTagName('body')[0];
+    body.setAttribute('new_user_guide', 'guide');
+    document.addEventListener('click', (e) => {
+      body.removeAttribute("new_user_guide");
+    });
+    
+    cookie('new_user_guide',  'dot', { path: '/', expires: 35600 })
+  }
+
   render() {
     const { slides, messages, userList, loading, dynamicMessages, completed } = this.state;
 
@@ -390,6 +404,9 @@ class Community extends Component {
       pageName: this.state.track.pageName,
       pageStayTime: ((new Date().getTime() - this.state.track.startTime.getTime()) / 1000)
     });
+
+    let body = document.getElementsByTagName('body')[0];
+    body.removeAttribute("new_user_guide");
   }
 }
 

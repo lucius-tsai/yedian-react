@@ -19,6 +19,35 @@ body {
     position: fixed;
   }
   transition: all 0.3s ease-in-out;
+  &[new_user_guide] {
+    overflow: hidden;
+    position: fixed;
+    &::before {
+      content: "";
+      width: 100%;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 10;
+      background-color: rgba(0, 0, 0, 0.25);
+    }
+    &::after {
+      content: "";
+      width: 350px;
+      height: 257px;
+      box-sizing: border-box;
+      position: fixed;
+      right: 4%;
+      bottom: calc(2% + 50px);
+      background-position: right bottom;
+      background-size: 80%;
+      z-index: 10;
+      background-repeat: no-repeat;
+      background-origin: padding-box;
+      background-image: url('../images/guide.png');
+    }
+  }
 }
 
 h1, h2, h3, h4, h5, h6, p {
@@ -153,7 +182,7 @@ table {
   overflow-y: scroll;
   overflow-x: hidden;
   position: relative;
-  background-image: url('../images/launch.png');
+  background-image: url('../images/launch.jpg');
   background-position: center center;
   background-size: cover;
 }

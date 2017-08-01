@@ -8,7 +8,10 @@
   text-align: center;
   border-radius: 50%;
   box-shadow: 0 6px 14px 0 rgba(115, 68, 192, .73);
-  background: linear-gradient(left top,#B33DE5,#3023AE);
+  background: -webkit-linear-gradient(top left, #B33DE5, #3023AE);
+  background: -moz-linear-gradient(top left, #B33DE5, #3023AE);
+  background: -o-linear-gradient(top left, #B33DE5, #3023AE);
+  background: linear-gradient(to bottom right, #B33DE5, #3023AE);
   font-size: 14px;
   &.bottom {
     bottom: 3%;

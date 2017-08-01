@@ -58,7 +58,7 @@ class Bootstrap extends Component {
 
     // console.log(location.pathname);
     this.state = {
-      redirectPath: !token ? `${BASENAME}login` : `${BASENAME}community`,
+      redirectPath: `${BASENAME}community`,
       loading: false,
       hideBar: true,
       router: null,
@@ -299,6 +299,7 @@ class Bootstrap extends Component {
         this.setUserFollowers();
         this.setVenuesFollowers();
       }
+      this.showGuide();
     } else {
       history.push(`${BASENAME}login`, {
         redirectUri: window.location.pathname
@@ -327,6 +328,7 @@ class Bootstrap extends Component {
       if (!(followers && followers.venuesFollowers) && !followers.loadingVenuesFollowers) {
         this.setVenuesFollowers();
       }
+      this.showGuide();
     }
   }
 
