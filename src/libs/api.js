@@ -84,7 +84,7 @@ export const getUserInfoById = (id) => {
 
 export const getWeChatSDKSign = () => {
 	return __promiseTask(_instance().post(API_ROOT.getWeChatSDKSign, {
-		url: location.href.split('#')[0]
+		url: `${location.origin}${location.pathname}`
 	}));
 };
 

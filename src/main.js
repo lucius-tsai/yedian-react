@@ -1,28 +1,37 @@
 'use strict';
-import React, {Component} from 'react';
-import {Provider} from 'react-redux';
-import {routerMiddleware, connectRouter} from 'react-router-redux';
+import React, { Component } from 'react';
+import { Provider } from 'react-redux';
+import { routerMiddleware, connectRouter } from 'react-router-redux';
 import createHistory from 'history/createBrowserHistory';
-import {ConnectedRouter} from 'connected-react-router'
+import { ConnectedRouter } from 'connected-react-router'
 
 import {
   BrowserRouter as Router
 } from 'react-router-dom';
 
+import { weChatSDKInstall } from './libs/wechat';
+import { os } from './libs/uitls';
+import { getWeChatSDKSign } from './libs/api';
 import Bootstrap from './router/AppStart/';
+import createStore from './store';
 
 const history = createHistory();
 
-import createStore from './store';
+/**
+ * listen route change
+ */
+history.listen(location => {
+  // 安卓需要重新配置SDK
+  if (os.isAndroid) {
+    sdk();
+  }
+});
 
 const store = createStore(history);
-
 class App extends Component {
-
-  shouldComponentUpdate() {
-    return true;
-  }
-
+  // shouldComponentUpdate() {
+  //   return true;
+  // }
   render() {
     return (
       <Provider store={store}>
@@ -32,6 +41,15 @@ class App extends Component {
       </Provider>
     )
   }
+}
+
+const sdk = () => {
+  getWeChatSDKSign().then(res => {
+    if (res.code === 200 && typeof wx !== "undefined") {
+      weChatSDKInstall(res.data);
+    }
+  }, error => {
+  });
 }
 
 export default App;

@@ -7,7 +7,6 @@ import App from './main';
 import { cookie, getQueryString, getLocation } from './libs/uitls';
 import { weChatSDKInstall } from './libs/wechat';
 import { weChatAuth, getWeChatSDKSign, getScripts } from './libs/api';
-
 // const currentPage = window.location.pathname;
 
 /**
@@ -36,8 +35,6 @@ const __API = process.env.NODE_ENV === 'production' ? '//yd-data.chinacloudapp.c
   server_url: __API
 });
 // }
-
-
 
 const MOUNT_NODE = document.getElementById('app');
 const isWechat = !!(/micromessenger|webbrowser/i).test(navigator.userAgent);
