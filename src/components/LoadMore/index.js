@@ -17,7 +17,7 @@ export default class Loading extends Component {
   render() {
     return (
       <div className={styles["load-more"]}>
-        <div className={styleIcons['ion-loading']} data-icons></div>
+        <div className={styleIcons['ion-loading']} data-icon></div>
       </div>
     )
   }

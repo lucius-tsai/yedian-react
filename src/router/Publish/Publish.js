@@ -41,7 +41,8 @@ class Publish extends Component {
       description: '',
       tags: [],
       venues: null,
-      tmpImages: []
+      tmpImages: [],
+			canSubmit: false
     };
     this.submit = this.submit.bind(this);
     this.handleFileUpload = this.handleFileUpload.bind(this);
@@ -80,10 +81,15 @@ class Publish extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    let canSubmit = false;
+    if (nextProps.publish.tags && nextProps.publish.tags.length && nextProps.publish.description) {
+      canSubmit = true;
+    }
     this.setState({
       tags: nextProps.publish.tags,
       venues: nextProps.publish.venues,
-      description: nextProps.publish.description
+      description: nextProps.publish.description,
+      canSubmit
     });
   }
 
@@ -191,8 +197,10 @@ class Publish extends Component {
   }
 
   input(e) {
+		const input = e.target.value.trim();
     this.setState({
-      description: e.target.value
+      description: input,
+      canSubmit: input.length > 0 && this.state.tags && this.state.tags.length
     });
   }
   blur(e) {
@@ -282,7 +290,7 @@ class Publish extends Component {
   }
 
   render() {
-    const { show, description, tags, venues, tmpImages, showRomeVenues } = this.state;
+    const { show, description, tags, venues, tmpImages, showRomeVenues, canSubmit } = this.state;
 
     return (
       <div className={styles.publish} style={show ? { display: "block" } : { display: "none" }}>
@@ -337,7 +345,7 @@ class Publish extends Component {
               }
             </div>
           </div>
-          <button className={styles["publish-submit"]} onClick={this.submit}>发布</button>
+          <button className={styles["publish-submit"]} onClick={this.submit} disabled={!canSubmit}>发布</button>
         </form>
       </div>
     )

@@ -31,6 +31,9 @@
     font-size: 18px;
     transform: translateX(-50%);
     outline: none;
+    &:disabled {
+      opacity: 0.6;
+    }
   }
   .pics-box {
     margin-bottom: 45px;
