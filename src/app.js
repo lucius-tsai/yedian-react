@@ -55,22 +55,14 @@ let render = () => {
 const sdk = () => {
   getWeChatSDKSign().then(res => {
     if (res.code === 200 && typeof wx !== "undefined") {
-      alert("install");
       weChatSDKInstall(res.data);
     }
   }, error => {
   });
 }
 
-// getLocation().then(res => {
-//   console.log(res);
-// }, error => {
-//   console.log(error)
-// })
-
 if (isWechat) {
   if (typeof wx !== 'undefined') {
-    alert("local")
     sdk()
   } else {
     const body = document.getElementsByTagName('body')[0];
@@ -78,7 +70,6 @@ if (isWechat) {
     // wxScriptDom.setAttribute('src', '//res.wx.qq.com/open/js/jweixin-1.2.0.js');
     wxScriptDom.setAttribute('src', `${location.origin}${BASENAME}static/jweixin-1.2.0.js`);
     wxScriptDom.addEventListener('load', () => {
-      alert("remote")
       sdk();
     });
     body.appendChild(wxScriptDom);
