@@ -15,7 +15,6 @@ import { os } from '../../libs/uitls';
 
 import styles from './ctabar.scss';
 import styleIcons from "../../icons/scss/ionicons";
-import styleAnimate from "../../assets/scss/animate";
 import styleBase from "../../assets/scss/base";
 
 class CTABar extends Component {
@@ -130,7 +129,7 @@ class CTABar extends Component {
 	handleClick(ref) {
 		const className = ref && ref.className;
 		ref && ref.addEventListener && ref.addEventListener('click', (e) => {
-			ref.className = `${ref.className} ${styleAnimate.bounceIn} ${styleAnimate.animated}`;
+			ref.className = `${ref.className} bounceIn animated`;
 			setTimeout(() => {
 				ref.className = className;
 			}, 300);

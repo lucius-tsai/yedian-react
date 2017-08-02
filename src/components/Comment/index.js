@@ -24,7 +24,6 @@ import {
 
 import styles from './comment.scss';
 import styleIcons from "../../icons/scss/ionicons";
-import styleAnimate from "../../assets/scss/animate";
 import styleBase from "../../assets/scss/base";
 
 class Comment extends Component {
@@ -258,7 +257,7 @@ class Comment extends Component {
 		const className = ref && ref.className;
 		ref && ref.addEventListener && ref.addEventListener('click', (e) => {
 			if (e && e.target && e.target.dataset && e.target.dataset.origin === 'delete') {
-				ref.className = `${ref.className} ${styleAnimate.bounceOutRight} ${styleAnimate.animated}`;
+				ref.className = `${ref.className} bounceOutRight animated`;
 				setTimeout(() => {
 					ref.className = className;
 				}, 300);

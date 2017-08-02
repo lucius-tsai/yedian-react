@@ -243,12 +243,19 @@ class Community extends Component {
     }
 
     let body = document.getElementsByTagName('body')[0];
+
     body.setAttribute('new_user_guide', 'guide');
-    document.addEventListener('click', (e) => {
+    let btn = document.createElement('a');
+    
+    btn.setAttribute('new_user_guide_click', 'guide');
+    btn.setAttribute('href', 'javascript:;');
+    body.appendChild(btn);
+
+    btn.addEventListener('click', (e) => {
       body.removeAttribute("new_user_guide");
     });
 
-    cookie('new_user_guide',  'dot', { path: '/', expires: 35600 })
+    cookie('new_user_guide',  'dot', { path: '/', expires: 35600 });
   }
 
   render() {

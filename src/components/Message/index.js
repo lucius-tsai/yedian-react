@@ -19,7 +19,6 @@ import {
 
 
 import styles from './message.scss';
-import styleAnimate from "../../assets/scss/animate";
 import styleBase from "../../assets/scss/base";
 
 /**
@@ -118,7 +117,7 @@ class Message extends Component {
     const className = ref && ref.className;
     ref && ref.addEventListener && ref.addEventListener('click', (e) => {
       if (e && e.target && e.target.dataset && e.target.dataset.origin === 'delete') {
-        ref.className = `${ref.className} ${styleAnimate.bounceOutRight} ${styleAnimate.animated}`;
+        ref.className = `${ref.className} bounceOutRight animated`;
       }
     });
 

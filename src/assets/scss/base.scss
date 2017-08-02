@@ -1,5 +1,4 @@
 @import "./setting";
-@import "./animate";
 
 html {
   font: 300 #{$fzSmall}/1 sans-serif;
@@ -14,6 +13,9 @@ body {
   -webkit-font-smoothing: antialiased;
   margin: 0;
   // -webkit-overflow-scrolling: touch;
+  a[new_user_guide_click] {
+    display: none;
+  }
   &.no-scroll {
     overflow: hidden;
     position: fixed;
@@ -32,8 +34,8 @@ body {
       z-index: 10;
       background-color: rgba(0, 0, 0, 0.25);
     }
-    &::after {
-      content: "";
+    a[new_user_guide_click] {
+      display: block;
       width: 350px;
       height: 257px;
       box-sizing: border-box;

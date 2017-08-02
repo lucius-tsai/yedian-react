@@ -49,6 +49,7 @@ import {
 } from '../../store/actions/userInfo';
 
 import './app.css';
+import "../../assets/scss/animate.css";
 
 class Bootstrap extends Component {
   constructor(props) {
