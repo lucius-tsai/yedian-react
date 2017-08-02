@@ -33,7 +33,7 @@ export const weChatSDKInstall = (data) => {
 
     window.wx.ready(function () {
       window.isWXReady = true;
-
+      alert("ready");
       window.wx.onMenuShareTimeline(window.shareDataTL);
       window.wx.onMenuShareAppMessage(window.shareData);
       window.wx.onMenuShareQQ(window.shareData);
