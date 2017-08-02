@@ -1,3 +1,4 @@
+
 .search-page {
 	width: 100%;
 	box-sizing: border-box;
@@ -10,7 +11,8 @@
 		padding-left: 30%;
 		border: 1px solid #CCCCCC;
 		border-radius: 18px;
-		.icon {
+		transition: all 0.3s ease-in-out;
+		[data-icon] {
 			color: #CCCCCC;
 			margin-right: 8px;
 		}
@@ -27,6 +29,7 @@
 	}
 	ul {
 		li {
+			padding: 20px 0;
 			border-bottom: 1px solid #EEEEEE;
 			&:last-child {
 				border-bottom: none;
@@ -50,6 +53,28 @@
 			li {
 				padding: 14px 0;
 			}
+		}
+	}
+	.showMore {
+		width: 100%;
+		line-height: 34px;
+		margin: 10px auto 15px;
+		text-align: center;
+		display: block;
+		border: 1px solid #cccccc;
+		border-radius: 3px;
+		font-size: 14px;
+	}
+	.creatTag-box {
+		margin-bottom: 24px;
+		button {
+			width: 100%;
+			line-height: 34px;
+			text-align: center;
+			display: block;
+			border: 1px solid #cccccc;
+			border-radius: 3px;
+			font-size: 14px;
 		}
 	}
 }

@@ -9,7 +9,7 @@ import {
   BrowserRouter as Router
 } from 'react-router-dom';
 
-import Bootstrap from './router/App/App';
+import Bootstrap from './router/AppStart/';
 
 const history = createHistory();
 

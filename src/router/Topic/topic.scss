@@ -7,11 +7,12 @@
   position: relative;
   height: 170px;
 }
-.topic-info {
+.topicInfo {
   width: 100%;
   box-sizing: border-box;
   padding: 10px;
   line-height: 1.5em;
+  margin-bottom: 10px;
   color: #666666;
   font-size: 16px;
   background-color: #ffffff;
@@ -38,7 +39,7 @@
   }
 }
 
-.news-timeLine {
+.newsTimeLine {
   margin: 10px auto;
   padding: 10px;
   line-height: 26px;
@@ -63,24 +64,10 @@
     text-align: left;
   }
 }
-
-.section {
-  margin-top: 10px;
-  h3 {
-    line-height: 1.5em;
-    padding: 0 18px;
-    font-size: 16px;
-  }
-  .message-cell {
-    padding: 15px 10px;
-    margin: 10px 0;
-    background-color: #ffffff;
-  }
-}
-.section-follow {
+.sectionFollow {
   overflow-x: scroll;
   overflow-y: hidden;
-  .follow-list {
+  .followList {
     padding: 0 10px; 
     li {
       width: 128px;
@@ -94,4 +81,74 @@
       margin-right: 0;
     }
   }
+}
+
+$max : 100;
+
+.topicSetion {
+  h3 {
+    line-height: 1.5em;
+    padding: 0 18px;
+    font-size: 16px;
+  }
+  .messageCell {
+    padding: 15px 10px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    -webkit-animation: messageShowUp 800ms linear both;
+    animation: messageShowUp 800ms linear both;
+    @for $i from 1 to $max { 
+      &:nth-child(#{$i}) {
+        animation-delay: #{($i - 1)*50}ms;
+      }
+    }
+  }
+}
+
+.topicTab {
+  height: 48px;
+  line-height: 48px;
+  font-size: 16px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  background-color: #ffffff;
+  border-bottom: 1px solid #E1E1E1;
+  .tab {
+    height: 48px;
+    flex: 1;
+    padding-left: 20px;
+    text-align: left;
+    &:first-child {
+      padding-left: 0;
+      padding-right: 20px;
+      text-align: right;
+    }
+  }
+  span {
+    display: inline-block;
+    padding: 0 5px;
+    cursor: pointer;
+    height: 45px;
+    border-bottom: 3px solid #ffffff;
+    color: #999999;
+  }
+  .active span {
+    color: #B746E7;
+    border-color: #B746E7;
+  }
+}
+
+
+@keyframes messageShowUp { 
+  0% { -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 50, 0, 1); transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 50, 0, 1); }
+  5.71% { -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 31.243, 0, 1); transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 31.243, 0, 1); }
+  11.31% { -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 18.229, 0, 1); transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 18.229, 0, 1); }
+  17.02% { -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 9.539, 0, 1); transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 9.539, 0, 1); }
+  22.62% { -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 4.333, 0, 1); transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 4.333, 0, 1); }
+  28.33% { -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1.357, 0, 1); transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1.357, 0, 1); }
+  33.93% { -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -0.107, 0, 1); transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -0.107, 0, 1); }
+  45.15% { -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -0.855, 0, 1); transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -0.855, 0, 1); }
+  72.57% { -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -0.193, 0, 1); transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -0.193, 0, 1); }
+  100% { -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); } 
 }

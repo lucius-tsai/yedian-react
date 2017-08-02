@@ -1,4 +1,4 @@
-.action-bar {
+.actionBar {
   position: fixed;
   left: 50%;
   bottom: calc(2% + 50px);
@@ -8,14 +8,15 @@
   text-align: center;
   border-radius: 50%;
   box-shadow: 0 6px 14px 0 rgba(115, 68, 192, .73);
-  background:-moz-linear-gradient(left top,#B33DE5,#3023AE);/*Mozilla*/
-  background:-webkit-linear-gradient(left top,#B33DE5,#3023AE);/*new gradient for Webkit*/
-  background:-o-linear-gradient(left top,#B33DE5,#3023AE); /*Opera11*/
+  background: -webkit-linear-gradient(top left, #B33DE5, #3023AE);
+  background: -moz-linear-gradient(top left, #B33DE5, #3023AE);
+  background: -o-linear-gradient(top left, #B33DE5, #3023AE);
+  background: linear-gradient(to bottom right, #B33DE5, #3023AE);
   font-size: 14px;
   &.bottom {
     bottom: 3%;
   }
-  .icon {
+  [data-icon] {
     font-size: 1.65em;
     color: #ffffff;
   }

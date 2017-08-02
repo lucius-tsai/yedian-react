@@ -1,0 +1,21 @@
+.message-animate-cell {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  [data-avator-box] {
+    width: 36px; // float: left;
+  }
+  ._text {
+    flex: 1;
+    width: 100px;
+    height: 26px;
+    line-height: 26px;
+    font-size: 14px;
+    color: #ffffff;
+    text-align: left;
+    word-break: keep-all;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

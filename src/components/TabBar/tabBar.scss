@@ -1,9 +1,8 @@
-@import "../../icons/scss/ionicons";
-@import "../../assets/scss/base";
-.tab-bar {
+@import '../../assets/scss/setting';
+.tabBar {
   max-width: 414px;
   position: fixed;
-  bottom: 0;
+  bottom: -100px;
   left: 50%;
   height: 50px;
   z-index: 9;
@@ -15,6 +14,7 @@
   display: -ms-flexbox;
   display: flex;
   box-shadow: 0 -3px 5px 0 rgba(0, 0, 0, .2);
+  transition: all 0.3s ease-in-out;
   &>div {
     -webkit-box-flex: 1;
     -ms-flex: 1;
@@ -34,11 +34,14 @@
       opacity: 1;
     }
   }
-  .icon {
+  [data-icon] {
     width: 26px;
     height: 20px;
     margin: 7px auto 5px;
     vertical-align: top;
     font-size: 20px;
+  }
+  &.show {
+    bottom: 0;
   }
 }

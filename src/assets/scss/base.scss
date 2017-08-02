@@ -12,8 +12,43 @@ body {
   -webkit-tap-highlight-color: transparent;
   -webkit-font-smoothing: antialiased;
   margin: 0;
+  // -webkit-overflow-scrolling: touch;
+  a[new_user_guide_click] {
+    display: none;
+  }
   &.no-scroll {
     overflow: hidden;
+    position: fixed;
+  }
+  transition: all 0.3s ease-in-out;
+  &[new_user_guide] {
+    overflow: hidden;
+    position: fixed;
+    &::before {
+      content: "";
+      width: 100%;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 10;
+      background-color: rgba(0, 0, 0, 0.25);
+    }
+    a[new_user_guide_click] {
+      display: block;
+      width: 350px;
+      height: 257px;
+      box-sizing: border-box;
+      position: fixed;
+      right: 4%;
+      bottom: calc(2% + 50px);
+      background-position: right bottom;
+      background-size: 80%;
+      z-index: 10;
+      background-repeat: no-repeat;
+      background-origin: padding-box;
+      background-image: url('../images/guide.png');
+    }
   }
 }
 
@@ -127,11 +162,29 @@ table {
   }
 }
 
-#app {
+::-webkit-input-placeholder { /* WebKit browsers */
+    color: #999;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #999;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #999;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: #999;
+}
+
+#app, div[data-app] {
   max-width: 414px;
   min-height: 100vh;
   margin: 0 auto;
   background: #F5F5F5;
   color: $textGray;
   overflow-y: scroll;
+  overflow-x: hidden;
+  position: relative;
+  background-image: url('../images/launch.jpg');
+  background-position: center center;
+  background-size: cover;
 }

@@ -1,0 +1,146 @@
+.app {
+	padding-bottom: 50px;
+}
+.app.no-tab-bar {
+  padding-bottom: 0;
+}
+
+/**
+ * 动画 界面 淡出淡入
+ */
+.app-enter {
+	width: 100%;
+	position: absolute;
+	opacity: 0.01;
+	transition: .3s opacity ease-in-out;
+}
+
+.app-enter.app-enter-active {
+	opacity: 1;
+}
+
+.app-leave {
+	width: 100%;
+	position: absolute;
+	opacity: 1;
+	transition: .3s opacity ease-in-out;
+}
+
+.app-leave.app-leave-active {
+	opacity: 0.01;
+}
+
+
+/**
+ * 界面 动画 左往右 出
+ */
+.app-left-to-right-enter {
+	width: 100%;
+	height: 100vh;
+	position: absolute;
+	left: 0;
+	top: 0;
+	overflow: hidden;
+	opacity: 0.01;
+	transform: translate3d(100%, 0, 0);
+	transition: all 0.3s ease-in;
+	z-index: 1;
+}
+
+.app-left-to-right-enter.app-left-to-right-enter-active {
+	opacity: 1;
+	transform: translate3d(0, 0, 0);
+}
+
+.app-left-to-right-leave {
+	width: 100%;
+	height: 100vh;
+	position: absolute;
+	left: 0;
+	top: 0;
+	opacity: 1;
+	overflow: hidden;
+	transform: translate3d(0, 0, 0);
+	transition: all 0.3s ease-in;
+}
+
+.app-left-to-right-leave.app-left-to-right-leave-active {
+	opacity: 0.01;
+	transform: translate3d(-100%, 0, 0);
+}
+
+/**
+ * 界面 动画 右往左 出
+ */
+.app-right-to-left-enter {
+	width: 100%;
+	height: 100vh;
+	position: absolute;
+	left: 0;
+	top: 0;
+	overflow: hidden;
+	opacity: 0.01;
+	transform: translate3d(-100%, 0, 0);
+	transition: all 0.3s ease-in;
+	z-index: 1;
+}
+
+.app-right-to-left-enter.app-right-to-left-enter-active {
+	opacity: 1;
+	transform: translate3d(0, 0, 0);
+}
+
+.app-right-to-left-leave {
+	width: 100%;
+	height: 100vh;
+	position: absolute;
+	left: 0;
+	top: 0;
+	overflow: hidden;
+	opacity: 1;
+	transform: translate3d(0, 0, 0);
+	transition: all 0.3s ease-in;
+}
+
+.app-right-to-left-leave.app-right-to-left-leave-active {
+	opacity: 0.01;
+	transform: translate3d(100%, 0, 0);
+}
+
+/**
+ * 界面 动画 下往上 出
+ */
+.app-bottom-to-top-enter  {
+	width: 100%;
+	height: 100vh;
+	position: absolute;
+	left: 0;
+	top: 0;
+	overflow: hidden;
+	opacity: 1;
+	z-index: 2;
+	transform: translate3d(0, 100%, 0);  
+	transition: all 0.3s ease-in;
+}
+
+.app-bottom-to-top-enter.app-bottom-to-top-enter-active {
+	 transform: translate3d(0, 0, 0); 
+}
+
+.app-bottom-to-top-leave {
+	 width: 100%;
+	height: 100vh;
+	position: absolute;
+	left: 0;
+	top: 0;
+	overflow: hidden;
+	opacity: 1;
+	z-index: 1;
+	transform: translate3d(0, 0, 0);  
+	transition: all 0.3s ease-in; 
+}
+
+.app-bottom-to-top-leave.app-bottom-to-top-leave-active {
+	 opacity: 0.01;
+	 /* transform: translate3d(0, -100%, 0); */
+}

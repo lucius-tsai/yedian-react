@@ -2,42 +2,58 @@
 // --------------------------
 
 .ionicons,
+.#{$ionicons-prefix}action-more:before,
 .#{$ionicons-prefix}angle-right:before,
 .#{$ionicons-prefix}community:before,
 .#{$ionicons-prefix}community-active:before,
 .#{$ionicons-prefix}cta-collection:before,
 .#{$ionicons-prefix}cta-comment:before,
 .#{$ionicons-prefix}cta-like:before,
+.#{$ionicons-prefix}delete:before,
+.#{$ionicons-prefix}flickr:before,
 .#{$ionicons-prefix}index:before,
 .#{$ionicons-prefix}index-active:before,
 .#{$ionicons-prefix}list:before,
 .#{$ionicons-prefix}list-active:before,
 .#{$ionicons-prefix}loading:before,
+.#{$ionicons-prefix}location:before,
+.#{$ionicons-prefix}login-captcha:before,
+.#{$ionicons-prefix}login-user:before,
 .#{$ionicons-prefix}pencil:before,
+.#{$ionicons-prefix}report:before,
 .#{$ionicons-prefix}search:before,
 .#{$ionicons-prefix}search-square:before,
 .#{$ionicons-prefix}topic:before,
 .#{$ionicons-prefix}user:before,
 .#{$ionicons-prefix}user-active:before,
-.#{$ionicons-prefix}venues-address:before
+.#{$ionicons-prefix}venues-address:before,
+.#{$ionicons-prefix}warning:before
 {
   @extend .ion;
 }
+.#{$ionicons-prefix}action-more:before { content: $ionicon-var-action-more; }
 .#{$ionicons-prefix}angle-right:before { content: $ionicon-var-angle-right; }
 .#{$ionicons-prefix}community:before { content: $ionicon-var-community; }
 .#{$ionicons-prefix}community-active:before { content: $ionicon-var-community-active; }
 .#{$ionicons-prefix}cta-collection:before { content: $ionicon-var-cta-collection; }
 .#{$ionicons-prefix}cta-comment:before { content: $ionicon-var-cta-comment; }
 .#{$ionicons-prefix}cta-like:before { content: $ionicon-var-cta-like; }
+.#{$ionicons-prefix}delete:before { content: $ionicon-var-delete; }
+.#{$ionicons-prefix}flickr:before { content: $ionicon-var-flickr; }
 .#{$ionicons-prefix}index:before { content: $ionicon-var-index; }
 .#{$ionicons-prefix}index-active:before { content: $ionicon-var-index-active; }
 .#{$ionicons-prefix}list:before { content: $ionicon-var-list; }
 .#{$ionicons-prefix}list-active:before { content: $ionicon-var-list-active; }
 .#{$ionicons-prefix}loading:before { content: $ionicon-var-loading; }
+.#{$ionicons-prefix}location:before { content: $ionicon-var-location; }
+.#{$ionicons-prefix}login-captcha:before { content: $ionicon-var-login-captcha; }
+.#{$ionicons-prefix}login-user:before { content: $ionicon-var-login-user; }
 .#{$ionicons-prefix}pencil:before { content: $ionicon-var-pencil; }
+.#{$ionicons-prefix}report:before { content: $ionicon-var-report; }
 .#{$ionicons-prefix}search:before { content: $ionicon-var-search; }
 .#{$ionicons-prefix}search-square:before { content: $ionicon-var-search-square; }
 .#{$ionicons-prefix}topic:before { content: $ionicon-var-topic; }
 .#{$ionicons-prefix}user:before { content: $ionicon-var-user; }
 .#{$ionicons-prefix}user-active:before { content: $ionicon-var-user-active; }
 .#{$ionicons-prefix}venues-address:before { content: $ionicon-var-venues-address; }
+.#{$ionicons-prefix}warning:before { content: $ionicon-var-warning; }

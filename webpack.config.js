@@ -2,6 +2,13 @@ var path = require('path');
 var webpack = require('webpack');
 var fs = require('fs-extra');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+
+const extractSass = new ExtractTextPlugin({
+  filename: "[name].[hash:8].css",
+  disable: false,
+  allChunks: true
+});
 
 var getIPAdress = function () {
   var interfaces = require('os').networkInterfaces();
@@ -19,12 +26,13 @@ var getIPAdress = function () {
 var webpackConfig = {
   entry: {
     app: './src/app.js',
-    vendor: ['react', 'react-dom', 'react-router'],
+    vendor: ['react', 'react-dom', 'react-router', 'redux', 'axios'],
   },
   output: {
-    path: path.resolve(__dirname, './app'),
+    path: path.resolve(__dirname, './app_tmp'),
     publicPath: '/app/',
-    filename: `[name].[hash:8].js`
+    filename: `[name].[hash:8].js`,
+    chunkFilename: `[name]-[id].[chunkhash:8].bundle.js`
   },
   resolve: {
     modules: ['./src', './node_modules'],
@@ -44,8 +52,32 @@ var webpackConfig = {
         }
       },
       {
-        test: /\.(css|scss)$/,
-        loader: "style-loader!css-loader!sass-loader"
+        test: /\.scss$/,
+        loader: ExtractTextPlugin.extract({
+          fallbackLoader: 'style-loader',
+          loader: [
+            {
+              loader: 'css-loader',
+              query: {
+                modules: true,
+                sourceMap: true,
+                importLoaders: 1,
+                localIdentName: '[local]_[hash:base64:5]'
+              }
+            }, {
+              loader: 'resolve-url-loader'
+            },
+            {
+              loader: 'postcss-loader'
+            }, {
+              loader: "sass-loader"
+            }
+          ]
+        })
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader','css-loader']
       },
       {
         test: /\.json$/,
@@ -64,15 +96,6 @@ var webpackConfig = {
         test: /\.(png|jpg|jpeg|gif)$/,
         loader: 'file-loader?hash=sha512&digest=hex&name=[hash].[ext]'
       }
-
-      // {
-      // 	test: /\.(ico|png|jpg|svg)$/,
-      // 	loader: 'file-loader',
-      // 	options: {
-      // 		limit: 10240,
-      // 		name: 'images/[name].[ext]?v=[hash:base64:5]'
-      // 	}
-      // }
     ]
   },
   devServer: {
@@ -87,7 +110,7 @@ var webpackConfig = {
     proxy: {
       "/api": {
         target: "http://localhost:4003",
-        pathRewrite: {"^/api" : ""}
+        pathRewrite: { "^/api": "" }
       }
     }
   },
@@ -95,9 +118,36 @@ var webpackConfig = {
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor'
-    })
+    }),
+    extractSass
   ]
 
+}
+
+if (process.env.NODE_ENV === 'localhost') {
+  webpackConfig.plugins = (webpackConfig.plugins || []).concat([
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('localhost')
+      },
+      BASENAME: JSON.stringify("/app/"),
+      'process.env.IP': JSON.stringify(getIPAdress())
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      hash: false,
+      // favicon: base('static/favicon.ico'),
+      filename: 'index.html',
+      inject: 'body',
+      minify: {
+        collapseWhitespace: true
+      },
+      title: 'wechat-dev',
+      env: {
+        production: false
+      }
+    })
+  ]);
 }
 
 if (process.env.NODE_ENV === 'development') {
@@ -118,14 +168,45 @@ if (process.env.NODE_ENV === 'development') {
       minify: {
         collapseWhitespace: true
       },
-      title: 'wechat-dev',
+      title: 'NIGHT+',
       env: {
-				production: false
-			}
+        production: false
+      }
     })
   ]);
   fs.ensureDirSync(path.resolve(__dirname, './app/mockData'));
   fs.copySync(path.resolve(__dirname, './mockData'), path.resolve(__dirname, './app/mockData'))
+}
+
+if (process.env.NODE_ENV === 'staging') {
+  webpackConfig.plugins = (webpackConfig.plugins || []).concat([
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('staging')
+      },
+      BASENAME: JSON.stringify("/app/"),
+      'process.env.IP': JSON.stringify(getIPAdress())
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      hash: false,
+      // favicon: base('static/favicon.ico'),
+      filename: 'index.html',
+      inject: 'body',
+      minify: {
+        collapseWhitespace: true
+      },
+      title: 'wechat-dev',
+      env: {
+        production: false
+      }
+    })
+  ]);
+  fs.ensureDirSync(path.resolve(__dirname, './app/mockData'));
+  fs.copySync(path.resolve(__dirname, './mockData'), path.resolve(__dirname, './app/mockData'))
+
+  fs.ensureDirSync(path.resolve(__dirname, './app/static'));
+  fs.copySync(path.resolve(__dirname, './static'), path.resolve(__dirname, './app/static'))
 }
 
 if (process.env.NODE_ENV === 'production') {
@@ -157,11 +238,16 @@ if (process.env.NODE_ENV === 'production') {
       },
       title: 'wechat-dev',
       env: {
-				production: true
-			}
+        production: true
+      }
     })
-  ])
+  ]);
 
+  fs.ensureDirSync(path.resolve(__dirname, './app/mockData'));
+  fs.copySync(path.resolve(__dirname, './mockData'), path.resolve(__dirname, './app/mockData'))
+
+  fs.ensureDirSync(path.resolve(__dirname, './app/static'));
+  fs.copySync(path.resolve(__dirname, './static'), path.resolve(__dirname, './app/static'))
 }
 
 module.exports = webpackConfig;

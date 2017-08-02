@@ -5,19 +5,23 @@ import rootReducer from './reducers/index';
 import logger from 'redux-logger'
 import reducers from './reducers'
 
-let middleware = [thunk, logger];
+let middleware = [thunk];
+
+if (process.env.NODE_ENV === "localhost") {
+	middleware.push(logger);
+}
 
 const init = (history) => {
-    return createStore(
-        connectRouter(history)(reducers),
-        // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-        compose(
-            applyMiddleware(
-                routerMiddleware(history),
-                ...middleware
-            ),
-        ),
-    )
+	return createStore(
+		connectRouter(history)(reducers),
+		window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+		compose(
+			applyMiddleware(
+				routerMiddleware(history),
+				...middleware
+			),
+		),
+	)
 }
 
 export default init;

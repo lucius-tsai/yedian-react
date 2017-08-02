@@ -1,0 +1,43 @@
+.carousel-default-enter {
+  position: absolute;
+  transform: translate3d(100%, 0, 0);
+  transition: transform 0.5s;
+  z-index: 1;
+}
+
+.carousel-default-enter.carousel-default-enter-active {
+  transform: translate3d(0, 0, 0);
+}
+
+.carousel-default-leave {
+  position: absolute;
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.5s;
+}
+
+.carousel-default-leave.carousel-default-leave-active {
+  transform: translate3d(-100%, 0, 0);
+}
+
+/**
+ *  渐变
+ */
+.carousel-fade-enter {
+  position: absolute;
+  opacity: 0.01;
+  transition: .7s opacity ease-in-out;
+}
+
+.carousel-fade-enter.carousel-fade-enter-active {
+  opacity: 1;
+}
+
+.carousel-fade-leave {
+  position: absolute;
+  opacity: 1;
+  transition: .7s opacity ease-in-out;
+}
+
+.carousel-fade-leave.carousel-fade-leave-active {
+  opacity: 0.01;
+}

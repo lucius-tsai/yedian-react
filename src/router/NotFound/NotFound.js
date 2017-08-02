@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import './notfound.scss';
+import styles from './notfound.scss';
 
 
 export default class NotFound extends Component {
@@ -10,7 +10,7 @@ export default class NotFound extends Component {
 
   render() {
     return (
-      <div className="not-found">
+      <div className={styles["not-found"]}>
         <img src={require("./notfound.png")} alt=""/>
       </div>
     )

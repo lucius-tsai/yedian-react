@@ -2,7 +2,9 @@
  * Created by townmi on 17/6/26.
  */
 import React, { Component } from 'react';
-import './loadmore.scss';
+
+import styles from './loadmore.scss';
+import styleIcons from  "../../icons/scss/ionicons";
 
 export default class Loading extends Component {
   constructor(props) {
@@ -14,8 +16,8 @@ export default class Loading extends Component {
   }
   render() {
     return (
-      <div className="load-more">
-        <div className="icon ion-loading"></div>
+      <div className={styles["load-more"]}>
+        <div className={styleIcons['ion-loading']} data-icon></div>
       </div>
     )
   }

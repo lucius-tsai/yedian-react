@@ -1,161 +1,323 @@
-import React, {Component} from 'react';
-import {Link, withRouter} from 'react-router-dom';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Link, withRouter } from 'react-router-dom';
 import Avator from '../Avator';
 import CTABar from '../CTABar';
-import './message.scss';
 
-const defaultProfile = {
-  avator: "http://www.wangmingdaquan.cc/tx61/66.jpg",
-  username: "towne",
-  date: "2017-10-8"
-};
 const defaultMessage = {
-  description: "呃呃呃～算是吧～",
-  pictures: [
-    "http://onq4xhob0.bkt.clouddn.com/bdc270ac6e5642b880b60b002e3a81a6.jpeg"
-  ]
+  description: "not found error",
+  pictures: []
 };
 
+import {
+  deletePost
+} from '../../libs/api.js';
+
+import {
+  putPostList
+} from '../../store/actions/posts';
+
+
+import styles from './message.scss';
+import styleBase from "../../assets/scss/base";
+
+/**
+ * [社区消息组件]
+ * post 消息对象
+ * canLink 消息卡片是否可以点击
+ * showFollow 是否可以关注
+ * @class Message
+ * @extends {Component}
+ */
 class Message extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      profile: defaultProfile,
-      message: defaultMessage,
+      post: defaultMessage,
       canLink: false,
-      showFollow: true
+      showFollow: false,
+      showModal: false,
+      __showComment: false
     };
-    this.go = this.go.bind(this);
+
     this.lazyLoadPictures = this.lazyLoadPictures.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.showModal = this.showModal.bind(this);
+    this.hiddenModal = this.hiddenModal.bind(this);
   }
 
   componentWillMount() {
-    const {profile, message, canLink, showFollow} = this.props;
-
+    const { post, canLink, showFollow, disabledLink, __showComment } = this.props;
     this.setState({
-      profile: profile ? profile : defaultProfile,
-      message: message ? message : defaultMessage,
+      post: post ? post : defaultMessage,
       canLink: canLink === true,
-      showFollow: showFollow
+      showFollow: showFollow,
+      disabledLink: disabledLink ? disabledLink : false,
+      __showComment
     });
   }
 
   componentWillReceiveProps(nextProps) {
-    const {profile, message, canLink, showFollow} = nextProps;
+    const { post, canLink, showFollow, disabledLink, __showComment } = nextProps;
     this.setState({
-      profile: profile ? profile : defaultProfile,
-      message: message ? message : defaultMessage,
+      post: post ? post : defaultMessage,
       canLink: canLink === true,
-      showFollow: showFollow
+      showFollow: showFollow,
+      disabledLink: disabledLink ? disabledLink : false,
+      __showComment
     })
   }
 
-  go(event, router) {
-    console.log(this);
-    console.log(event, router);
-    if (router) {
-    }
-  }
-
-  lazyLoadPictures () {
-    const currentScrollY = window.scrollY + window.innerHeight - 30;
-    for(const i in this.refs) {
+  lazyLoadPictures(e) {
+    const cellWidth = window.innerWidth > 414 ? (414 - 20) : (window.innerWidth - 20);
+    const currentScrollY = window.scrollY + window.innerHeight - 40;
+    for (const i in this.refs) {
       const cell = this.refs[i];
-      if(cell.offsetTop < currentScrollY) {
+      if (cell.offsetTop < currentScrollY) {
         const originSrc = cell.getAttribute("data-src");
-        cell.style.backgroundImage = `url(${originSrc})`;
+        let image = new Image();
+        image.src = originSrc;
+        image.onload = function () {
+          cell.style.backgroundImage = `url(${originSrc})`;
+          cell.style.backgroundColor = 'transparent';
+          if (cell && cell.dataset && cell.dataset.origin === 'single') {
+            cell.style.height = `${cellWidth * image.height / image.width}px`;
+          }
+        }
         delete this.refs[i];
       }
     }
   }
 
+  deletePost(cb) {
+    // return false;
+    const { post } = this.state;
+    const { posts, putPostList } = this.props;
+    const localPosts = Object.assign({}, JSON.parse(JSON.stringify({ o: posts }))).o;
+    deletePost(post._id).then(res => {
+      if (res.code === 200) {
+        localPosts.every((cell, index) => {
+          if (post._id === cell._id) {
+            localPosts.splice(index, 1);
+            return false;
+          } else {
+            return true;
+          }
+        });
+        putPostList(localPosts);
+        cb && cb();
+      }
+    }, error => {
+      cb && cb();
+    });
+  }
+
+  handleClick(ref) {
+    const self = this;
+    const className = ref && ref.className;
+    ref && ref.addEventListener && ref.addEventListener('click', (e) => {
+      if (e && e.target && e.target.dataset && e.target.dataset.origin === 'delete') {
+        ref.className = `${ref.className} bounceOutRight animated`;
+      }
+    });
+
+    ref && ref.addEventListener && ref.addEventListener('webkitAnimationEnd', (e) => {
+      self.deletePost(() => {
+        self.lazyLoadPictures();
+        ref.className = className;
+      });
+    });
+  }
+
+  hiddenModal() {
+    this.setState({
+      showModal: false
+    });
+  }
+
+  /**
+   * 查看 图片
+   * @param {any} ref 
+   * @memberof Message
+   */
+  showModal(ref) {
+    const self = this;
+    // ref && ref.addEventListener && ref.addEventListener('click', (e) => {
+    //   if (e && e.target && e.target.dataset && e.target.dataset.origin === 'picture') {
+    //     self.setState({
+    //       showModal: true
+    //     });
+    //   }
+    // });
+  }
+
   render() {
-    const {profile, message, canLink, showFollow} = this.state;
+    const { post, canLink, showFollow, showModal, disabledLink, __showComment } = this.state;
+    const { __parentOpenComment } = this.props;
+    let message = null;
+    const affiliates = post.affiliates;
+
+    if (post && post.postType === 0) {
+      message = post.message;
+    } else if (post && post.postType === 1) {
+      /**
+       * 正对商家活动，特殊处理
+       */
+      message = {};
+      post.defaultComponents && post.defaultComponents.forEach(cell => {
+        switch (cell.name) {
+          case 'component-banner':
+            message.images = [cell.content[0].url];
+            break;
+          default:
+            break;
+        }
+      });
+
+      post.customizedComponents && post.customizedComponents.forEach(cell => {
+        if (cell.name === 'component-paragraph') {
+          message.description = cell.content;
+        }
+      });
+    }
+
+    const tags = post.tags;
+    const query = '?fromwhere=community';
+
+    if (!message) {
+      return (<div></div>)
+    }
     const cellWidth = window.innerWidth > 414 ? (414 - 20) * 0.32 : (window.innerWidth - 20) * 0.32;
     let picturesList = "";
-    if (message.pictures.length === 1) {
+    const random = () => {
+      return Math.floor(Math.random() * 255);
+    }
+    if (message.images && message.images.length === 1) {
       picturesList = (
-        <img src={message.pictures[0]} alt="" data-src={message.pictures[0]}/>
+        <div className={styles['single']} data-origin='single' style={{ height: `${cellWidth * 12 / 7}px`, backgroundColor: `rgb(${random()}, ${random()}, ${random()})` }} ref={`lazyImages-${new Date().getTime()}`} data-src={message.images[0]}>
+        </div>
       );
-    } else if (message.pictures.length > 1) {
-      picturesList = message.pictures.map((cell, index) => {
+    } else if (message.images && message.images.length > 1) {
+      picturesList = message.images.map((cell, index) => {
         return (
-          <div className="img-single" key={index} style={{backgroundColor: `#3023AE`, height: `${cellWidth}px`}} ref={`lazyImages-${new Date().getTime()}-${index}`} data-src={cell}>
+          <div data-origin='picture' className={styles["img-single"]} key={`${post._id}${index}`} style={{ backgroundColor: `rgb(${random()}, ${random()}, ${random()})`, height: `${cellWidth}px` }} ref={`lazyImages-${new Date().getTime()}-${index}`} data-src={cell}>
           </div>
         )
       });
     }
     return (
-      <div className="card-message">
-        <div className="card-message-top">
-          <Avator profile={profile} showFollow={showFollow} model={"default"}/>
+      <div className={styles["card-message"]} ref={this.handleClick} key={post._id}>
+        <div className={styles["card-message-top"]}>
+          <Avator profile={post.postedBy} date={post.createdAt} showFollow={showFollow} model={"default"} disabledLink={disabledLink} affiliates={affiliates} />
         </div>
         {
-          !canLink ?
-            <div className="card-message-content">
-              <h4>{message.description}</h4>
+          !canLink && <div className={styles["card-message-content"]}>
+            <h4>{message.description}</h4>
+            {
+              message.images.length > 1 ?
+                <div className={styles["imgs"]} ref={this.showModal}>
+                  {picturesList}
+                </div>
+                :
+                <div className={styles["img-single"]}>
+                  {picturesList}
+                </div>
+            }
+            <div className={styles["topics"]}>
               {
-                message.pictures.length > 1 ?
-                  <div className="imgs">
-                    {picturesList}
-                  </div>
-                  :
-                  <p className="img-single">
-                    {picturesList}
-                  </p>
+                tags.map(cell => {
+                  return (<a key={cell._id}>{`#${cell.tag}#`}</a>)
+                })
               }
-              <div className="topics">
-                <a href="#">#最浪漫的夜生活#</a>
-                <a href="#">#最浪漫的夜生活#</a>
-                <span className="city">上海</span>
-              </div>
+              {/* <span className="city">上海</span> */}
             </div>
-            :
-            <Link className="card-message-content clearfix" to={{pathname: `${BASENAME}message/123`}}>
-              <h4>{message.description}</h4>
-              {
-                message.pictures.length > 1 ?
-                  <div className="imgs">
-                    {picturesList}
-                  </div>
-                  :
-                  <p className="img-single">
-                    {picturesList}
-                  </p>
-              }
-            </Link>
-        }
-        {
-          <div className={"card-message-bottom"}>
-            <CTABar fix={canLink}/>
           </div>
         }
-
+        {
+          canLink && post.postType === 0 && <Link className={`${styles['card-message-content']} ${styleBase['clearfix']}`} to={{ pathname: `${BASENAME}message/${post._id}`, state: { id: post._id } }}>
+            <h4>{message.description}</h4>
+            {
+              message.images && message.images.length > 1 ?
+                <div className={styles["imgs"]}>
+                  {picturesList}
+                </div>
+                :
+                <div className={styles["img-single"]}>
+                  {picturesList}
+                </div>
+            }
+          </Link>
+        }
+        {
+          canLink && post.postType === 1 && <a className={`${styles['card-message-content']} ${styleBase['clearfix']}`} href={`${location.origin}/dist/?#!/venues/event/${post._id}${query}`}>
+            <h4>{message.description}</h4>
+            {
+              message.images && message.images.length > 1 ?
+                <div className={styles["imgs"]}>
+                  {picturesList}
+                </div>
+                :
+                <div className={styles["img-single"]}>
+                  {picturesList}
+                </div>
+            }
+          </a>
+        }
+        {
+          <div className={styles["card-message-bottom"]}>
+            <CTABar fix={canLink} post={post} __showComment={__showComment} />
+          </div>
+        }
+        {
+          !canLink && 
+          <div className={showModal ? `${styles.modal} ${styles.active}` : styles.modal} onClick={this.hiddenModal}>
+            <ul className={`${styles.carousel} ${styleBase.clearfix}`}>
+              {
+                message.images.map((cell, index) => {
+                  return (
+                    <li key={index}>
+                      <img src={cell} alt=""/>
+                    </li>
+                  )
+                })
+              }
+            </ul>
+          </div>
+        }
       </div>
     )
   }
 
   componentDidMount() {
+    const { post } = this.state;
     window.addEventListener("scroll", this.lazyLoadPictures);
     this.lazyLoadPictures();
-
   }
+
+  componentDidUpdate() {
+    const { post } = this.state;
+    this.lazyLoadPictures();
+  }
+
   componentWillUnmount() {
     window.removeEventListener("scroll", this.lazyLoadPictures)
   }
 }
 
 const mapStateToProps = state => {
-  const {router} = state;
+  const { posts } = state;
   return {
-    router
+    posts: posts.posts || []
   }
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return {}
+  return {
+    putPostList: (cell) => {
+      dispatch(putPostList(cell))
+    }
+  }
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Message));
+export default connect(mapStateToProps, mapDispatchToProps)(Message);
 // export default Message;
