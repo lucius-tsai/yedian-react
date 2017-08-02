@@ -26,7 +26,7 @@ var getIPAdress = function () {
 var webpackConfig = {
   entry: {
     app: './src/app.js',
-    vendor: ['react', 'react-dom', 'react-router'],
+    vendor: ['react', 'react-dom', 'react-router', 'redux', 'axios'],
   },
   output: {
     path: path.resolve(__dirname, './app_tmp'),
@@ -168,7 +168,7 @@ if (process.env.NODE_ENV === 'development') {
       minify: {
         collapseWhitespace: true
       },
-      title: 'wechat-dev',
+      title: 'NIGHT+',
       env: {
         production: false
       }

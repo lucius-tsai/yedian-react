@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 
 import styles from './avator.scss';
 import styleBase from  "../../assets/scss/base";
 
-import { parseDate } from '../../libs/uitls';
 import {
   getFollwers,
   creatFollow,
@@ -42,7 +42,7 @@ class Avator extends Component {
         headImgUrl: "http://www.wangmingdaquan.cc/tx61/66.jpg",
         displayName: 'N'
       },
-      date: date ? parseDate('yyyy/MM/dd hh:mm:ss', new Date(date)) : parseDate('yyyy/MM/dd hh:mm:ss', new Date()),
+      date: date ? moment(new Date(date)).format('YYYY/MM/DD HH:mm:ss') : moment().format('YYYY/MM/DD HH:mm:ss'),
       size: size ? size : "normal",
       style: style ? style : "horizontal", //vertical
       model: model ? model : undefined,
@@ -64,7 +64,7 @@ class Avator extends Component {
         headImgUrl: "http://www.wangmingdaquan.cc/tx61/66.jpg",
         displayName: 'N'
       },
-      date: date ? parseDate('yyyy/MM/dd hh:mm:ss', new Date(date)) : parseDate('yyyy/MM/dd hh:mm:ss', new Date()),
+      date: date ? moment(new Date(date)).format('YYYY/MM/DD HH:mm:ss') : moment().format('YYYY/MM/DD HH:mm:ss'),
       size: size ? size : "normal",
       style: style ? style : "horizontal", //vertical
       model: model ? model : undefined,
