@@ -73,7 +73,8 @@ if (isWechat) {
   } else {
     const body = document.getElementsByTagName('body')[0];
     const wxScriptDom = document.createElement('script');
-    wxScriptDom.setAttribute('src', '//res.wx.qq.com/open/js/jweixin-1.2.0.js');
+    // wxScriptDom.setAttribute('src', '//res.wx.qq.com/open/js/jweixin-1.2.0.js');
+    wxScriptDom.setAttribute('src', `${location.origin}${BASENAME}static/jweixin-1.2.0.js`);
     wxScriptDom.addEventListener('load', () => {
       sdk();
     });
