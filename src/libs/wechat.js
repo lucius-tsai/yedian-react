@@ -43,7 +43,7 @@ export const weChatSDKInstall = (data) => {
     window.wx.error(function (res) {
       window.isWXReady = false;
       window.wxErrorMsg = res.errMsg;
-      alert("debug-sign-error");
+      alert(JSON.stringify(res));
     });
   } else {
     alert(data.msg);
