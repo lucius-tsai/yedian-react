@@ -54,9 +54,7 @@ import "../../assets/scss/animate.css";
 class Bootstrap extends Component {
   constructor(props) {
     super(props);
-
     const token = cookie('js_session');
-
     // console.log(location.pathname);
     this.state = {
       redirectPath: `${BASENAME}community`,
@@ -68,7 +66,6 @@ class Bootstrap extends Component {
 
     this.pointY = null;
     this.handleScroll = this.handleScroll.bind(this);
-
   }
 
   componentWillMount() {
@@ -292,6 +289,7 @@ class Bootstrap extends Component {
       history
     } = this.props;
     const token = cookie('js_session');
+    this.setLocation();
     if (token) {
       if (!userInfo.user) {
         this.getUserInfo();
@@ -303,15 +301,6 @@ class Bootstrap extends Component {
         redirectUri: window.location.pathname
       });
     }
-
-    if (!(/micromessenger|webbrowser/i).test(navigator.userAgent)) {
-      if (typeof wx !== 'undefined') {
-        this.setLocation();
-      }
-    } else {
-      this.setLocation();
-    }
-
     // 全局处理SPA下拉滚动加载数据
     document.addEventListener("touchstart", this.handleTouch);
     window.addEventListener("scroll", this.handleScroll);
@@ -334,15 +323,6 @@ class Bootstrap extends Component {
       // if (!(followers && followers.venuesFollowers) && !followers.loadingVenuesFollowers) {
       //   this.setVenuesFollowers();
       // }
-    }
-    if(!gps) {
-      if (!(/micromessenger|webbrowser/i).test(navigator.userAgent)) {
-        if (typeof wx !== 'undefined') {
-          this.setLocation();
-        }
-      } else {
-        this.setLocation();
-      }
     }
   }
 
