@@ -4,7 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './main';
 
-import { cookie, getQueryString, getLocation } from './libs/uitls';
+import { cookie, getQueryString } from './libs/uitls';
 import { weChatSDKInstall } from './libs/wechat';
 import { weChatAuth, getWeChatSDKSign, getScripts } from './libs/api';
 // const currentPage = window.location.pathname;

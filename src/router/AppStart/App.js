@@ -287,7 +287,6 @@ class Bootstrap extends Component {
     const {
       loading,
       userInfo,
-      setLocation,
       setUserFollowers,
       setVenuesFollowers,
       history
@@ -296,7 +295,6 @@ class Bootstrap extends Component {
     if (token) {
       if (!userInfo.user) {
         this.getUserInfo();
-        this.setLocation();
         // this.setUserFollowers();
         // this.setVenuesFollowers();
       }
@@ -304,6 +302,14 @@ class Bootstrap extends Component {
       history.push(`${BASENAME}login`, {
         redirectUri: window.location.pathname
       });
+    }
+
+    if (!(/micromessenger|webbrowser/i).test(navigator.userAgent)) {
+      if (typeof wx !== 'undefined') {
+        this.setLocation();
+      }
+    } else {
+      this.setLocation();
     }
 
     // 全局处理SPA下拉滚动加载数据
@@ -316,7 +322,7 @@ class Bootstrap extends Component {
     /**
      * 检查基础数据是否已经加载
      */
-    const { userInfo } = this.props;
+    const { userInfo, gps } = this.props;
     const token = cookie('js_session');
     if (token) {
       if (!(userInfo && userInfo.user && userInfo.user.id) && !userInfo.loading) {
@@ -328,6 +334,15 @@ class Bootstrap extends Component {
       // if (!(followers && followers.venuesFollowers) && !followers.loadingVenuesFollowers) {
       //   this.setVenuesFollowers();
       // }
+    }
+    if(!gps) {
+      if (!(/micromessenger|webbrowser/i).test(navigator.userAgent)) {
+        if (typeof wx !== 'undefined') {
+          this.setLocation();
+        }
+      } else {
+        this.setLocation();
+      }
     }
   }
 
