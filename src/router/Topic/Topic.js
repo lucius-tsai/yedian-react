@@ -200,9 +200,11 @@ class Topic extends Component {
       )
     });
 
+    const bannerHeight = window.innerWidth > 414 ? 414 / 2 : (window.innerWidth / 2);
+
     return (
       <div className={style.community}>
-        <div className={style.banner}>
+        <div className={style.banner} style={{height: `${bannerHeight}px`}}>
           {
             !!slides.length && <Carousel slides={slides} element={'div'} enterDelay={1000} leaveDelay={1000} speed={3000} />
           }

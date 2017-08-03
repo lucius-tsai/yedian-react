@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 
 import Avator from '../Avator';
 import LoadMore from '../LoadMore';
+import Alert from '../Alert';
 
 import {
 	getComments,
@@ -26,6 +27,11 @@ import styles from './comment.scss';
 import styleIcons from "../../icons/scss/ionicons";
 import styleBase from "../../assets/scss/base";
 
+/**
+ * 评论组件
+ * @class Comment
+ * @extends {Component}
+ */
 class Comment extends Component {
 	constructor(props) {
 		super(props);
@@ -40,7 +46,8 @@ class Comment extends Component {
 			offset: 0,
 			loading: false,
 			completed: false,
-			userId: null
+			userId: null,
+			// showAlert: false,
 		}
 		this.infromComment = this.infromComment.bind(this);
 	}
@@ -80,7 +87,7 @@ class Comment extends Component {
 				userId: userInfo && userInfo.user && userInfo.user.id
 			})
 		}
-		
+
 		if (nextProps.scrollLoading && !this.state.completed) {
 			this.fetch();
 		}
@@ -192,7 +199,10 @@ class Comment extends Component {
 			deleteLikeComment(data[index]._id).then(res => {
 				if (res.code === 200) {
 					data[index].__liked = !data[index].__liked;
-					self.setState(data);
+					self.setState({
+						data,
+						// showAlert: true
+					});
 				}
 			}, error => {
 
@@ -203,7 +213,10 @@ class Comment extends Component {
 			}).then(res => {
 				if (res.code === 200) {
 					data[index].__liked = !data[index].__liked;
-					self.setState(data);
+					self.setState({
+						data,
+						// showAlert: true
+					});
 				}
 			}, error => {
 
@@ -310,11 +323,12 @@ class Comment extends Component {
 				{
 					completed && <p style={{ textAlign: 'center' }}>没有更多数据了</p>
 				}
+				{/* <Alert visiable={this.state.showAlert} /> */}
 			</div>
 		)
 	}
 	componentDidMount() {
-		this.props.showScrollLoading();
+		// this.props.showScrollLoading();
 		this.fetch();
 		document.addEventListener('click', () => {
 			const actions = document.querySelectorAll('div[data-actions]');

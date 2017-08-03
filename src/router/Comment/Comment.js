@@ -98,7 +98,7 @@ class Comment extends Component {
 	componentWillUnmount() {
     const { showBar, router } = this.props;
     const pathname = router.location.pathname;
-		const reg = new RegExp(`^${BASENAME}topic|${BASENAME}search`);
+		const reg = new RegExp(`^${BASENAME}topic|${BASENAME}search|${BASENAME}message`);
     if (!reg.test(pathname)) {
       showBar();
     }
