@@ -108,7 +108,7 @@ export const getLocation = () => {
 		if (cachedData) {
     	alert("debug-session-geolocation");
 			resolve(cachedData, 'cache')
-		} else if (typeof window.wx !== 'undefined' && window.isWXReady) {
+		} else if (typeof window.wx !== 'undefined' && !!(/micromessenger|webbrowser/i).test(navigator.userAgent)) {
 			window.wx.ready(function () {
 				window.wx.getLocation({
 					type: 'gcj02',
