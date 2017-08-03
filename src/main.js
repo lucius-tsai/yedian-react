@@ -21,10 +21,10 @@ const history = createHistory();
  * listen route change
  */
 history.listen(location => {
-  // 安卓需要重新配置SDK
-  if (os.isAndroid) {
-    sdk();
-  }
+  // pushState需要重新配置微信SDK
+  // if (os.isAndroid) {
+  sdk();
+  // }
 });
 
 const store = createStore(history);
