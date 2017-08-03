@@ -54,9 +54,7 @@ import "../../assets/scss/animate.css";
 class Bootstrap extends Component {
   constructor(props) {
     super(props);
-
     const token = cookie('js_session');
-
     // console.log(location.pathname);
     this.state = {
       redirectPath: `${BASENAME}community`,
@@ -68,7 +66,6 @@ class Bootstrap extends Component {
 
     this.pointY = null;
     this.handleScroll = this.handleScroll.bind(this);
-
   }
 
   componentWillMount() {
@@ -287,16 +284,15 @@ class Bootstrap extends Component {
     const {
       loading,
       userInfo,
-      setLocation,
       setUserFollowers,
       setVenuesFollowers,
       history
     } = this.props;
     const token = cookie('js_session');
+    this.setLocation();
     if (token) {
       if (!userInfo.user) {
         this.getUserInfo();
-        this.setLocation();
         // this.setUserFollowers();
         // this.setVenuesFollowers();
       }
@@ -305,7 +301,6 @@ class Bootstrap extends Component {
         redirectUri: window.location.pathname
       });
     }
-
     // 全局处理SPA下拉滚动加载数据
     document.addEventListener("touchstart", this.handleTouch);
     window.addEventListener("scroll", this.handleScroll);
@@ -316,7 +311,7 @@ class Bootstrap extends Component {
     /**
      * 检查基础数据是否已经加载
      */
-    const { userInfo } = this.props;
+    const { userInfo, gps } = this.props;
     const token = cookie('js_session');
     if (token) {
       if (!(userInfo && userInfo.user && userInfo.user.id) && !userInfo.loading) {

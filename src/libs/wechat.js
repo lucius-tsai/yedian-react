@@ -37,11 +37,13 @@ export const weChatSDKInstall = (data) => {
       window.wx.onMenuShareAppMessage(window.shareData);
       window.wx.onMenuShareQQ(window.shareData);
       window.wx.onMenuShareQZone(window.shareData);
+      alert("debug-sign-success");
     });
 
     window.wx.error(function (res) {
       window.isWXReady = false;
       window.wxErrorMsg = res.errMsg;
+      alert(JSON.stringify(res));
     });
   } else {
     alert(data.msg);

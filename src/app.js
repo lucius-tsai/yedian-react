@@ -4,7 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './main';
 
-import { cookie, getQueryString, getLocation } from './libs/uitls';
+import { cookie, getQueryString } from './libs/uitls';
 import { weChatSDKInstall } from './libs/wechat';
 import { weChatAuth, getWeChatSDKSign, getScripts } from './libs/api';
 // const currentPage = window.location.pathname;
@@ -52,6 +52,7 @@ let render = () => {
 const sdk = () => {
   getWeChatSDKSign().then(res => {
     if (res.code === 200 && typeof wx !== "undefined") {
+      alert("debug-http-sdk-success-app");
       weChatSDKInstall(res.data);
     }
   }, error => {
