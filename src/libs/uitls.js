@@ -112,6 +112,7 @@ export const getLocation = () => {
 				window.wx.getLocation({
 					type: 'gcj02',
 					success: function (res) {
+      			alert("debug-sdk-geolocation");
 						resolve({
 							lat: res.latitude,
 							lng: res.longitude
@@ -123,6 +124,7 @@ export const getLocation = () => {
 			});
 		} else if (navigator.geolocation) {
 			console.log(`run navigator geolocation`);
+      alert("debug-navigator-geolocation");
 			navigator.geolocation.getCurrentPosition(function ({ coords }) {
 				resolve({
 					lat: coords.latitude,
