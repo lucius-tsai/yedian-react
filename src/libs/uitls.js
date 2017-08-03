@@ -106,6 +106,7 @@ export const getLocation = () => {
 	const cachedData = sessionData ? JSON.parse(sessionData) : null;
 	return new Promise((resolve, reject) => {
 		if (cachedData) {
+    	alert("debug-session-geolocation");
 			resolve(cachedData, 'cache')
 		} else if (typeof window.wx !== 'undefined' && window.isWXReady) {
 			window.wx.ready(function () {
