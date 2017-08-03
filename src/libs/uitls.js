@@ -198,6 +198,10 @@ export const minSizeImage = (files) => {
 			let reader = new FileReader();
 			reader.readAsDataURL(file);
 			reader.onloadend = function (e) {
+				const dataURL = this.result;
+				let image = new Image();
+				image.src = dataURL;
+
 				let orientation = null,
 					needRotate = false;
 				if (os.isPhone) {
@@ -207,9 +211,6 @@ export const minSizeImage = (files) => {
 					}
 				}
 
-				const dataURL = this.result;
-				let image = new Image();
-				image.src = dataURL;
 				image.onload = function () {
 					let originalWidth = image.width, originalHeight = image.height;
 
@@ -219,26 +220,32 @@ export const minSizeImage = (files) => {
 					}
 
 					let canvas = document.createElement('canvas');
-
 					let ctxt = canvas.getContext('2d');
-					ctxt.clearRect(0, 0, canvas.width, canvas.height);
-
-
-					canvas.width = originalWidth;
-					canvas.height = originalHeight;
 
 					if (needRotate) {
+						canvas.width = originalHeight;
+						canvas.height = originalWidth;
+
+						ctxt.clearRect(0, 0, canvas.width, canvas.height);
+
 						const buildingImgX = originalWidth / 2;
 						const buildingImgY = originalHeight / 2;
 
 						ctxt.translate(buildingImgX, buildingImgY);
 						ctxt.rotate(90 * Math.PI / 180);
 						ctxt.translate(-buildingImgX, -buildingImgY);
+
+						ctxt.drawImage(image, (buildingImgX - buildingImgY), (buildingImgX - buildingImgY), originalWidth, originalHeight);
+					} else {
+						canvas.width = originalWidth;
+						canvas.height = originalHeight;
+
+						ctxt.clearRect(0, 0, canvas.width, canvas.height);
+						ctxt.drawImage(image, 0, 0, originalWidth, originalHeight);
 					}
 
-					ctxt.drawImage(image, 0, 0, originalWidth, originalHeight);
 					const minRate = (9 - Math.floor(file.size / 1024 / 100));
-					const rate = minRate > 6 ? minRate * 0.1 : 0.6;
+					const rate = minRate > 7 ? minRate * 0.1 : 0.75;
 
 					const newFile = canvas.toDataURL('image/jpeg', rate);
 					resolve(newFile);
