@@ -23,7 +23,6 @@ const history = createHistory();
 history.listen(location => {
   // pushState需要重新配置微信SDK
   if (os.isAndroid) {
-    alert("debug-route-change-sign-sdk");
     sdk();
   }
 });
@@ -47,7 +46,6 @@ class App extends Component {
 const sdk = () => {
   getWeChatSDKSign().then(res => {
     if (res.code === 200 && typeof wx !== "undefined") {
-      alert("debug-http-sdk-success");
       weChatSDKInstall(res.data);
     }
   }, error => {
