@@ -106,14 +106,12 @@ export const getLocation = () => {
 	const cachedData = sessionData ? JSON.parse(sessionData) : null;
 	return new Promise((resolve, reject) => {
 		if (cachedData) {
-    	alert("debug-session-geolocation");
 			resolve(cachedData, 'cache')
 		} else if (typeof window.wx !== 'undefined' && !!(/micromessenger|webbrowser/i).test(navigator.userAgent)) {
 			window.wx.ready(function () {
 				window.wx.getLocation({
 					type: 'gcj02',
 					success: function (res) {
-      			alert("debug-sdk-geolocation");
 						resolve({
 							lat: res.latitude,
 							lng: res.longitude
@@ -125,7 +123,6 @@ export const getLocation = () => {
 			});
 		} else if (navigator.geolocation) {
 			console.log(`run navigator geolocation`);
-      alert("debug-navigator-geolocation");
 			navigator.geolocation.getCurrentPosition(function ({ coords }) {
 				resolve({
 					lat: coords.latitude,

@@ -52,7 +52,6 @@ let render = () => {
 const sdk = () => {
   getWeChatSDKSign().then(res => {
     if (res.code === 200 && typeof wx !== "undefined") {
-      alert("debug-http-sdk-success-app");
       weChatSDKInstall(res.data);
     }
   }, error => {

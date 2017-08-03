@@ -236,7 +236,7 @@ class Bootstrap extends Component {
     if (pathname === `${BASENAME}comment`) {
       key = 'app-bottom-to-top';
     }
-    // alert(key)
+    
     if (userInfo && userInfo.loading) {
       return (<Loading />)
     } else {
