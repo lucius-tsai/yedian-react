@@ -22,9 +22,9 @@ const history = createHistory();
  */
 history.listen(location => {
   // pushState需要重新配置微信SDK
-  // if (os.isAndroid) {
-  sdk();
-  // }
+  if (os.isAndroid) {
+    sdk();
+  }
 });
 
 const store = createStore(history);

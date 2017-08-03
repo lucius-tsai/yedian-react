@@ -53,7 +53,6 @@ class CommunityInfo extends Component {
     return true;
   }
 
-
   updateComments(newNum) {
     const { messageInfo } = this.state;
     messageInfo.commentCount = newNum;
@@ -76,7 +75,7 @@ class CommunityInfo extends Component {
           }
           {
             venuesInfo &&
-            <a href={`${window.location.origin}/dist/?#!/ktv/${venuesInfo._id}`}>
+            <a href={`${window.location.origin}/dist/?#!/${venuesInfo.type.toLocaleLowerCase()}/${venuesInfo._id}`}>
               <VenuesCell venuesInfo={venuesInfo} />
             </a>
           }
@@ -110,8 +109,14 @@ class CommunityInfo extends Component {
         self._isMounted && self.setState({
           messageInfo: res.data[0]
         }, () => {
+          let title = '';
+          if (self.state.messageInfo.postedBy && self.state.messageInfo.postedBy._id === userId) {
+            title = `${userName}在NIGHT+晒的夜晚生活好新潮，快来看！`;
+          } else {
+            title = `${userName}发现NIGHT+的夜晚生活好新潮，快来看！`;
+          }
           setShare({
-            title: `${userName}在NIIGHT+ 晒的夜晚生活好新潮，快来看！`,
+            title: title,
             desc: `${self.state.messageInfo.message.description}`,
             imgUrl: self.state.messageInfo.message.images[0],
             link: `${window.location.origin}${BASENAME}message/${id}?utm_medium=SHARING&utm_campaign=POST&utm_source=${id}&utm_content=${userId}`,
@@ -133,7 +138,7 @@ class CommunityInfo extends Component {
               venues(isValid: 1, isDeleted: 0, _id: "${cell.targetId}"){
                 count,
                 rows{
-                  _id, name, images
+                  _id, name, images, type
                 }
               }
             }`
