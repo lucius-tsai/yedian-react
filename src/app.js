@@ -7,7 +7,6 @@ import App from './main';
 import { cookie, getQueryString, getLocation } from './libs/uitls';
 import { weChatSDKInstall } from './libs/wechat';
 import { weChatAuth, getWeChatSDKSign, getScripts } from './libs/api';
-
 // const currentPage = window.location.pathname;
 
 /**
@@ -37,8 +36,6 @@ const __API = process.env.NODE_ENV === 'production' ? '//yd-data.chinacloudapp.c
 });
 // }
 
-
-
 const MOUNT_NODE = document.getElementById('app');
 const isWechat = !!(/micromessenger|webbrowser/i).test(navigator.userAgent);
 
@@ -61,19 +58,14 @@ const sdk = () => {
   });
 }
 
-// getLocation().then(res => {
-//   console.log(res);
-// }, error => {
-//   console.log(error)
-// })
-
 if (isWechat) {
   if (typeof wx !== 'undefined') {
     sdk()
   } else {
     const body = document.getElementsByTagName('body')[0];
     const wxScriptDom = document.createElement('script');
-    wxScriptDom.setAttribute('src', '//res.wx.qq.com/open/js/jweixin-1.2.0.js');
+    // wxScriptDom.setAttribute('src', '//res.wx.qq.com/open/js/jweixin-1.2.0.js');
+    wxScriptDom.setAttribute('src', `${location.origin}${BASENAME}static/jweixin-1.2.0.js`);
     wxScriptDom.addEventListener('load', () => {
       sdk();
     });

@@ -145,8 +145,9 @@ export const getLocation = () => {
  * dataURLtoBuffer base64 to Buffer
  * @param {String} base64 
  */
-const dataURLtoBuffer = function (base64) {
-	base64 = base64.replace(/data\:image\/jpeg\;base64\,/g, '');
+const dataURLtoBuffer = function (bs64) {
+	// base64 = base64.replace(/data\:image\/jpeg\;base64\,/g, '');
+	const base64 = bs64.split(";base64,")[1];
 	var binary_string = window.atob(base64);
 	var len = binary_string.length;
 	var bytes = new Uint8Array(len);

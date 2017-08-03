@@ -11,7 +11,13 @@ if (process.env.NODE_ENV === "development") {
 	venuesCoreApiDomain = "//venuescore.dev.ye-dian.com";
 	cmsCoreApiDomain = "//cmscore.dev.ye-dian.com";
 
-} else if (process.env.NODE_ENV === "staging") {
+} else if (process.env.NODE_ENV === "localhost") {
+	userApiDomain = "//user.staging.ye-dian.com";
+	userCoreApiDomain = "//userCore.staging.ye-dian.com";
+	commontCoreApiDomain = "//feedback.staging.ye-dian.com";
+	venuesCoreApiDomain = "//venuescore.staging.ye-dian.com";
+	cmsCoreApiDomain = "//cmscore.staging.ye-dian.com";
+}  else if (process.env.NODE_ENV === "staging") {
 	userApiDomain = "//user.staging.ye-dian.com";
 	userCoreApiDomain = "//userCore.staging.ye-dian.com";
 	commontCoreApiDomain = "//feedback.staging.ye-dian.com";
