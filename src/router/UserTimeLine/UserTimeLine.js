@@ -37,7 +37,7 @@ class UserTimeLine extends Component {
       },
       messages: [],
       pagination: {
-        pageSize: 3,
+        pageSize: 10,
         current: 1
       },
       user: null,

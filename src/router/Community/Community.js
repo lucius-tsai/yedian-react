@@ -260,7 +260,7 @@ class Community extends Component {
 
   render() {
     const { slides, messages, userList, loading, dynamicMessages, completed } = this.state;
-
+    const bannerHeight = window.innerWidth > 414 ? 414 / 2 : (window.innerWidth / 2);
     const messagesList = messages.map((cell, index) => {
       return (
         <li className={styles["message-cell"]} key={index}>
@@ -279,7 +279,7 @@ class Community extends Component {
 
     return (
       <div className={styles["community"]} ref={this.handleLoad}>
-        <div className={styles["banner"]}>
+        <div className={styles["banner"]} style={{height: `${bannerHeight}px`}}>
           {
             !!slides.length && <Carousel slides={slides} element={"div"} enterDelay={1000} leaveDelay={1000} speed={3000} />
           }
