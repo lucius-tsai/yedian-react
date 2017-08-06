@@ -144,9 +144,9 @@ class Bootstrap extends Component {
     }).catch(error => {
       getUserInfoFail()
       const msg = error.message;
-      console.log(msg);
-      if (/403/g.test(msg)) {
-        deleteAllCookies();
+      if (/403/g.test(msg) || /401/g.test(msg)) {
+        // deleteAllCookies();
+        cookie('js_session', null,  { path: '/', expires: -1 });
         window.location.reload();
       }
     });

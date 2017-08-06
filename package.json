@@ -16,6 +16,7 @@
     "axios": "^0.15.3",
     "connected-react-router": "^4.2.1",
     "immutable": "^3.8.1",
+    "lightgallery.js": "^1.0.1",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "prop-types": "*",

@@ -183,7 +183,6 @@ class UserTimeLine extends Component {
   componentDidMount() {
     const self = this;
     this._isMounted = true;
-
     document.body.scrollTop = 0;
 
     const { showScrollLoading, location, match, userInfo } = this.props;
