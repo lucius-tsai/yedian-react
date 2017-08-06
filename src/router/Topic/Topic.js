@@ -312,7 +312,7 @@ class Topic extends Component {
                   return cell.tag
                 })
               }).then(() => {
-                setShareLocal(id, userId, banner.image, banner.title, res.data[0].title);
+                setShareLocal(id, userId, banner.image, res.data[0].topic, banner.title);
                 // showScrollLoading();
                 self.fetch(true);
               });
