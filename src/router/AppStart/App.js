@@ -293,8 +293,8 @@ class Bootstrap extends Component {
     if (token) {
       if (!userInfo.user) {
         this.getUserInfo();
-        // this.setUserFollowers();
-        // this.setVenuesFollowers();
+        this.setUserFollowers();
+        this.setVenuesFollowers();
       }
     } else {
       history.push(`${BASENAME}login`, {
@@ -311,18 +311,18 @@ class Bootstrap extends Component {
     /**
      * 检查基础数据是否已经加载
      */
-    const { userInfo, gps } = this.props;
+    const { userInfo, gps, followers } = this.props;
     const token = cookie('js_session');
     if (token) {
       if (!(userInfo && userInfo.user && userInfo.user.id) && !userInfo.loading) {
         this.getUserInfo();
       }
-      // if (!(followers && followers.userFollowers) && !followers.loadingUserFollowers) {
-      //   this.setUserFollowers();
-      // }
-      // if (!(followers && followers.venuesFollowers) && !followers.loadingVenuesFollowers) {
-      //   this.setVenuesFollowers();
-      // }
+      if (!(followers && followers.userFollowers) && !followers.loadingUserFollowers) {
+        this.setUserFollowers();
+      }
+      if (!(followers && followers.venuesFollowers) && !followers.loadingVenuesFollowers) {
+        this.setVenuesFollowers();
+      }
     }
   }
 
