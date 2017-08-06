@@ -6,7 +6,7 @@ window.defaultShareData = {
   desc: "分享你的夜晚生活，让有趣的灵魂相遇，做夜晚生活达人",
   titleTL: "NIGHT+ 夜间动物园，开启夜晚无限可能",
   link: location.href.replace("?fromTabBar=1", ""),
-  imgUrl: `${window.location.origin}${require('../assets/images/logo.png')}`,
+  imgUrl: `${window.location.origin}${require('../assets/images/wechat.jpg')}`,
   success: function (res) {
     let action = res.errMsg.split(":")[0];
     if (window.shareData.successCallback) window.shareData.successCallback(action);

@@ -109,16 +109,19 @@ class CommunityInfo extends Component {
         self._isMounted && self.setState({
           messageInfo: res.data[0]
         }, () => {
-          let title = '';
+          let title = '', imgUrl = window.defaultShareData.imgUrl;
           if (self.state.messageInfo.postedBy && self.state.messageInfo.postedBy._id === userId) {
             title = `${userName}在NIGHT+晒的夜晚生活好新潮，快来看！`;
           } else {
             title = `${userName}发现NIGHT+的夜晚生活好新潮，快来看！`;
           }
+          if (self.state.messageInfo.message && self.state.messageInfo.message.images && self.state.messageInfo.message.images[0]) {
+            imgUrl = self.state.messageInfo.message.images[0];
+          }
           setShare({
             title: title,
             desc: `${self.state.messageInfo.message.description}`,
-            imgUrl: self.state.messageInfo.message.images[0],
+            imgUrl: imgUrl,
             link: `${window.location.origin}${BASENAME}message/${id}?utm_medium=SHARING&utm_campaign=POST&utm_source=${id}&utm_content=${userId}`,
             success: (shareType) => {
               track('wechat_share', Object.assign({
