@@ -25,7 +25,7 @@ import TabBar from '../../components/TabBar';
 import Loading from '../../components/Loading';
 
 // apis
-import { getUserInfo, getFollwers } from '../../libs/api';
+import { getUserInfo, getFollwers, getOfficialAccount } from '../../libs/api';
 import { cookie, getLocation, deleteAllCookies } from "../../libs/uitls";
 import { trackLogin, trackSetProfile, trackSetOnceProfile } from '../../libs/track';
 
@@ -40,7 +40,10 @@ import {
   getUserFollowers,
   getUserFollowersFail,
   setUserFollowers,
-  setVenuesFollowers
+  setVenuesFollowers,
+  getOfficialAccountLoging,
+  getOfficialAccountFail,
+  setOfficialAccount
 } from '../../store/actions/followers';
 import {
   getUserInfoLoading,
@@ -146,7 +149,7 @@ class Bootstrap extends Component {
       const msg = error.message;
       if (/403/g.test(msg) || /401/g.test(msg)) {
         // deleteAllCookies();
-        cookie('js_session', null,  { path: '/', expires: -1 });
+        cookie('js_session', null, { path: '/', expires: -1 });
         window.location.reload();
       }
     });
@@ -156,7 +159,6 @@ class Bootstrap extends Component {
     const {
       setLocation
     } = this.props;
-
     getLocation().then(res => {
       if (res && res.lat && res.lng) {
         setLocation(res);
@@ -215,6 +217,29 @@ class Bootstrap extends Component {
     });
   }
 
+  setOfficialAccount() {
+    const {
+      getOfficialAccountLoging,
+      getOfficialAccountFail,
+      setOfficialAccount,
+      followers
+    } = this.props;
+    if (followers && followers.officialAccount) {
+      return false;
+    }
+    getOfficialAccountLoging();
+    getOfficialAccount().then(res => {
+      if (res.code === 200) {
+        console.log(res);
+        setOfficialAccount(res.data);
+      } else {
+        getOfficialAccountFail();
+      }
+    }, error => {
+      getOfficialAccountFail();
+    });
+  }
+
   render() {
     let key = "app";
     const { loading, hideBar, router, lastRouter, userInfo, redirectPath } = this.state;
@@ -236,7 +261,7 @@ class Bootstrap extends Component {
     if (pathname === `${BASENAME}comment`) {
       key = 'app-bottom-to-top';
     }
-    
+
     if (userInfo && userInfo.loading) {
       return (<Loading />)
     } else {
@@ -295,6 +320,7 @@ class Bootstrap extends Component {
         this.getUserInfo();
         this.setUserFollowers();
         this.setVenuesFollowers();
+        this.setOfficialAccount();
       }
     } else {
       history.push(`${BASENAME}login`, {
@@ -322,6 +348,9 @@ class Bootstrap extends Component {
       }
       if (!(followers && followers.venuesFollowers) && !followers.loadingVenuesFollowers) {
         this.setVenuesFollowers();
+      }
+      if (!(followers && followers.officialAccount) && !followers.loadingofficialAccount) {
+        this.setOfficialAccount();
       }
     }
   }
@@ -374,6 +403,15 @@ const mapDispatchToProps = (dispatch) => {
     },
     setVenuesFollowers: (cell) => {
       dispatch(setVenuesFollowers(cell));
+    },
+    getOfficialAccountLoging: () => {
+      dispatch(getOfficialAccountLoging());
+    },
+    getOfficialAccountFail: () => {
+      dispatch(getOfficialAccountFail());
+    },
+    setOfficialAccount: (cell) => {
+      dispatch(setOfficialAccount(cell));
     },
     showScrollLoading: (cell) => {
       dispatch(showScrollLoading(cell));

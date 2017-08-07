@@ -18,7 +18,8 @@ import {
   addTag,
   removeTag,
   removeVenues,
-  saveDescription
+  saveDescription,
+  delAll
 } from '../../store/actions/publish';
 
 import { postMessage, uploadFile } from '../../libs/api';
@@ -97,7 +98,7 @@ class Publish extends Component {
     e.preventDefault();
     let post = {};
     const { description, tags, venues, tmpImages } = this.state;
-    const { history } = this.props;
+    const { history, delAll } = this.props;
 
     if (!description || !tags || !tags.length) {
       return alert('信息不全！');
@@ -124,6 +125,7 @@ class Publish extends Component {
 
     postMessage(post).then(res => {
       if (res.code === 200) {
+        delAll();
         history.goBack();
       }
     }, error => {
@@ -197,7 +199,7 @@ class Publish extends Component {
   }
 
   input(e) {
-		const input = e.target.value.trim();
+		const input = e.target.value
     this.setState({
       description: input,
       canSubmit: input.length > 0 && this.state.tags && this.state.tags.length
@@ -205,7 +207,7 @@ class Publish extends Component {
   }
   blur(e) {
     const { saveDescription } = this.props;
-    saveDescription(e.target.value);
+    saveDescription(e.target.value.trim());
   }
 
   handleRemoveVenues(dom) {
@@ -412,6 +414,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     removeVenues: () => {
       dispatch(removeVenues())
+    },
+    delAll: () => {
+      dispatch(delAll())
     }
   }
 };

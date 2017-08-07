@@ -259,7 +259,9 @@ class Message extends Component {
       mode: 'lg-fade',
       cssEasing : 'cubic-bezier(0.25, 0, 0.25, 1)',
       fullScreen: true,
-      download: false
+      download: false,
+      controls: false,
+      loop: false
     });
   }
 
