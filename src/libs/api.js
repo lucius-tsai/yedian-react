@@ -166,6 +166,10 @@ export const getFollwers = (data) => {
 	}));
 }
 
+export const getOfficialAccount = () => {
+	return __promiseTask(_instance().get(API_ROOT.getOfficialAccount))
+}
+
 export const creatFollow = (data) => {
 	return __promiseTask(_instance().post(API_ROOT.creatFollow, data));
 }

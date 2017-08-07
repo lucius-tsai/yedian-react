@@ -6,6 +6,10 @@
 
 .card-message-content {
   display: block;
+  pre {
+    margin: auto;
+    font-family: initial;
+  }
   h4 {
     line-height: 1.5em;
     margin-bottom: 8px;

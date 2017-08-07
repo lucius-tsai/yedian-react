@@ -36,7 +36,23 @@ class Avator extends Component {
     super(props);
   }
   componentWillMount() {
-    let { size, style, showFollow, profile, model, date, disabledLink, affiliates } = this.props;
+    let { size, style, showFollow, profile, model, date, disabledLink, affiliates, followers } = this.props;
+
+    if(profile && profile.userType && profile.userType.toLocaleLowerCase() === 'user' && followers && followers.officialAccount) {
+      followers.officialAccount.forEach(cell => {
+        if (cell.user && cell.user.id === profile._id) {
+          showFollow = false;
+        }
+      })
+    }
+    followers.userFollowers && followers.userFollowers.forEach(cell => {
+        if (cell.targetId === profile._id) {
+          this.setState({
+            isFollow: true,
+            followId: cell._id
+          });
+        }
+      });
     this.setState({
       profile: profile ? profile : {
         headImgUrl: "http://www.wangmingdaquan.cc/tx61/66.jpg",
@@ -53,6 +69,7 @@ class Avator extends Component {
       isFollow: false,
       followId: null,
     });
+    
     this.handleFollow = this.handleFollow.bind(this);
   }
 
@@ -88,6 +105,13 @@ class Avator extends Component {
           });
         }
       });
+      followers.officialAccount && followers.officialAccount.forEach(cell => {
+        if (cell.user && cell.user.id === profile._id) {
+          this.setState({
+            showFollow: false
+          });
+        }
+      })
     } else if (profile.userType.toLocaleLowerCase() === 'venuesmanager') {
       followers.venuesFollowers && followers.venuesFollowers.forEach(cell => {
         if (cell.targetId === profile.venuesId) {

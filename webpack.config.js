@@ -85,7 +85,7 @@ var webpackConfig = {
       },
       {
         test: /\.(ttf|eot|otf|svg|woff(2)?)(\?[a-z0-9]+)?$/,
-        include: /icons\/fonts/,
+        include: /icons\/fonts|node_modules/,
         loader: 'url-loader',
         options: {
           limit: 1024,

@@ -322,7 +322,7 @@ class Community extends Component {
     this._isMounted = true;
     document.title = "NIGHT+";
     const { messages, pagination } = this.state;
-    const { loading, loadSuccess, loadFail, showScrollLoading } = this.props;
+    const { loading, loadSuccess, loadFail, showScrollLoading, router } = this.props;
 
     reSetShare();
 

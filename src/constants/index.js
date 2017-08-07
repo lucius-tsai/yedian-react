@@ -81,6 +81,7 @@ let __API_ROOT = {
 	getFollwers: commontCoreApiDomain + "/users/follows",
 	creatFollow: commontCoreApiDomain + "/users/follows",
 	deleteFollow: commontCoreApiDomain + "/users/follows",
+	getOfficialAccount: commontCoreApiDomain + "/community/officialAccount",
 	/********************************************************************************** */
 
 	deletePost: commontCoreApiDomain + "/community/post",

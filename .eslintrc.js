@@ -59,6 +59,7 @@ module.exports = {
         "no-cond-assign": 2
     },
     "globals": {
-        "BASENAME": true
+        "BASENAME": true,
+        "lightGallery": true // plugins
     }
 };

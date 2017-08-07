@@ -4,6 +4,10 @@ import { Link, withRouter } from 'react-router-dom';
 import Avator from '../Avator';
 import CTABar from '../CTABar';
 
+// lightGallery
+import 'lightgallery.js';
+import 'lightgallery.js/src/css/lightgallery';
+
 const defaultMessage = {
   description: "not found error",
   pictures: []
@@ -36,14 +40,11 @@ class Message extends Component {
       post: defaultMessage,
       canLink: false,
       showFollow: false,
-      showModal: false,
       __showComment: false
     };
 
     this.lazyLoadPictures = this.lazyLoadPictures.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    this.showModal = this.showModal.bind(this);
-    this.hiddenModal = this.hiddenModal.bind(this);
   }
 
   componentWillMount() {
@@ -129,30 +130,8 @@ class Message extends Component {
     });
   }
 
-  hiddenModal() {
-    this.setState({
-      showModal: false
-    });
-  }
-
-  /**
-   * 查看 图片
-   * @param {any} ref 
-   * @memberof Message
-   */
-  showModal(ref) {
-    const self = this;
-    // ref && ref.addEventListener && ref.addEventListener('click', (e) => {
-    //   if (e && e.target && e.target.dataset && e.target.dataset.origin === 'picture') {
-    //     self.setState({
-    //       showModal: true
-    //     });
-    //   }
-    // });
-  }
-
   render() {
-    const { post, canLink, showFollow, showModal, disabledLink, __showComment } = this.state;
+    const { post, canLink, showFollow, disabledLink, __showComment } = this.state;
     const { __parentOpenComment } = this.props;
     let message = null;
     const affiliates = post.affiliates;
@@ -212,10 +191,10 @@ class Message extends Component {
         </div>
         {
           !canLink && <div className={styles["card-message-content"]}>
-            <h4>{message.description}</h4>
+            <pre><h4>{message.description}</h4></pre>
             {
               message.images.length > 1 ?
-                <div className={styles["imgs"]} ref={this.showModal}>
+                <div className={styles["imgs"]} id="lightgallery">
                   {picturesList}
                 </div>
                 :
@@ -235,7 +214,7 @@ class Message extends Component {
         }
         {
           canLink && post.postType === 0 && <Link className={`${styles['card-message-content']} ${styleBase['clearfix']}`} to={{ pathname: `${BASENAME}message/${post._id}`, state: { id: post._id } }}>
-            <h4>{message.description}</h4>
+            <pre><h4>{message.description}</h4></pre>
             {
               message.images && message.images.length > 1 ?
                 <div className={styles["imgs"]}>
@@ -250,7 +229,7 @@ class Message extends Component {
         }
         {
           canLink && post.postType === 1 && <a className={`${styles['card-message-content']} ${styleBase['clearfix']}`} href={`${location.origin}/dist/?#!/venues/event/${post._id}${query}`}>
-            <h4>{message.description}</h4>
+            <pre><h4>{message.description}</h4></pre>
             {
               message.images && message.images.length > 1 ?
                 <div className={styles["imgs"]}>
@@ -268,30 +247,22 @@ class Message extends Component {
             <CTABar fix={canLink} post={post} __showComment={__showComment} />
           </div>
         }
-        {
-          !canLink && 
-          <div className={showModal ? `${styles.modal} ${styles.active}` : styles.modal} onClick={this.hiddenModal}>
-            <ul className={`${styles.carousel} ${styleBase.clearfix}`}>
-              {
-                message.images.map((cell, index) => {
-                  return (
-                    <li key={index}>
-                      <img src={cell} alt=""/>
-                    </li>
-                  )
-                })
-              }
-            </ul>
-          </div>
-        }
       </div>
     )
   }
 
   componentDidMount() {
-    const { post } = this.state;
+    const { post, canLink } = this.state;
     window.addEventListener("scroll", this.lazyLoadPictures);
     this.lazyLoadPictures();
+    !canLink && lightGallery(document.getElementById('lightgallery'), {
+      mode: 'lg-fade',
+      cssEasing : 'cubic-bezier(0.25, 0, 0.25, 1)',
+      fullScreen: true,
+      download: false,
+      controls: false,
+      loop: false
+    });
   }
 
   componentDidUpdate() {

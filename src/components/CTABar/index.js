@@ -29,7 +29,7 @@ class CTABar extends Component {
 			likeCount: 0,
 			favoriteCount: 0,
 			commentCount: 0,
-      isSelf: false,
+			isSelf: false,
 		}
 		this.like = this.like.bind(this);
 		this.favorite = this.favorite.bind(this);
@@ -153,18 +153,23 @@ class CTABar extends Component {
 				<div className={showComment ? `${catBarClass} ${styles['bar-hidden']}` : catBarClass}>
 					<div className={likeId ? `${styles['cell']} ${styles['_like']} ${styles['active']}` : `${styles['cell']} ${styles['_like']}`}>
 						<div data-icon className={styleIcons['ion-cta-like']} onClick={this.like} ref={this.handleClick}>&nbsp;</div>
-						<span className={styles["text"]} style={{width: `${String(likeCount).length * 10}px`}}>{likeCount}</span>
+						<span className={styles["text"]} style={{ width: `${String(likeCount).length * 10}px` }}>{likeCount}</span>
 					</div>
 					<div className={favoriteId ? `${styles['cell']} ${styles['_collection']} ${styles['active']}` : `${styles['cell']} ${styles['_collection']}`}>
 						<div data-icon className={styleIcons['ion-cta-collection']} onClick={this.favorite} ref={this.handleClick}>&nbsp;</div>
-						<span className={styles["text"]} style={{width: `${String(favoriteCount).length * 10}px`}}>{favoriteCount}</span>
+						<span className={styles["text"]} style={{ width: `${String(favoriteCount).length * 10}px` }}>{favoriteCount}</span>
 					</div>
 					<div className={`${styles['cell']} ${styles['_comment']}`}>
-						<Link data-icon className={styleIcons['ion-cta-comment']} to={{ pathname: `${BASENAME}comment`, search: `?type=POST&id=${post._id}`, state: { post } }}>&nbsp;</Link>
+						{
+							fix ?
+								<Link data-icon className={styleIcons['ion-cta-comment']} to={{ pathname: `${BASENAME}message/${post._id}`, state: { id: post._id } }}>&nbsp;</Link>
+								:
+								<Link data-icon className={styleIcons['ion-cta-comment']} to={{ pathname: `${BASENAME}comment`, search: `?type=POST&id=${post._id}`, state: { post } }}>&nbsp;</Link>
+						}
 						<span className={styles["text"]}>{commentCount}</span>
 					</div>
 					{
-						isSelf && 
+						isSelf &&
 						<div className={`${styles['cell']} ${styles['_delete']}`}>
 							<div data-origin='delete'>
 								<i data-icon className={styleIcons['ion-delete']} data-origin='delete'></i>
@@ -176,8 +181,8 @@ class CTABar extends Component {
 			</div>
 		)
 	}
-	
-  componentDidMount() {
+
+	componentDidMount() {
 		this._isMounted = true;
 		const self = this;
 		const { post, userInfo, showComment } = this.props;
@@ -220,13 +225,13 @@ class CTABar extends Component {
 
 	componentDidUpdate() {
 		const { showComment } = this.props;
-		if(showComment) {
+		if (showComment) {
 			document.addEventListener('click', this.__hidden);
 		}
 	}
 
 	componentWillUnmount() {
-    this._isMounted = false;
+		this._isMounted = false;
 		document.removeEventListener('click', this.__hidden);
 	}
 }
