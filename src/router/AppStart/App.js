@@ -17,7 +17,7 @@ import Topic from '../Topic/';
 import UserTimeLine from '../UserTimeLine/';
 import Login from '../Login/';
 import FeedBack from '../FeedBack/';
-import Comment from '../Comment';
+import Comment from '../Comment/';
 import NotFound from '../NotFound/';
 
 // components
@@ -230,7 +230,6 @@ class Bootstrap extends Component {
     getOfficialAccountLoging();
     getOfficialAccount().then(res => {
       if (res.code === 200) {
-        console.log(res);
         setOfficialAccount(res.data);
       } else {
         getOfficialAccountFail();

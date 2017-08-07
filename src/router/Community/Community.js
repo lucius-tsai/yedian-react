@@ -321,13 +321,14 @@ class Community extends Component {
     const self = this;
     this._isMounted = true;
     document.title = "NIGHT+";
+    document.body.scrollTop = 0;
+
     const { messages, pagination } = this.state;
-    const { loading, loadSuccess, loadFail, showScrollLoading, router } = this.props;
+    const { loading, loadSuccess, loadFail, showScrollLoading } = this.props;
+
 
     reSetShare();
-
     this.showGuide();
-
     // 拉取banner
     const query = `query=query
     {
