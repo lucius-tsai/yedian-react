@@ -191,7 +191,7 @@ class Message extends Component {
         </div>
         {
           !canLink && <div className={styles["card-message-content"]}>
-            <h4>{message.description}</h4>
+            <pre><h4>{message.description}</h4></pre>
             {
               message.images.length > 1 ?
                 <div className={styles["imgs"]} id="lightgallery">
@@ -214,7 +214,7 @@ class Message extends Component {
         }
         {
           canLink && post.postType === 0 && <Link className={`${styles['card-message-content']} ${styleBase['clearfix']}`} to={{ pathname: `${BASENAME}message/${post._id}`, state: { id: post._id } }}>
-            <h4>{message.description}</h4>
+            <pre><h4>{message.description}</h4></pre>
             {
               message.images && message.images.length > 1 ?
                 <div className={styles["imgs"]}>
@@ -229,7 +229,7 @@ class Message extends Component {
         }
         {
           canLink && post.postType === 1 && <a className={`${styles['card-message-content']} ${styleBase['clearfix']}`} href={`${location.origin}/dist/?#!/venues/event/${post._id}${query}`}>
-            <h4>{message.description}</h4>
+            <pre><h4>{message.description}</h4></pre>
             {
               message.images && message.images.length > 1 ?
                 <div className={styles["imgs"]}>

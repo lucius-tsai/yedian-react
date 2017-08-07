@@ -311,7 +311,11 @@ class Comment extends Component {
 											}
 										</div>
 									</div>
-									<div className={styles["_content"]}>{cell.comment}</div>
+									<div className={styles["_content"]}>
+										<pre>
+											{cell.comment}
+										</pre>
+									</div>
 								</li>
 							)
 						})

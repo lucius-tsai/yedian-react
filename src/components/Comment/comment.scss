@@ -47,6 +47,10 @@
       color: #333333;
       word-break: break-all;
       margin: 10px auto;
+      pre {
+        margin: auto;
+        font-family: initial;
+      }
     }
   }
 }
