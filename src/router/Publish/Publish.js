@@ -25,7 +25,7 @@ import {
 import { postMessage, uploadFile } from '../../libs/api';
 import { minSizeImage } from '../../libs/uitls';
 import { reSetShare } from '../../libs/wechat';
-import { trackPageView, trackPageLeave } from '../../libs/track';
+import { trackPageView, trackPageLeave, track } from '../../libs/track';
 
 import styles from './publish.scss';
 import styleIcons from "../../icons/scss/ionicons";
@@ -134,6 +134,18 @@ class Publish extends Component {
     postMessage(post).then(res => {
       if (res.code === 200) {
         delAll();
+        try {
+          track('publish', Object.assign({
+            $url: window.location.href,
+            $path: window.location.pathname,
+            title: description,
+            post_type: "USER",
+            type: "POST",
+            action_time: new Date()
+          }, {}));
+        } catch (error) {
+
+        }
         history.goBack();
       }
       submitKey = false;
@@ -146,11 +158,16 @@ class Publish extends Component {
   handleFileUpload(e) {
     const { addPictures } = this.props;
     const { tmpImages } = this.state;
-    const files = e.target.files;
+    const __files = e.target.files;
+    let files = [];
+    const index = __files.length + tmpImages.length - 9;
 
-    if ((files.length + tmpImages.length) > 9) {
-      alert('最多上传9张图片');
-      return false;
+    if ((__files.length + tmpImages.length) > 9) {
+      for (let i = 0; i < index; i++) {
+        files.push(__files.item(i));
+      }
+    } else {
+      files = __files;
     }
 
     // let fd = new FormData();
@@ -173,7 +190,6 @@ class Publish extends Component {
     // return false;
 
     minSizeImage(files).then(data => {
-      console.log(data)
       let fd = new FormData();
       data.forEach(cell => {
         fd.append("file", cell);

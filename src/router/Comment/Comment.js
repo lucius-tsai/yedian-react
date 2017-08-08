@@ -13,8 +13,11 @@ import {
 import {
 	commentMessage
 } from '../../libs/api';
+import { track } from '../../libs/track';
 
 import styles from './comment.scss';
+
+let submitKey = false;
 
 class Comment extends Component {
 	constructor(props) {
@@ -32,7 +35,7 @@ class Comment extends Component {
 
 	componentWillMount() {
 		const { hideBar, router } = this.props;
-		console.log(router);
+		
 		const type = getQueryString('type');
 		const id = getQueryString('id');
 		const target = router && router.location && router.location.state && router.location.state.post
@@ -57,6 +60,12 @@ class Comment extends Component {
 	}
 
 	submit(e) {
+
+		if (submitKey) {
+      return false;
+    }
+		submitKey = true;
+		
 		e.preventDefault();
 		const { type, target, targetId } = this.state;
 		const { history } = this.props;
@@ -67,10 +76,24 @@ class Comment extends Component {
 			comment: this.state.comment
 		}).then(res => {
 			if (res.code === 200) {
+				// track
+				try {
+					track('comment', Object.assign({
+						$url: window.location.href,
+						$path: window.location.pathname,
+						title: target.message && target.message.description,
+						post_type: target && target.postType === 1 ? "VENUES" : "USER",
+						post_id: target && String(target._id),
+						type: "POST",
+						action_time: new Date()
+					}, {}));
+				} catch (error) {
+				}
         return history.goBack();
 			}
+      submitKey = false;
 		}, error => {
-
+      submitKey = false;
 		});
 	}
 
