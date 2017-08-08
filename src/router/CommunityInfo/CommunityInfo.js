@@ -80,6 +80,13 @@ class CommunityInfo extends Component {
               <VenuesCell venuesInfo={venuesInfo} />
             </a>
           }
+          {
+            !messageInfo && 
+            <div className={styles.null}>
+              <span>加载失败</span>&nbsp;&nbsp;
+              <Link to={{ pathname: `${BASENAME}community` }}>去首页看看</Link>
+            </div>
+          }
         </div>
         {
           messageInfo &&
