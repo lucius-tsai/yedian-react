@@ -9,6 +9,7 @@ import Comment from '../../components/Comment';
 import { getMessageInfo, getVenues } from '../../libs/api';
 import { setShare } from '../../libs/wechat';
 import { trackPageView, trackPageLeave, track } from '../../libs/track';
+import { os } from '../../libs/uitls';
 
 import {
   loading,
@@ -78,6 +79,13 @@ class CommunityInfo extends Component {
             <a href={`${window.location.origin}/dist/?#!/${venuesInfo.type.toLocaleLowerCase()}/${venuesInfo._id}`}>
               <VenuesCell venuesInfo={venuesInfo} />
             </a>
+          }
+          {
+            !messageInfo && 
+            <div className={styles.null}>
+              <span>加载失败</span>&nbsp;&nbsp;
+              <Link to={{ pathname: `${BASENAME}community` }}>去首页看看</Link>
+            </div>
           }
         </div>
         {
@@ -176,6 +184,10 @@ class CommunityInfo extends Component {
       pageName: this.state.track.pageName,
       pageStayTime: ((new Date().getTime() - this.state.track.startTime.getTime()) / 1000)
     });
+    // hack WeChat white screen
+    if (os.isWechat && os.isPhone) {
+      document.body.scrollTop = '1px';
+    }
   }
 }
 

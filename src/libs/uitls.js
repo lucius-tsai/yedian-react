@@ -274,7 +274,8 @@ export const os = (() => {
 		isTablet: isTablet,
 		isPhone: isPhone,
 		isAndroid: isAndroid,
-		isPc: isPc
+		isPc: isPc,
+		isWechat: !!(/micromessenger|webbrowser/i).test(navigator.userAgent)
 	};
 })();
 

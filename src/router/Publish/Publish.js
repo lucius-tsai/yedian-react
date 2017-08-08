@@ -30,6 +30,8 @@ import { trackPageView, trackPageLeave, track } from '../../libs/track';
 import styles from './publish.scss';
 import styleIcons from "../../icons/scss/ionicons";
 
+let submitKey = false;
+
 class Publish extends Component {
   constructor(props) {
     super(props);
@@ -43,7 +45,7 @@ class Publish extends Component {
       tags: [],
       venues: null,
       tmpImages: [],
-			canSubmit: false
+      canSubmit: false
     };
     this.submit = this.submit.bind(this);
     this.handleFileUpload = this.handleFileUpload.bind(this);
@@ -95,6 +97,12 @@ class Publish extends Component {
   }
 
   submit(e) {
+
+    if (submitKey) {
+      return false;
+    }
+    submitKey = true;
+
     e.preventDefault();
     let post = {};
     const { description, tags, venues, tmpImages } = this.state;
@@ -140,7 +148,9 @@ class Publish extends Component {
         }
         history.goBack();
       }
+      submitKey = false;
     }, error => {
+      submitKey = false;
       console.log(error);
     })
   }
@@ -215,7 +225,7 @@ class Publish extends Component {
   }
 
   input(e) {
-		const input = e.target.value
+    const input = e.target.value
     this.setState({
       description: input,
       canSubmit: input.length > 0 && this.state.tags && this.state.tags.length
@@ -313,7 +323,7 @@ class Publish extends Component {
     return (
       <div className={styles.publish} style={show ? { display: "block" } : { display: "none" }}>
         <form action="" className={styles["publish-form"]} ref={this.loadPage}>
-          <textarea value={description} cols="30" rows="10" placeholder="Show出你的夜生活～" onChange={this.input} onBlur={this.blur}></textarea>
+          <textarea value={description} cols="30" rows="10" placeholder="Show出你的夜晚生活～" onChange={this.input} onBlur={this.blur}></textarea>
           <div className={styles["pics-box"]}>
             {
               tmpImages && tmpImages.map((cell, index) => {
@@ -381,7 +391,6 @@ class Publish extends Component {
       this.refs.removeVenue.removeEventListener("click", this.removeVenue);
       this.refs.removeVenue.addEventListener("click", this.removeVenue);
     }
-
   }
 
   componentWillUnmount() {
