@@ -9,6 +9,7 @@ import Comment from '../../components/Comment';
 import { getMessageInfo, getVenues } from '../../libs/api';
 import { setShare } from '../../libs/wechat';
 import { trackPageView, trackPageLeave, track } from '../../libs/track';
+import { os } from '../../libs/uitls';
 
 import {
   loading,
@@ -176,6 +177,10 @@ class CommunityInfo extends Component {
       pageName: this.state.track.pageName,
       pageStayTime: ((new Date().getTime() - this.state.track.startTime.getTime()) / 1000)
     });
+    // hack WeChat white screen
+    if (os.isWechat && os.isPhone) {
+      document.body.scrollTop = '1px';
+    }
   }
 }
 

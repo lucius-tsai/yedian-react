@@ -297,7 +297,7 @@ class Publish extends Component {
     return (
       <div className={styles.publish} style={show ? { display: "block" } : { display: "none" }}>
         <form action="" className={styles["publish-form"]} ref={this.loadPage}>
-          <textarea value={description} cols="30" rows="10" placeholder="Show出你的夜生活～" onChange={this.input} onBlur={this.blur}></textarea>
+          <textarea value={description} cols="30" rows="10" placeholder="Show出你的夜晚生活～" onChange={this.input} onBlur={this.blur}></textarea>
           <div className={styles["pics-box"]}>
             {
               tmpImages && tmpImages.map((cell, index) => {
