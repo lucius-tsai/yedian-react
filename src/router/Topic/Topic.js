@@ -312,7 +312,7 @@ class Topic extends Component {
                   return cell.tag
                 })
               }).then(() => {
-                setShareLocal(id, userId, banner.image, res.data[0].title, banner.title);
+                setShareLocal(id, userId, banner.image, res.data[0].topic, banner.title);
                 // showScrollLoading();
                 self.fetch(true);
               });
@@ -321,7 +321,7 @@ class Topic extends Component {
           });
         } else {
           document.title = `${banner.title}`;
-          setShareLocal(id, userId, banner.image, undefined, banner.title);
+          setShareLocal(id, userId, banner.image, banner.title, undefined);
           self.setState({
             slides: [{
               image: banner.image,

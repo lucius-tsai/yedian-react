@@ -193,7 +193,7 @@ class UserTimeLine extends Component {
         user: location.state
       }).then(() => {
         setShare({
-          title: `${self.state.user.displayName}在NIIGHT+ 晒的夜晚生活好新潮，快来看！`,
+          title: `${self.state.user.displayName}在NIGHT+的新潮夜晚生活，快来看！`,
           desc: `分享你的夜晚生活，让有趣的灵魂相遇，做夜晚生活达人`,
           imgUrl: self.state.user.headImgUrl,
           link: `${window.location.origin}${BASENAME}user/times/${self.state.user._id}?utm_medium=SHARING&utm_campaign=USER&utm_source=${self.state.user._id}&utm_content=${userId}`,
@@ -224,7 +224,7 @@ class UserTimeLine extends Component {
               }
             }).then(() => {
               setShare({
-                title: `${self.state.user.displayName}在NIIGHT+ 晒的夜晚生活好新潮，快来看！`,
+                title: `${self.state.user.displayName}在NIGHT+的新潮夜晚生活，快来看！`,
                 desc: `分享你的夜晚生活，让有趣的灵魂相遇，做夜晚生活达人`,
                 imgUrl: self.state.user.headImgUrl,
                 link: `${window.location.origin}${BASENAME}user/times/${self.state.user._id}?utm_medium=SHARING&utm_campaign=USER&utm_source=${self.state.user._id}&utm_content=${userId}`,
