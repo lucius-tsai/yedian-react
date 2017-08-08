@@ -160,8 +160,8 @@ class Publish extends Component {
     const { tmpImages } = this.state;
     const __files = e.target.files;
     let files = [];
-    const index = __files.length + tmpImages.length - 9;
-
+    const index =  9 - tmpImages.length;
+    
     if ((__files.length + tmpImages.length) > 9) {
       for (let i = 0; i < index; i++) {
         files.push(__files.item(i));
