@@ -12,6 +12,7 @@ import {
 	deletePost
 } from '../../libs/api';
 import { os } from '../../libs/uitls';
+import { track } from '../../libs/track';
 
 import styles from './ctabar.scss';
 import styleIcons from "../../icons/scss/ionicons";
@@ -87,6 +88,20 @@ class CTABar extends Component {
 						likeId: res.data._id,
 						likeCount: (self.state.likeCount * 1 + 1)
 					});
+
+					// track 
+					try {
+						track('like', Object.assign({
+							$url: window.location.href,
+							$path: window.location.pathname,
+							post_description: post.message && post.message.description,
+							post_type: post && post.postType === 1 ? "VENUES" : "USER",
+							post_id: post && String(post._id),
+							collection_type: "POST",
+							action_time: new Date()
+						}, {}));
+					} catch (error) {
+					}
 				}
 			}, error => {
 
@@ -120,6 +135,20 @@ class CTABar extends Component {
 						favoriteId: res.data._id,
 						favoriteCount: (self.state.favoriteCount * 1 + 1)
 					});
+
+					try {
+						// track 
+						track('collection_add', Object.assign({
+							$url: window.location.href,
+							$path: window.location.pathname,
+							post_description: post.message && post.message.description,
+							post_type: post && post.postType === 1 ? "VENUES" : "USER",
+							post_id: post && String(post._id),
+							collection_type: "POST",
+							action_time: new Date()
+						}, {}));
+					} catch (error) {
+					}
 				}
 			}, error => {
 			});
