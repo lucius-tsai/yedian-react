@@ -100,7 +100,7 @@ export default class DaynimcMessage extends Component {
   }
 
   componentDidMount() {
-    this.autoRun();
+    // this.autoRun();
   }
 
   componentDidUpdate() {
