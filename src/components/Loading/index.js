@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom';
 
 import styles from './loading.scss';
 import styleIcons from  "../../icons/scss/ionicons";
